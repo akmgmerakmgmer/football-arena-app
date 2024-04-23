@@ -3,6 +3,7 @@ import 'package:flutter_challenge_mobile/providers/locale_provider.dart';
 import 'package:flutter_challenge_mobile/utilities/auth.dart';
 import 'package:flutter_challenge_mobile/widgets/drawer/drawer_widget.dart';
 import 'package:flutter_challenge_mobile/widgets/footer/footer.dart';
+import 'package:flutter_challenge_mobile/widgets/loadings/primary_loading.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +19,7 @@ class PageContainerWithFooter extends StatefulWidget {
 }
 
 class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
+  bool loading = false;
   void getLocale() async {
     if (Provider.of<LocaleProvider>(context, listen: false).locale == '') {
       SharedPreferences locale = await SharedPreferences.getInstance();
@@ -36,8 +38,14 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
         !Provider.of<LocaleProvider>(context, listen: false)
             .user
             .containsKey('username')) {
+      setState(() {
+        loading = true;
+      });
       // ignore: use_build_context_synchronously
       await Auth().getUser(token, context);
+      setState(() {
+        loading = false;
+      });
     }
   }
 
@@ -56,7 +64,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: AppBar(
-            iconTheme:  IconThemeData(color: Colors.grey.shade400),
+            iconTheme: IconThemeData(color: Colors.grey.shade400),
             automaticallyImplyLeading: false,
             title: Image.asset(
               'assets/images/logo.png',
@@ -71,15 +79,21 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
         body: SingleChildScrollView(
             child: Container(
           color: widget.background,
-          child: Column(
-            children: [
-              ConstrainedBox(
-                  constraints: BoxConstraints(
-                      minHeight: MediaQuery.of(context).size.height - 200),
-                  child: widget.body),
-              const Footer()
-            ],
-          ),
+          child: loading
+              ? Container(
+                  height: MediaQuery.of(context).size.height - 56,
+                  color: Theme.of(context).splashColor,
+                  child: const PrimaryLoading())
+              : Column(
+                  children: [
+                    ConstrainedBox(
+                        constraints: BoxConstraints(
+                            minHeight:
+                                MediaQuery.of(context).size.height - 200),
+                        child: widget.body),
+                    const Footer()
+                  ],
+                ),
         )),
       ),
     );

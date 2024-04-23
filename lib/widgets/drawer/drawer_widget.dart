@@ -17,6 +17,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
   bool isUserExists = false;
 
   void logoutMethod() async {
+    String currentPath = ModalRoute.of(context)?.settings.name ?? '/';
+    if (currentPath == '/profile') {
+      Navigator.pushReplacementNamed(context, '/');
+    }
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     localStorage.setString('token', '');
     // ignore: use_build_context_synchronously
@@ -61,7 +65,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             action: () {
               Navigator.pushNamed(context, '/');
             },
-            selected: currentPath=='/',
+            selected: currentPath == '/',
           ),
           // DrawerItem(
           //   text: AppLocalizations.of(context)!.about,
@@ -74,7 +78,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             action: () {
               Navigator.pushNamed(context, '/rankings');
             },
-            selected: currentPath=='/rankings',
+            selected: currentPath == '/rankings',
           ),
           // DrawerItem(
           //   text: AppLocalizations.of(context)!.challenges,
@@ -93,21 +97,23 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   action: () {
                     Navigator.pushNamed(context, '/profile');
                   },
-                  selected: currentPath=='/profile',
+                  selected: currentPath == '/profile',
                 )
               : Container(),
           isUserExists
-              ? DrawerItem(
-                  text: AppLocalizations.of(context)!.logout,
-                  icon: Icons.logout,
-                  action: logoutMethod)
+              ? currentPath != '/profile'
+                  ? DrawerItem(
+                      text: AppLocalizations.of(context)!.logout,
+                      icon: Icons.logout,
+                      action: logoutMethod)
+                  : Container()
               : DrawerItem(
                   text: AppLocalizations.of(context)!.login,
                   icon: Icons.login,
                   action: () {
                     Navigator.pushNamed(context, '/login');
                   },
-                  selected: currentPath=='/login',
+                  selected: currentPath == '/login',
                 ),
           DrawerItem(
             text: AppLocalizations.of(context)!.createAccount,
@@ -115,7 +121,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             action: () {
               Navigator.pushNamed(context, '/signup');
             },
-            selected: currentPath=='/signup',
+            selected: currentPath == '/signup',
           ),
           DrawerItem(
             text: 'English',

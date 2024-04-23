@@ -5,11 +5,13 @@ class RegularButton extends StatelessWidget {
   final String buttonText;
   final Function action;
   final bool uppercase;
+  final double fontSize;
   const RegularButton(
       {super.key,
       required this.buttonText,
       required this.action,
-      this.uppercase = false});
+      this.uppercase = false,
+      this.fontSize = 18});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class RegularButton extends StatelessWidget {
           title: uppercase ? buttonText.toUpperCase() : buttonText,
           textAlign: TextAlign.center,
           fontWeight: FontWeight.bold,
-          fontSize: 18,
+          fontSize: fontSize,
           letterSpacing: 2.0,
         ),
       ),

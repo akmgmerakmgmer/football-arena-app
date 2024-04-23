@@ -21,13 +21,16 @@ class SingleUser extends StatelessWidget {
       required this.coins,
       required this.name,
       required this.rank,
-      required this.isSameUser, required this.fontSize});
+      required this.isSameUser,
+      required this.fontSize});
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Container(
+        constraints:
+            BoxConstraints(minWidth: MediaQuery.of(context).size.width),
         padding: const EdgeInsets.all(16.0),
         margin: const EdgeInsets.only(bottom: 15),
         decoration: BoxDecoration(

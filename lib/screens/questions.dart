@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_challenge_mobile/providers/locale_provider.dart';
 import 'package:flutter_challenge_mobile/utilities/api_methods.dart';
 import 'package:flutter_challenge_mobile/widgets/buttons/save_exit_button.dart';
+import 'package:flutter_challenge_mobile/widgets/containers/fade_transition.dart';
 import 'package:flutter_challenge_mobile/widgets/containers/glass_background_container.dart';
 import 'package:flutter_challenge_mobile/widgets/containers/image_background_plain.dart';
 import 'package:flutter_challenge_mobile/widgets/containers/page_plain_container.dart';
@@ -15,6 +17,7 @@ import 'package:flutter_challenge_mobile/widgets/screens/questions/true_or_false
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:just_audio/just_audio.dart';
+
 class Questions extends StatefulWidget {
   const Questions({super.key});
 
@@ -51,8 +54,10 @@ class _QuestionsState extends State<Questions> {
   bool allowVarActivation = true;
   bool stopCountActivated = false;
   final audioPlayer = AudioPlayer();
-  String correctAudio = 'https://res.cloudinary.com/do0qe5hin/video/upload/v1713830132/vdnaipfdraveg92re1bi.mp4';
-  String buzzerAudio = 'https://res.cloudinary.com/do0qe5hin/video/upload/v1713830128/pxay0ehplbk4p1vmcdzf.mp4';
+  String correctAudio =
+      'https://res.cloudinary.com/do0qe5hin/video/upload/v1713830132/vdnaipfdraveg92re1bi.mp4';
+  String buzzerAudio =
+      'https://res.cloudinary.com/do0qe5hin/video/upload/v1713830128/pxay0ehplbk4p1vmcdzf.mp4';
   // Methods
   Future<void> getQuestions() async {
     if (questions.isEmpty) {
@@ -96,7 +101,6 @@ class _QuestionsState extends State<Questions> {
           });
         } else {
           answeredConsecutively = 0;
-          // generalMethods.soundPlayMethod(buzzerAudio)
           setState(() {
             currentQuestion = currentQuestion + 1;
           });
@@ -239,54 +243,56 @@ class _QuestionsState extends State<Questions> {
     });
   }
 
-  void soundPlayMethod(audio){
+  void soundPlayMethod(audio) {
     audioPlayer.setUrl(audio);
     audioPlayer.play();
   }
+
   void rightAnswer() {
-    // generalMethods.soundPlayMethod(correctAudio)
     soundPlayMethod(correctAudio);
     rightAnswerPoints();
     getToNextQuestion();
     answeredConsecutively += 1;
   }
 
-  void wrongAnswer() {
-    soundPlayMethod(buzzerAudio);
-    if (lives > 1) {
-      getToNextQuestion();
-    } else {
+  void wrongAnswer(index) {
+    if (!questions[currentQuestion]['choices'][index]
+        .containsKey('wrongAnswer')) {
+      soundPlayMethod(buzzerAudio);
+      if (lives > 1) {
+        getToNextQuestion();
+      } else {
+        setState(() {
+          pageLoading = true;
+        });
+        saveGame(false);
+      }
+      answeredConsecutively = 0;
+      if (points != 0) {
+        setState(() {
+          points = points - 1;
+        });
+      }
+      if (lives != 0 && !activateVar) {
+        setState(() {
+          lives = lives - 1;
+        });
+      }
       setState(() {
-        pageLoading = true;
+        questions = questions;
       });
-      saveGame(false);
-    }
-    // wrongAnswerSoundMethod()
-    answeredConsecutively = 0;
-    if (points != 0) {
-      setState(() {
-        points = points - 1;
-      });
-    }
-    if (lives != 0 && !activateVar) {
-      setState(() {
-        lives = lives - 1;
-      });
-    }
-    setState(() {
-      questions = questions;
-    });
-    if (activateVar) {
-      activateVar = false;
+      if (activateVar) {
+        activateVar = false;
+      }
     }
   }
 
-  void choiceAction(answer) {
+  void choiceAction(answer, index) {
     getNextPatchOfQuestions();
     if (answer == questions[currentQuestion]['answer']) {
       rightAnswer();
     } else {
-      wrongAnswer();
+      wrongAnswer(index);
     }
     if ((points / numberOfPointsToCoin).floor() != coins) {
       setState(() {
@@ -323,7 +329,7 @@ class _QuestionsState extends State<Questions> {
       saveLoading = true;
     });
     PostApi('user-save-game/$userId', payload, (res) {
-      Provider.of<LocaleProvider>(context, listen: false).setUser(res);
+      Provider.of<LocaleProvider>(context, listen: false).setUser(res['user']);
       if (navigate) {
         Navigator.pushNamed(context, '/');
       } else {
@@ -345,7 +351,37 @@ class _QuestionsState extends State<Questions> {
     return false;
   }
 
-  void penaltyMethod() {}
+  void penaltyMethod() {
+    if (!penaltyActivated &&
+        !showPlayerSearch() &&
+        questions[currentQuestion]['questionMode'] != 'trueOrFalse') {
+      int numberOfChoicesRemoved = 0;
+
+      while (numberOfChoicesRemoved != 2) {
+        List indeces = [];
+        int randomIndex = (Random().nextDouble() *
+                questions[currentQuestion]['choices'].length)
+            .floor();
+        if (questions[currentQuestion]['choices'][randomIndex]['value'] !=
+                questions[currentQuestion]['answer'] &&
+            !indeces.contains(
+                questions[currentQuestion]['choices'][randomIndex]['value']) &&
+            !questions[currentQuestion]['choices'][randomIndex]
+                .containsKey('wrongAnswer')) {
+          questions[currentQuestion]['choices'][randomIndex]['wrongAnswer'] =
+              true;
+          indeces
+              .add(questions[currentQuestion]['choices'][randomIndex]['value']);
+          numberOfChoicesRemoved += 1;
+        }
+      }
+      setState(() {
+        questions = questions;
+      });
+      penaltyActivated = true;
+    }
+  }
+
   void varMethod() {
     if (allowVarActivation) {
       activateVar = true;
@@ -427,41 +463,43 @@ class _QuestionsState extends State<Questions> {
                       varMethod: varMethod,
                       stoppageTime: stoppageTimeMethod,
                     ),
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextWidget(
-                            title: countDown.toString(),
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          GlassBackgroundContainer(
-                            body: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                TextWidget(
-                                  title: locale == 'ar'
-                                      ? '${questions[currentQuestion]['question']['ar']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})'
-                                      : '${questions[currentQuestion]['question']['en']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})',
-                                  fontSize: 18,
-                                ),
-                              ],
+                    FadeTransitionContainer(
+                      body: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextWidget(
+                              title: countDown.toString(),
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
                             ),
-                          ),
-                          MultipleChoices(
-                            locale: locale,
-                            choices: questions[currentQuestion]['choices'],
-                            isMultipleChoices: isMultipleChoices(),
-                            action: choiceAction,
-                          ),
-                          TrueOrFalse(
-                            locale: locale,
-                            choices: questions[currentQuestion]['choices'],
-                            isTrueOrFalse: isTrueOrFalse(),
-                            action: choiceAction,
-                          )
-                        ],
+                            GlassBackgroundContainer(
+                              body: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  TextWidget(
+                                    title: locale == 'ar'
+                                        ? '${questions[currentQuestion]['question']['ar']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})'
+                                        : '${questions[currentQuestion]['question']['en']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})',
+                                    fontSize: 18,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            MultipleChoices(
+                              locale: locale,
+                              choices: questions[currentQuestion]['choices'],
+                              isMultipleChoices: isMultipleChoices(),
+                              action: choiceAction,
+                            ),
+                            TrueOrFalse(
+                              locale: locale,
+                              choices: questions[currentQuestion]['choices'],
+                              isTrueOrFalse: isTrueOrFalse(),
+                              action: choiceAction,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ],

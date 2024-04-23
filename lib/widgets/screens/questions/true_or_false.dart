@@ -25,11 +25,15 @@ class TrueOrFalse extends StatelessWidget {
               mainAxisSpacing: 15,
               crossAxisSpacing: 15,
               children: choices
+                  .asMap()
+                  .entries
                   .map<Widget>(
                     (choice) => MainButton(
-                      buttonText: locale == 'ar' ? choice['ar'] : choice['en'],
+                      buttonText: locale == 'ar'
+                          ? choice.value['ar']
+                          : choice.value['en'],
                       action: () {
-                        action(choice['value']);
+                        action(choice.value['value'], choice.key);
                       },
                       uppercase: true,
                       fontSize: 15,
