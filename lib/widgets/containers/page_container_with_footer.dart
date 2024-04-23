@@ -56,6 +56,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: AppBar(
+            iconTheme:  IconThemeData(color: Colors.grey.shade400),
             automaticallyImplyLeading: false,
             title: Image.asset(
               'assets/images/logo.png',

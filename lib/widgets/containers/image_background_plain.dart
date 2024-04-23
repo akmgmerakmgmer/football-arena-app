@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 class ImageBackgroundPlain extends StatelessWidget {
   final Widget body;
-  final double height;
   const ImageBackgroundPlain(
-      {super.key, required this.body, this.height = 280});
+      {super.key, required this.body});
 
   @override
   Widget build(BuildContext context) {

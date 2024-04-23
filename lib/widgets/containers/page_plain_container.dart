@@ -8,11 +8,10 @@ class PagePlainContainer extends StatefulWidget {
   final Widget body;
   final Color background;
   const PagePlainContainer(
-      {super.key, required this.body, this.background = Colors.transparent });
+      {super.key, required this.body, this.background = Colors.transparent});
 
   @override
-  State<PagePlainContainer> createState() =>
-      _PagePlainContainerState();
+  State<PagePlainContainer> createState() => _PagePlainContainerState();
 }
 
 class _PagePlainContainerState extends State<PagePlainContainer> {
@@ -52,11 +51,10 @@ class _PagePlainContainerState extends State<PagePlainContainer> {
       child: Scaffold(
         body: SingleChildScrollView(
             child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-          color: widget.background,
-          child: widget.body
-        )),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                color: widget.background,
+                child: widget.body)),
       ),
     );
   }

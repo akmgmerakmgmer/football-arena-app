@@ -96,6 +96,7 @@ class AccountProfile extends StatelessWidget {
                       callback: (value) {},
                       label: AppLocalizations.of(context)!.password,
                       value: "MynameIsAhmedPassword",
+                      isPassword: true,
                       disabled: true,
                     ),
                     const SizedBox(

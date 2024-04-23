@@ -14,8 +14,7 @@ import 'package:flutter_challenge_mobile/widgets/screens/questions/stats.dart';
 import 'package:flutter_challenge_mobile/widgets/screens/questions/true_or_false.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:audioplayers/audioplayers.dart';
-
+import 'package:just_audio/just_audio.dart';
 class Questions extends StatefulWidget {
   const Questions({super.key});
 
@@ -51,9 +50,9 @@ class _QuestionsState extends State<Questions> {
   bool penaltyActivated = false;
   bool allowVarActivation = true;
   bool stopCountActivated = false;
-  AudioPlayer audioPlayer = AudioPlayer();
-  String correctAudio = 'assets/audio/correct.wav';
-  String buzzerAudio = 'assets/audio/buzzer.mp3';
+  final audioPlayer = AudioPlayer();
+  String correctAudio = 'https://res.cloudinary.com/do0qe5hin/video/upload/v1713830132/vdnaipfdraveg92re1bi.mp4';
+  String buzzerAudio = 'https://res.cloudinary.com/do0qe5hin/video/upload/v1713830128/pxay0ehplbk4p1vmcdzf.mp4';
   // Methods
   Future<void> getQuestions() async {
     if (questions.isEmpty) {
@@ -102,6 +101,7 @@ class _QuestionsState extends State<Questions> {
             currentQuestion = currentQuestion + 1;
           });
           if (lives > 0) {
+            soundPlayMethod(buzzerAudio);
             setState(() {
               lives = lives - 1;
             });
@@ -240,8 +240,8 @@ class _QuestionsState extends State<Questions> {
   }
 
   void soundPlayMethod(audio){
-    audioPlayer.stop();
-    audioPlayer.play(audio);
+    audioPlayer.setUrl(audio);
+    audioPlayer.play();
   }
   void rightAnswer() {
     // generalMethods.soundPlayMethod(correctAudio)

@@ -198,42 +198,46 @@ class _RankingsState extends State<Rankings> {
                     margin: const EdgeInsets.only(top: 20),
                     child: const PrimaryLoading())
                 : rankedUsers.isNotEmpty
-                    ? Column(
-                        children: [
-                          Column(
-                            children: rankedUsers
-                                .asMap()
-                                .entries
-                                .map((item) => SingleUser(
-                                    image: item.value['selectedAvatar']
-                                        ['image'],
-                                    gamesPlayed: item.value['games_played'],
-                                    points: item.value['points'],
-                                    coins: item.value['coins'],
-                                    name: item.value['_id'] == userId
-                                        ? '${item.value['username']} (${AppLocalizations.of(context)!.you})'
-                                        : item.value['username'],
-                                    isSameUser: item.value['_id'] == userId,
-                                    rank: '${item.key + 1}',
-                                    fontSize: locale == 'ar' ? 17 : 19))
-                                .toList(),
-                          ),
-                          rankedUsers.isNotEmpty && rank > 10 && userId != ''
-                              ? SingleUser(
-                                  image: user['selectedAvatar']['image'],
-                                  gamesPlayed: user['games_played'],
-                                  points: user['points'],
-                                  coins: user['coins'],
-                                  name: user['_id'] == userId
-                                      ? '${user['username']} (${AppLocalizations.of(context)!.you})'
-                                      : user['username'],
-                                  isSameUser: user['_id'] == userId,
-                                  rank: '$rank',
-                                  fontSize: locale == 'ar' ? 17 : 19,
-                                )
-                              : Container()
-                        ],
-                      )
+                    ? Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width),
+                      child: Column(
+                          children: [
+                            Column(
+                              children: rankedUsers
+                                  .asMap()
+                                  .entries
+                                  .map((item) => SingleUser(
+                                      image: item.value['selectedAvatar']
+                                          ['image'],
+                                      gamesPlayed: item.value['games_played'],
+                                      points: item.value['points'],
+                                      coins: item.value['coins'],
+                                      name: item.value['_id'] == userId
+                                          ? '${item.value['username']} (${AppLocalizations.of(context)!.you})'
+                                          : item.value['username'],
+                                      isSameUser: item.value['_id'] == userId,
+                                      rank: '${item.key + 1}',
+                                      fontSize: locale == 'ar' ? 17 : 19))
+                                  .toList(),
+                            ),
+                            rankedUsers.isNotEmpty && rank > 10 && userId != ''
+                                ? SingleUser(
+                                    image: user['selectedAvatar']['image'],
+                                    gamesPlayed: user['games_played'],
+                                    points: user['points'],
+                                    coins: user['coins'],
+                                    name: user['_id'] == userId
+                                        ? '${user['username']} (${AppLocalizations.of(context)!.you})'
+                                        : user['username'],
+                                    isSameUser: user['_id'] == userId,
+                                    rank: '$rank',
+                                    fontSize: locale == 'ar' ? 17 : 19,
+                                  )
+                                : Container()
+                          ],
+                        ),
+                    )
                     : Container(
                         margin: const EdgeInsets.only(top: 20),
                         child: TextWidget(
