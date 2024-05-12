@@ -43,6 +43,7 @@
     "challenges": "Upcoming Challenges",
     "challengesDesc": "Football fanatics, get ready! Exciting challenges are coming your way, spanning the Premier League, La Liga, Serie A, Bundesliga, and Ligue 1. Brace for intense moments and unexpected twists. Sharpen your knowledge, stay tuned, and don't miss the countdown to football greatness! ⚽🔥",
     "notifyMe": "Notify Me",
+    "willBeNotified": "Will be notified",
     "comingSoon": "Challenge Coming Soon",
     "saveAndClose": "Save and Close",
     "exitGame": "Exit Game",
@@ -78,5 +79,10 @@
     "youHave": "You Have",
     "select": "Select",
     "selected": "Selected",
-    "number": "Phone number"
+    "number": "Phone number",
+    "helpingPerks": "Helping Perks",
+    "unlimitedText": "Unlimited",
+    "skipAdIn": "Skip Ad in",
+    "skipAd": "Skip Ad",
+    "seconds": "Seconds"
 }

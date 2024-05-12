@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_challenge_mobile/widgets/containers/glass_background_container.dart';
 import 'package:flutter_challenge_mobile/widgets/general_widgets/text_widget.dart';
+import 'package:flutter_challenge_mobile/widgets/screens/questions/single_perk.dart';
 
 class Stats extends StatelessWidget {
   final Map user;
@@ -16,7 +17,11 @@ class Stats extends StatelessWidget {
       required this.user,
       required this.points,
       required this.coins,
-      required this.lives, required this.stopTime, required this.penalty, required this.varMethod, required this.stoppageTime});
+      required this.lives,
+      required this.stopTime,
+      required this.penalty,
+      required this.varMethod,
+      required this.stoppageTime});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +33,8 @@ class Stats extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 32),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 32),
                 decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -91,26 +97,31 @@ class Stats extends StatelessWidget {
                 ),
               ),
               GlassBackgroundContainer(
-                radius: true,
-                margin: 0,
-                padding: 3,
-                body: Row(children: [
-                GestureDetector(
-                  onTap: ()=>stoppageTime(),
-                  child: Image.asset('assets/images/image90.png',fit: BoxFit.cover,width: 35,)),
-                  const SizedBox(width: 5,),
-                  GestureDetector(
-                  onTap: ()=>penalty(),
-                  child: Image.asset('assets/images/halfTime.png',fit: BoxFit.cover,width: 35,)),
-                  const SizedBox(width: 5,),
-                  GestureDetector(
-                  onTap: ()=>varMethod(),
-                  child: Image.asset('assets/images/VAR.png',fit: BoxFit.cover,width: 35,)),
-                  const SizedBox(width: 5,),
-                  GestureDetector(
-                  onTap: ()=>stopTime(),
-                  child: Image.asset('assets/images/stopTime.png',fit: BoxFit.cover,width: 35,)),
-              ],))
+                  radius: true,
+                  margin: 0,
+                  padding: 3,
+                  body: Row(
+                    children: [
+                      SinglePerk(
+                          action: stoppageTime,
+                          image: 'assets/images/image90.png'),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      SinglePerk(
+                          action: penalty, image: 'assets/images/halfTime.png'),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      SinglePerk(
+                          action: varMethod, image: 'assets/images/VAR.png'),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      SinglePerk(
+                          action: stopTime, image: 'assets/images/stopTime.png')
+                    ],
+                  )),
             ],
           ),
         ),

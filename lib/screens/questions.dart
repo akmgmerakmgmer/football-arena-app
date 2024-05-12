@@ -10,8 +10,10 @@ import 'package:flutter_challenge_mobile/widgets/containers/image_background_pla
 import 'package:flutter_challenge_mobile/widgets/containers/page_plain_container.dart';
 import 'package:flutter_challenge_mobile/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_challenge_mobile/widgets/loadings/primary_loading.dart';
+import 'package:flutter_challenge_mobile/widgets/screens/questions/advertisment.dart';
 import 'package:flutter_challenge_mobile/widgets/screens/questions/game_over.dart';
 import 'package:flutter_challenge_mobile/widgets/screens/questions/multiple_choices.dart';
+import 'package:flutter_challenge_mobile/widgets/screens/questions/perks_illustrations.dart';
 import 'package:flutter_challenge_mobile/widgets/screens/questions/stats.dart';
 import 'package:flutter_challenge_mobile/widgets/screens/questions/true_or_false.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +34,7 @@ class _QuestionsState extends State<Questions> {
   bool pageLoading = false;
   int currentQuestion = 0;
   int points = 0;
-  int lives = 10;
+  int lives = 100;
   int coins = 0;
   int answeredConsecutively = 0;
   List chosenPlayers = [];
@@ -47,12 +49,18 @@ class _QuestionsState extends State<Questions> {
   bool activateVar = false;
   int numberOfPointsToCoin = 5;
   bool countStarted = false;
-  bool stopCount = false;
+  bool stopCount = true;
   bool show = true;
   bool saveLoading = false;
   bool penaltyActivated = false;
   bool allowVarActivation = true;
   bool stopCountActivated = false;
+  bool showTut = true;
+  List advertisments = [];
+  bool showAd = false;
+  int currentAd = 0;
+  int currentAdCountDown = 6;
+  bool stopAdCount = true;
   final audioPlayer = AudioPlayer();
   String correctAudio =
       'https://res.cloudinary.com/do0qe5hin/video/upload/v1713830132/vdnaipfdraveg92re1bi.mp4';
@@ -78,6 +86,7 @@ class _QuestionsState extends State<Questions> {
           countDown = setCount();
         });
         decreaseCount();
+        decreaseAdCount();
         countStarted = true;
       }
       if (currentQuestion == 0 && hints.isEmpty && showHints()) {
@@ -87,7 +96,7 @@ class _QuestionsState extends State<Questions> {
       }
     }, errorCallback: () {
       setState(() {
-        Navigator.pushNamed(context, '/');
+        Navigator.pushReplacementNamed(context, '/');
       });
     }).fetch(context);
   }
@@ -122,6 +131,18 @@ class _QuestionsState extends State<Questions> {
           }
           setState(() {
             countDown = defaultCountDown;
+          });
+        }
+      }
+    });
+  }
+
+  void decreaseAdCount() {
+    Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      if (!stopAdCount && lives != 0) {
+        if (currentAdCountDown > 0) {
+          setState(() {
+            currentAdCountDown -= 1;
           });
         }
       }
@@ -184,6 +205,12 @@ class _QuestionsState extends State<Questions> {
   }
 
   void getToNextQuestion() {
+    if (currentQuestion % 10 == 0 &&
+        currentQuestion != 0 &&
+        lives != 1 &&
+        lives != 0) {
+      currentAdMethod();
+    }
     if (getQuestionMode() == 'guessTheTeam') {
       setState(() {
         chosenPlayers = [];
@@ -331,7 +358,7 @@ class _QuestionsState extends State<Questions> {
     PostApi('user-save-game/$userId', payload, (res) {
       Provider.of<LocaleProvider>(context, listen: false).setUser(res['user']);
       if (navigate) {
-        Navigator.pushNamed(context, '/');
+        Navigator.pushReplacementNamed(context, '/');
       } else {
         setState(() {
           saveLoading = false;
@@ -415,16 +442,70 @@ class _QuestionsState extends State<Questions> {
       lives = 10;
       coins = 0;
       points = 0;
+      currentAd = 0;
     });
   }
 
   void exitGame() {
-    Navigator.pushNamed(context, '/');
+    Navigator.pushReplacementNamed(context, '/rankings');
+  }
+
+  void finishTutorialAction() {
+    setState(() {
+      stopCount = false;
+      showTut = false;
+    });
+  }
+
+  getAdvertisments() {
+    FetchApi('advertisments?page=1&company=&advertiseAt=gamePage', (res) {
+      setState(() {
+        advertisments = res['advertisments'];
+      });
+    }).fetch(context);
+  }
+
+  currentAdMethod() {
+    setState(() {
+      currentAdCountDown = 6;
+      showAd = true;
+      stopCount = true;
+      stopAdCount = false;
+    });
+
+    if (currentAd == advertisments.length - 1) {
+      setState(() {
+        currentAd = 0;
+      });
+    } else {
+      setState(() {
+        currentAd = ((currentQuestion / 10) - 1).toInt();
+      });
+    }
+  }
+
+  void adClicked(id) {
+    PutApi('ad-clicked/$id', {}, (res) {}).put(context);
+  }
+
+  void initialFetch() async {
+    await getAdvertisments();
+    getQuestions();
+  }
+
+  skipAdMethod() {
+    if (currentAdCountDown == 0) {
+      setState(() {
+        stopAdCount = true;
+        showAd = false;
+        stopCount = false;
+      });
+    }
   }
 
   @override
   void initState() {
-    getQuestions();
+    initialFetch();
     super.initState();
   }
 
@@ -432,78 +513,100 @@ class _QuestionsState extends State<Questions> {
   Widget build(BuildContext context) {
     String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
     return PagePlainContainer(
-        body: ImageBackgroundPlain(
-      body: pageLoading || questions[currentQuestion] == null
-          ? const PrimaryLoading()
-          : lives == 0
-              ? GameOver(playAgain: playAgain, exitGame: exitGame)
-              : Stack(
-                  children: [
-                    Positioned(
-                      bottom: 10,
-                      right: 10,
-                      child: SaveExitButton(
-                        buttonText: AppLocalizations.of(context)!.saveAndClose,
-                        radius: 100,
-                        action: () => saveGame(true),
-                        letterSpacing: 0,
-                        fontSize: 15,
-                        icon: Icons.save_alt,
-                        loading: saveLoading,
-                      ),
-                    ),
-                    Stats(
-                      user: Provider.of<LocaleProvider>(context, listen: false)
-                          .user,
-                      points: points,
-                      coins: coins,
-                      lives: lives,
-                      stopTime: stopTimeMethod,
-                      penalty: penaltyMethod,
-                      varMethod: varMethod,
-                      stoppageTime: stoppageTimeMethod,
-                    ),
-                    FadeTransitionContainer(
-                      body: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            TextWidget(
-                              title: countDown.toString(),
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            GlassBackgroundContainer(
-                              body: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  TextWidget(
-                                    title: locale == 'ar'
-                                        ? '${questions[currentQuestion]['question']['ar']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})'
-                                        : '${questions[currentQuestion]['question']['en']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})',
-                                    fontSize: 18,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            MultipleChoices(
-                              locale: locale,
-                              choices: questions[currentQuestion]['choices'],
-                              isMultipleChoices: isMultipleChoices(),
-                              action: choiceAction,
-                            ),
-                            TrueOrFalse(
-                              locale: locale,
-                              choices: questions[currentQuestion]['choices'],
-                              isTrueOrFalse: isTrueOrFalse(),
-                              action: choiceAction,
-                            )
-                          ],
+        body: Focus(
+      onFocusChange: (hasFocus) {
+        if (!hasFocus) {
+          Navigator.pushReplacementNamed(context, '/');
+        }
+      },
+      child: ImageBackgroundPlain(
+        body: pageLoading || questions[currentQuestion] == null
+            ? const PrimaryLoading()
+            : lives == 0
+                ? GameOver(playAgain: playAgain, exitGame: exitGame)
+                : Stack(
+                    children: [
+                      Positioned(
+                        bottom: 10,
+                        right: 10,
+                        child: SaveExitButton(
+                          buttonText:
+                              AppLocalizations.of(context)!.saveAndClose,
+                          radius: 100,
+                          action: () => saveGame(true),
+                          letterSpacing: 0,
+                          fontSize: 15,
+                          icon: Icons.save_alt,
+                          loading: saveLoading,
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                      Stats(
+                        user:
+                            Provider.of<LocaleProvider>(context, listen: false)
+                                .user,
+                        points: points,
+                        coins: coins,
+                        lives: lives,
+                        stopTime: stopTimeMethod,
+                        penalty: penaltyMethod,
+                        varMethod: varMethod,
+                        stoppageTime: stoppageTimeMethod,
+                      ),
+                      FadeTransitionContainer(
+                        body: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextWidget(
+                                title: countDown.toString(),
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              GlassBackgroundContainer(
+                                body: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    TextWidget(
+                                      title: locale == 'ar'
+                                          ? '${questions[currentQuestion]['question']['ar']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})'
+                                          : '${questions[currentQuestion]['question']['en']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})',
+                                      fontSize: 18,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              MultipleChoices(
+                                locale: locale,
+                                choices: questions[currentQuestion]['choices'],
+                                isMultipleChoices: isMultipleChoices(),
+                                action: choiceAction,
+                              ),
+                              TrueOrFalse(
+                                locale: locale,
+                                choices: questions[currentQuestion]['choices'],
+                                isTrueOrFalse: isTrueOrFalse(),
+                                action: choiceAction,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      showTut
+                          ? PerksIllustrations(
+                              action: finishTutorialAction,
+                            )
+                          : Container(),
+                      showAd
+                          ? Advertisment(
+                              adClicked: () =>
+                                  adClicked(advertisments[currentAd]['_id']),
+                              seconds: currentAdCountDown,
+                              skipAdMethod: skipAdMethod,
+                              image: advertisments[currentAd]['image'])
+                          : Container()
+                    ],
+                  ),
+      ),
     ));
   }
 }

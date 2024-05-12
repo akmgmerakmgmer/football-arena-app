@@ -47,6 +47,7 @@ class UpcomingChallenges extends StatelessWidget {
           GridContainer(
               widget: challenges
                   .map((challenge) => SingleChallenge(
+                        challengeValue: challenge['challengeEn'],
                         image: challenge['background'],
                         title:
                             Provider.of<LocaleProvider>(context, listen: false)

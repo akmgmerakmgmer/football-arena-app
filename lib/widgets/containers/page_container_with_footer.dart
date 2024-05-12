@@ -73,7 +73,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
               height: 45,
             ),
             elevation: 0, // Remove AppBar shadow
-            backgroundColor: const Color(0xFF191919), // Make AppBar transparent
+            backgroundColor: const Color(0xFF191919),
           ),
         ),
         body: SingleChildScrollView(
