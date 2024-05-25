@@ -26,7 +26,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
       dynamic currentLocale = locale.getString('locale');
       // ignore: use_build_context_synchronously
       Provider.of<LocaleProvider>(context, listen: false)
-          .changeLocale(currentLocale == 'ar' ? 'ar' : 'en');
+          .changeLocale(currentLocale == 'en' ? 'en' : 'ar');
     }
   }
 
@@ -66,11 +66,13 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
           child: AppBar(
             iconTheme: IconThemeData(color: Colors.grey.shade400),
             automaticallyImplyLeading: false,
-            title: Image.asset(
-              'assets/images/logo.png',
-              fit: BoxFit.cover,
-              width: 45,
-              height: 45,
+            title: GestureDetector(
+              onTap: () => {Navigator.pushNamed(context, '/')},
+              child: Image.asset(
+                'assets/images/logo.png',
+                fit: BoxFit.cover,
+                width: 55,
+              ),
             ),
             elevation: 0, // Remove AppBar shadow
             backgroundColor: const Color(0xFF191919),

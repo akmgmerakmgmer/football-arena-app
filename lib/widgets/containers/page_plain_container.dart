@@ -47,15 +47,12 @@ class _PagePlainContainerState extends State<PagePlainContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return  Scaffold(
         body: SingleChildScrollView(
             child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
                 color: widget.background,
                 child: widget.body)),
-      ),
+      
     );
   }
 }

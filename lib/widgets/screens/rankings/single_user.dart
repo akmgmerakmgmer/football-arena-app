@@ -13,6 +13,8 @@ class SingleUser extends StatelessWidget {
   final String rank;
   final bool isSameUser;
   final double fontSize;
+  final String currentFilter;
+  final String locale;
   const SingleUser(
       {super.key,
       required this.image,
@@ -22,7 +24,24 @@ class SingleUser extends StatelessWidget {
       required this.name,
       required this.rank,
       required this.isSameUser,
-      required this.fontSize});
+      required this.fontSize,
+      required this.currentFilter,
+      required this.locale});
+
+  String prizeText() {
+    if (currentFilter == 'weekly') {
+      if (rank == '1') {
+        return locale == 'ar' ? '(جائزة 2000 جنيه مصري)' : '(2000 EGP Prize)';
+      } else if (rank == '2') {
+        return locale == 'ar' ? '(جائزة 1500 جنيه مصري)' : '(1500 EGP Prize)';
+      } else if (rank == '3') {
+        return locale == 'ar' ? '(جائزة 1000 جنيه مصري)' : '(1000 EGP Prize)';
+      } else {
+        return '';
+      }
+    }
+    return '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +83,28 @@ class SingleUser extends StatelessWidget {
                 const SizedBox(
                   width: 15,
                 ),
+                rank == '1'
+                    ? Image.asset(
+                        'assets/images/prize.png',
+                        width: 25,
+                      )
+                    : Container(),
+                const SizedBox(
+                  width: 5,
+                ),
                 TextWidget(
                   title: name,
                   fontWeight: FontWeight.bold,
                   fontSize: fontSize,
-                )
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                TextWidget(
+                  title: prizeText(),
+                  fontWeight: FontWeight.bold,
+                  fontSize: fontSize,
+                ),
               ],
             ),
             const SizedBox(

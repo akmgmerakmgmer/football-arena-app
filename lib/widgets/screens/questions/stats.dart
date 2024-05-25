@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_challenge_mobile/widgets/containers/glass_background_container.dart';
 import 'package:flutter_challenge_mobile/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_challenge_mobile/widgets/screens/questions/single_perk.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Stats extends StatelessWidget {
   final Map user;
@@ -69,7 +70,9 @@ class Stats extends StatelessWidget {
                           size: 28,
                         ),
                         TextWidget(
-                          title: lives.toString(),
+                          title: lives > 1000
+                              ? AppLocalizations.of(context)!.unlimitedText
+                              : lives.toString(),
                           fontSize: 13,
                           color: Colors.black,
                         )

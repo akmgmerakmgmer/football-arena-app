@@ -38,28 +38,28 @@ class Footer extends StatelessWidget {
             ],
           ),
           const SizedBox(
-            height: 16,
+            height: 8,
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextWidget(
-                title: AppLocalizations.of(context)!.terms,
-                fontSize: 18,
-              ),
-              const SizedBox(
-                width: 32,
-              ),
-              TextWidget(
-                title: AppLocalizations.of(context)!.privacy,
-                fontSize: 18,
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 16,
-          ),
+          // Row(
+          //   crossAxisAlignment: CrossAxisAlignment.center,
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     TextWidget(
+          //       title: AppLocalizations.of(context)!.terms,
+          //       fontSize: 18,
+          //     ),
+          //     const SizedBox(
+          //       width: 32,
+          //     ),
+          //     TextWidget(
+          //       title: AppLocalizations.of(context)!.privacy,
+          //       fontSize: 18,
+          //     ),
+          //   ],
+          // ),
+          // const SizedBox(
+          //   height: 16,
+          // ),
           TextWidget(
             title: AppLocalizations.of(context)!.copyrights,
             color: Colors.grey.shade500,

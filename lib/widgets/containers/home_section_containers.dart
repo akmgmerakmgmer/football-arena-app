@@ -13,8 +13,10 @@ class HomeSectionContainers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: backgroundColor,
       padding: EdgeInsets.all(padding),
+      decoration: BoxDecoration(
+          color: backgroundColor,
+          border: Border.all(color: backgroundColor, width: 4)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: children,

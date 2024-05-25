@@ -18,32 +18,32 @@ class Prizes extends StatelessWidget {
       'description':
           "Every week, seize the chance to win 2000 EGP – no strings attached. Use the extra cash for a spontaneous treat or boost your savings. Stay tuned for our weekly updates to see if luck favors you.",
       'descriptionAr':
-          " كل أسبوع ، اغتنم الفرصة للفوز ب 1000 جنيه مصري - بدون قيود. استخدم النقود الإضافية للحصول على علاج عفوي أو زيادة مدخراتك. ترقبوا تحديثاتنا الأسبوعية لمعرفة ما إذا كان الحظ في صالحك."
+          "كل أسبوع ، استغل الفرصة للفوز ب 2000 جنيه مصري حسب عدد نقاطك في اللعبة. ترقبوا تحديثاتنا الأسبوعية لمعرفة ما إذا كان الحظ في صالحك."
     },
-    {
-      'title': 'Monthly Prize',
-      'titleAr': "الجائزة الشهرية",
-      'description':
-          "Secure your shot at 5000 EGP every month – no strings attached. Whether you're eyeing a spontaneous treat or aiming to bolster your savings, it's up to you. Stay tuned for our monthly updates, and find out if fortune favors you. Don't miss the chance to claim the 5000 EGP prize – enter now and let the monthly excitement unfold!",
-      'descriptionAr':
-          "نافس على فرصتك ب 5000 جنيه مصري كل شهر - بدون قيود. سواء كنت تتطلع إلى علاج عفوي أو تهدف إلى تعزيز مدخراتك ، فالأمر متروك لك. ترقبوا تحديثاتنا الشهرية ، واكتشف ما إذا كانت الثروة تفضلك. لا تفوت فرصة الحصول على جائزة 5000 جنيه مصري - ادخل الآن ودع الإثارة الشهرية تتكشف!"
-    },
-    {
-      'title': 'Half-Year Jackpot',
-      'titleAr': "الجائزة الكبرى نصف السنوية",
-      'description':
-          "Lock in your chance at a 10,000 EGP Half-Year Jackpot – no strings attached. Whether you fancy a spontaneous treat or aim to beef up your savings, the choice is yours. Stay tuned for our biannual updates, and discover if luck is on your side. Don't miss out on the opportunity to snag the 10,000 EGP prize – enter now and get ready for the thrill of the Half-Year Jackpot!",
-      'descriptionAr':
-          "نافس على فرصتك في الفوز بالجائزة الكبرى نصف السنوية بقيمة 10,000 جنيه مصري - بدون قيود. سواء كنت ترغب في علاج عفوي أو تهدف إلى زيادة مدخراتك ، فالخيار لك. ترقبوا تحديثاتنا نصف السنوية ، واكتشف ما إذا كان الحظ في صفك. لا تفوت فرصة الحصول على جائزة 10,000 جنيه مصري - ادخل الآن واستعد لإثارة الجائزة الكبرى نصف السنوية!"
-    },
-    {
-      'title': 'Yearly Grand Prize',
-      'titleAr': "الجائزة السنوية الكبرى",
-      'description':
-          "Seize the opportunity for a 15,000 EGP Yearly Grand Prize – no strings attached. Whether you're up for a spontaneous treat or keen on boosting your savings, it's entirely your call. Stay tuned for our yearly updates, and find out if fortune favors you. Don't miss your shot at claiming the 15,000 EGP prize – enter now and gear up for the excitement of the Yearly Grand Prize!",
-      'descriptionAr':
-          "اغتنم الفرصة للحصول على جائزة كبرى سنوية بقيمة 15,000 جنيه مصري - بدون قيود. سواء كنت ترغب في الحصول على علاج عفوي أو حريص على زيادة مدخراتك ، فهذه هي دعوتك بالكامل. ترقبوا تحديثاتنا السنوية ، واكتشف ما إذا كان الحظ يفضلك أم لا. لا تفوت فرصتك في الحصول على جائزة 15,000 جنيه مصري - ادخل الآن واستعد لإثارة الجائزة السنوية الكبرى!"
-    },
+    // {
+    //   'title': 'Monthly Prize',
+    //   'titleAr': "الجائزة الشهرية",
+    //   'description':
+    //       "Secure your shot at 5000 EGP every month – no strings attached. Whether you're eyeing a spontaneous treat or aiming to bolster your savings, it's up to you. Stay tuned for our monthly updates, and find out if fortune favors you. Don't miss the chance to claim the 5000 EGP prize – enter now and let the monthly excitement unfold!",
+    //   'descriptionAr':
+    //       "نافس على فرصتك ب 5000 جنيه مصري كل شهر - بدون قيود. سواء كنت تتطلع إلى علاج عفوي أو تهدف إلى تعزيز مدخراتك ، فالأمر متروك لك. ترقبوا تحديثاتنا الشهرية ، واكتشف ما إذا كانت الثروة تفضلك. لا تفوت فرصة الحصول على جائزة 5000 جنيه مصري - ادخل الآن ودع الإثارة الشهرية تتكشف!"
+    // },
+    // {
+    //   'title': 'Half-Year Jackpot',
+    //   'titleAr': "الجائزة الكبرى نصف السنوية",
+    //   'description':
+    //       "Lock in your chance at a 10,000 EGP Half-Year Jackpot – no strings attached. Whether you fancy a spontaneous treat or aim to beef up your savings, the choice is yours. Stay tuned for our biannual updates, and discover if luck is on your side. Don't miss out on the opportunity to snag the 10,000 EGP prize – enter now and get ready for the thrill of the Half-Year Jackpot!",
+    //   'descriptionAr':
+    //       "نافس على فرصتك في الفوز بالجائزة الكبرى نصف السنوية بقيمة 10,000 جنيه مصري - بدون قيود. سواء كنت ترغب في علاج عفوي أو تهدف إلى زيادة مدخراتك ، فالخيار لك. ترقبوا تحديثاتنا نصف السنوية ، واكتشف ما إذا كان الحظ في صفك. لا تفوت فرصة الحصول على جائزة 10,000 جنيه مصري - ادخل الآن واستعد لإثارة الجائزة الكبرى نصف السنوية!"
+    // },
+    // {
+    //   'title': 'Yearly Grand Prize',
+    //   'titleAr': "الجائزة السنوية الكبرى",
+    //   'description':
+    //       "Seize the opportunity for a 15,000 EGP Yearly Grand Prize – no strings attached. Whether you're up for a spontaneous treat or keen on boosting your savings, it's entirely your call. Stay tuned for our yearly updates, and find out if fortune favors you. Don't miss your shot at claiming the 15,000 EGP prize – enter now and gear up for the excitement of the Yearly Grand Prize!",
+    //   'descriptionAr':
+    //       "اغتنم الفرصة للحصول على جائزة كبرى سنوية بقيمة 15,000 جنيه مصري - بدون قيود. سواء كنت ترغب في الحصول على علاج عفوي أو حريص على زيادة مدخراتك ، فهذه هي دعوتك بالكامل. ترقبوا تحديثاتنا السنوية ، واكتشف ما إذا كان الحظ يفضلك أم لا. لا تفوت فرصتك في الحصول على جائزة 15,000 جنيه مصري - ادخل الآن واستعد لإثارة الجائزة السنوية الكبرى!"
+    // },
     {
       'title': 'Special Prizes',
       'titleAr': "الجوائز الاستثنائية",

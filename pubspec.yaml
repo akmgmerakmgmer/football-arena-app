@@ -82,6 +82,8 @@ flutter:
     - assets/images/stopTime.png
     - assets/images/VAR.png
     - assets/images/image90.png
+    - assets/images/prize.png
+    - assets/images/gameOver.png
     - assets/audio/correct.wav
     - assets/audio/buzzer.mp3
 

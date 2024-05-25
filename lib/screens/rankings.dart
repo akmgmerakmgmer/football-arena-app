@@ -200,16 +200,19 @@ class _RankingsState extends State<Rankings> {
                     child: const PrimaryLoading())
                 : rankedUsers.isNotEmpty
                     ? FadeTransitionContainer(
-                      body: Container(
-                        margin: const EdgeInsets.only(top: 10),
-                        constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width),
-                        child: Column(
+                        body: Container(
+                          margin: const EdgeInsets.only(top: 10),
+                          constraints: BoxConstraints(
+                              minWidth: MediaQuery.of(context).size.width),
+                          child: Column(
                             children: [
                               Column(
                                 children: rankedUsers
                                     .asMap()
                                     .entries
                                     .map((item) => SingleUser(
+                                        locale: locale,
+                                        currentFilter: searchTime,
                                         image: item.value['selectedAvatar']
                                             ['image'],
                                         gamesPlayed: item.value['games_played'],
@@ -223,8 +226,12 @@ class _RankingsState extends State<Rankings> {
                                         fontSize: locale == 'ar' ? 17 : 19))
                                     .toList(),
                               ),
-                              rankedUsers.isNotEmpty && rank > 10 && userId != ''
+                              rankedUsers.isNotEmpty &&
+                                      rank > 10 &&
+                                      userId != ''
                                   ? SingleUser(
+                                      locale: locale,
+                                      currentFilter: searchTime,
                                       image: user['selectedAvatar']['image'],
                                       gamesPlayed: user['games_played'],
                                       points: user['points'],
@@ -239,8 +246,8 @@ class _RankingsState extends State<Rankings> {
                                   : Container()
                             ],
                           ),
-                      ),
-                    )
+                        ),
+                      )
                     : Container(
                         margin: const EdgeInsets.only(top: 20),
                         child: TextWidget(

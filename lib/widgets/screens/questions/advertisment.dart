@@ -8,7 +8,12 @@ class Advertisment extends StatelessWidget {
   final int seconds;
   final void Function() skipAdMethod;
   final void Function() adClicked;
-  const Advertisment({super.key, required this.image, required this.seconds, required this.skipAdMethod, required this.adClicked});
+  const Advertisment(
+      {super.key,
+      required this.image,
+      required this.seconds,
+      required this.skipAdMethod,
+      required this.adClicked});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +41,15 @@ class Advertisment extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                    color: Colors.grey.shade600,
+                    color: Colors.white.withOpacity(0.1),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.6),
+                        blurRadius: 20, // Equivalent to backdrop-blur-md
+                        spreadRadius: 2, // Optional
+                        offset: const Offset(0, 3), // Optional
+                      ),
+                    ],
                     borderRadius: const BorderRadius.all(Radius.circular(100))),
                 child: TextWidget(
                     title: seconds == 0

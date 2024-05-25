@@ -10,6 +10,7 @@ import 'package:flutter_challenge_mobile/widgets/containers/image_background_pla
 import 'package:flutter_challenge_mobile/widgets/containers/page_plain_container.dart';
 import 'package:flutter_challenge_mobile/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_challenge_mobile/widgets/loadings/primary_loading.dart';
+import 'package:flutter_challenge_mobile/widgets/screens/home/main_menu.dart';
 import 'package:flutter_challenge_mobile/widgets/screens/questions/advertisment.dart';
 import 'package:flutter_challenge_mobile/widgets/screens/questions/game_over.dart';
 import 'package:flutter_challenge_mobile/widgets/screens/questions/multiple_choices.dart';
@@ -27,14 +28,14 @@ class Questions extends StatefulWidget {
   State<Questions> createState() => _QuestionsState();
 }
 
-class _QuestionsState extends State<Questions> {
+class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   // States
   List questions = [];
   int currentPage = 1;
   bool pageLoading = false;
   int currentQuestion = 0;
   int points = 0;
-  int lives = 100;
+  int lives = 10;
   int coins = 0;
   int answeredConsecutively = 0;
   List chosenPlayers = [];
@@ -58,9 +59,10 @@ class _QuestionsState extends State<Questions> {
   bool showTut = true;
   List advertisments = [];
   bool showAd = false;
-  int currentAd = 0;
+  int currentAd = -1;
   int currentAdCountDown = 6;
   bool stopAdCount = true;
+  bool gameSaved = false;
   final audioPlayer = AudioPlayer();
   String correctAudio =
       'https://res.cloudinary.com/do0qe5hin/video/upload/v1713830132/vdnaipfdraveg92re1bi.mp4';
@@ -205,11 +207,15 @@ class _QuestionsState extends State<Questions> {
   }
 
   void getToNextQuestion() {
-    if (currentQuestion % 10 == 0 &&
+    if ((currentQuestion - 1) % 15 == 0 &&
         currentQuestion != 0 &&
         lives != 1 &&
-        lives != 0) {
+        lives != 0 &&
+        advertisments.isNotEmpty) {
       currentAdMethod();
+    }
+    if (currentQuestion == questions.length - 1) {
+      currentQuestion = 0;
     }
     if (getQuestionMode() == 'guessTheTeam') {
       setState(() {
@@ -349,23 +355,28 @@ class _QuestionsState extends State<Questions> {
   }
 
   void saveGame(navigate) {
-    Map payload = {'points': points, 'coins': coins};
-    String userId =
-        Provider.of<LocaleProvider>(context, listen: false).user['_id'];
-    setState(() {
-      saveLoading = true;
-    });
-    PostApi('user-save-game/$userId', payload, (res) {
-      Provider.of<LocaleProvider>(context, listen: false).setUser(res['user']);
-      if (navigate) {
-        Navigator.pushReplacementNamed(context, '/');
-      } else {
-        setState(() {
-          saveLoading = false;
-          pageLoading = false;
-        });
-      }
-    }).post(context);
+    if (points == 0 && navigate) {
+      Navigator.pushReplacementNamed(context, '/rankings');
+    } else {
+      Map payload = {'points': points, 'coins': coins};
+      String userId =
+          Provider.of<LocaleProvider>(context, listen: false).user['_id'];
+      setState(() {
+        saveLoading = true;
+      });
+      PostApi('user-save-game/$userId', payload, (res) {
+        Provider.of<LocaleProvider>(context, listen: false)
+            .setUser(res['user']);
+        if (navigate) {
+          Navigator.pushReplacementNamed(context, '/rankings');
+        } else {
+          setState(() {
+            saveLoading = false;
+            pageLoading = false;
+          });
+        }
+      }).post(context);
+    }
   }
 
   showPlayerSearch() {
@@ -437,12 +448,12 @@ class _QuestionsState extends State<Questions> {
 
   void playAgain() {
     stopCount = false;
+    currentAd = 0;
     setState(() {
       currentQuestion = currentQuestion + 1;
       lives = 10;
       coins = 0;
       points = 0;
-      currentAd = 0;
     });
   }
 
@@ -466,22 +477,16 @@ class _QuestionsState extends State<Questions> {
   }
 
   currentAdMethod() {
+    currentAd = currentAd + 1;
+    if (currentAd > advertisments.length - 1) {
+      currentAd = 0;
+    }
     setState(() {
       currentAdCountDown = 6;
       showAd = true;
       stopCount = true;
       stopAdCount = false;
     });
-
-    if (currentAd == advertisments.length - 1) {
-      setState(() {
-        currentAd = 0;
-      });
-    } else {
-      setState(() {
-        currentAd = ((currentQuestion / 10) - 1).toInt();
-      });
-    }
   }
 
   void adClicked(id) {
@@ -489,6 +494,7 @@ class _QuestionsState extends State<Questions> {
   }
 
   void initialFetch() async {
+    gameSaved = true;
     await getAdvertisments();
     getQuestions();
   }
@@ -505,21 +511,57 @@ class _QuestionsState extends State<Questions> {
 
   @override
   void initState() {
-    initialFetch();
     super.initState();
+    initialFetch();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  void stopGame() {
+    setState(() {
+      stopCount = true;
+    });
+    Future.delayed(const Duration(seconds: 5), () {
+      getToNextQuestion();
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.inactive && gameSaved == false) {
+      saveGame(true);
+      gameSaved = true;
+    } else if (state == AppLifecycleState.paused) {
+      saveGame(true);
+      gameSaved = true;
+    } else if (state == AppLifecycleState.detached) {
+      saveGame(true);
+      gameSaved = true;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
-    return PagePlainContainer(
-        body: Focus(
-      onFocusChange: (hasFocus) {
-        if (!hasFocus) {
-          Navigator.pushReplacementNamed(context, '/');
-        }
+    final args = ModalRoute.of(context)?.settings.arguments as PageArguments;
+    if (args.status) {
+      setState(() {
+        lives = 10000000000;
+      });
+    }
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (bool didPop) {
+        saveGame(true);
       },
-      child: ImageBackgroundPlain(
+      child: PagePlainContainer(
+          body: ImageBackgroundPlain(
         body: pageLoading || questions[currentQuestion] == null
             ? const PrimaryLoading()
             : lives == 0
@@ -530,10 +572,14 @@ class _QuestionsState extends State<Questions> {
                         bottom: 10,
                         right: 10,
                         child: SaveExitButton(
-                          buttonText:
-                              AppLocalizations.of(context)!.saveAndClose,
+                          buttonText: args.status
+                              ? AppLocalizations.of(context)!.exitGame
+                              : AppLocalizations.of(context)!.saveAndClose,
                           radius: 100,
-                          action: () => saveGame(true),
+                          action: args.status
+                              ? () =>
+                                  {Navigator.pushReplacementNamed(context, '/')}
+                              : () => saveGame(true),
                           letterSpacing: 0,
                           fontSize: 15,
                           icon: Icons.save_alt,
@@ -596,7 +642,7 @@ class _QuestionsState extends State<Questions> {
                               action: finishTutorialAction,
                             )
                           : Container(),
-                      showAd
+                      showAd && advertisments.isNotEmpty
                           ? Advertisment(
                               adClicked: () =>
                                   adClicked(advertisments[currentAd]['_id']),
@@ -606,7 +652,7 @@ class _QuestionsState extends State<Questions> {
                           : Container()
                     ],
                   ),
-      ),
-    ));
+      )),
+    );
   }
 }

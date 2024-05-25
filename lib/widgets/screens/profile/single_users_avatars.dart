@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_challenge_mobile/utilities/api_methods.dart';
 import 'package:flutter_challenge_mobile/widgets/buttons/main_button.dart';
 
@@ -51,27 +52,31 @@ class _SingleUsersAvatarsState extends State<SingleUsersAvatars> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 3),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Container(
-            decoration: BoxDecoration(
+          ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(15)),
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+                  border: Border.all(
+                      width: 3,
+                      color: widget.isSelected
+                          ? Theme.of(context).primaryColor
+                          : Colors.transparent)),
+              child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(15)),
-                border: Border.all(
-                    width: 3,
-                    color: widget.isSelected
-                        ? Theme.of(context).primaryColor
-                        : Colors.transparent)),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(15)),
-              child: Image.network(
-                widget.image,
-                fit: BoxFit.cover,
-                width: MediaQuery.of(context).size.width,
-                height: 220,
+                child: Image.network(
+                  widget.image,
+                  fit: BoxFit.cover,
+                  width: 260,
+                  height: 180,
+                ),
               ),
             ),
           ),

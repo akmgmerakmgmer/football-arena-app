@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_challenge_mobile/widgets/buttons/save_exit_button.dart';
 import 'package:flutter_challenge_mobile/widgets/containers/fade_transition.dart';
-import 'package:flutter_challenge_mobile/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GameOver extends StatelessWidget {
@@ -17,10 +16,9 @@ class GameOver extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const TextWidget(
-              title: 'GAME OVER',
-              fontSize: 40,
-              fontWeight: FontWeight.bold,
+            Image.asset(
+              'assets/images/gameOver.png',
+              width: 200,
             ),
             const SizedBox(
               height: 15,

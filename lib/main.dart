@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_challenge_mobile/screens/account_profile.dart';
 import 'package:flutter_challenge_mobile/screens/home.dart';
 import 'package:flutter_challenge_mobile/screens/login.dart';
@@ -13,7 +14,9 @@ import 'providers/locale_provider.dart';
 import './my_I18n.dart';
 
 void main() async {
-  runApp(const MyApp());
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive).then((_) {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatefulWidget {
@@ -30,7 +33,7 @@ class _MyAppState extends State<MyApp> {
     SharedPreferences locale = await SharedPreferences.getInstance();
     if (locale.getString('locale') == null) {
       setState(() {
-        _locale = const Locale('en');
+        _locale = const Locale('ar');
       });
     } else {
       setState(() {
@@ -60,7 +63,7 @@ class _MyAppState extends State<MyApp> {
                   '/rankings': (context) => const Rankings(),
                   '/profile': (context) => AccountProfile()
                 },
-                title: 'Arena Games',
+                title: 'InZone',
                 localizationsDelegates: const [
                   AppLocalizations.delegate,
                   GlobalMaterialLocalizations.delegate,

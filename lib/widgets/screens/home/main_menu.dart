@@ -6,6 +6,13 @@ import 'package:flutter_challenge_mobile/widgets/containers/image_background_con
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
+class PageArguments {
+  final String message;
+  final bool status;
+
+  PageArguments(this.message, this.status);
+}
+
 class MainMenu extends StatelessWidget {
   const MainMenu({super.key});
 
@@ -20,7 +27,8 @@ class MainMenu extends StatelessWidget {
             if (Provider.of<LocaleProvider>(context, listen: false)
                 .user
                 .containsKey('username')) {
-              Navigator.pushNamed(context, '/questions');
+              Navigator.pushNamed(context, '/questions',
+                  arguments: PageArguments('practice', false));
             } else {
               Navigator.pushNamed(context, '/login');
             }
@@ -32,14 +40,25 @@ class MainMenu extends StatelessWidget {
         ),
         RegularButton(
             buttonText: AppLocalizations.of(context)!.practice,
-            action: () {},
+            action: () {
+              if (Provider.of<LocaleProvider>(context, listen: false)
+                  .user
+                  .containsKey('username')) {
+                Navigator.pushNamed(context, '/questions',
+                    arguments: PageArguments('practice', true));
+              } else {
+                Navigator.pushNamed(context, '/login');
+              }
+            },
             uppercase: true),
         const SizedBox(
           height: 15,
         ),
         RegularButton(
-            buttonText: AppLocalizations.of(context)!.rules,
-            action: () {},
+            buttonText: AppLocalizations.of(context)!.rankings,
+            action: () {
+              Navigator.pushNamed(context, '/rankings');
+            },
             uppercase: true),
         const SizedBox(
           height: 15,

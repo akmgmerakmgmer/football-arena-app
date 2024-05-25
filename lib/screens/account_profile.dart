@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_challenge_mobile/providers/locale_provider.dart';
 import 'package:flutter_challenge_mobile/widgets/buttons/main_button_no_width.dart';
-import 'package:flutter_challenge_mobile/widgets/containers/grid_container.dart';
 import 'package:flutter_challenge_mobile/widgets/containers/page_container_with_footer.dart';
 import 'package:flutter_challenge_mobile/widgets/general_widgets/snackbar_message.dart';
 import 'package:flutter_challenge_mobile/widgets/general_widgets/text_widget.dart';
@@ -20,43 +17,38 @@ class AccountProfile extends StatelessWidget {
   List<Map> avatars = [
     {
       "image":
-          'http://res.cloudinary.com/do0qe5hin/image/upload/v1711999199/bgl4bi1mwgyx063hqlrl.jpg',
-      "price": 6
-    },
-    {
-      "image":
           'http://res.cloudinary.com/do0qe5hin/image/upload/v1711999232/hwf7tvwntitssim3bnin.jpg',
-      "price": 7
+      "price": 800
     },
     {
       "image":
           'http://res.cloudinary.com/do0qe5hin/image/upload/v1711999256/lyeqdkttphhgkbhotpce.jpg',
-      "price": 8
+      "price": 550
     },
     {
       "image":
           'http://res.cloudinary.com/do0qe5hin/image/upload/v1711999282/jkulcncu57buwpfvalxu.jpg',
-      "price": 2
+      "price": 700
     },
     {
       "image":
           'http://res.cloudinary.com/do0qe5hin/image/upload/v1711999312/e0mcpelurwowwvlhhtnq.jpg',
-      "price": 25
+      "price": 200
     },
     {
       "image":
           'http://res.cloudinary.com/do0qe5hin/image/upload/v1711999342/z5byrvq7izwbmgonvg7b.jpg',
-      "price": 3
+      "price": 500
     },
     {
       "image":
           'http://res.cloudinary.com/do0qe5hin/image/upload/v1711999365/cyivdbji0gkl7zcsk8je.jpg',
-      "price": 5
+      "price": 150
     },
     {
       "image":
           'http://res.cloudinary.com/do0qe5hin/image/upload/v1711999387/cn3bvdsbdvchaqxech9p.jpg',
-      "price": 10
+      "price": 1500
     },
   ];
 
@@ -86,7 +78,7 @@ class AccountProfile extends StatelessWidget {
                     Input(
                       callback: (value) {},
                       label: AppLocalizations.of(context)!.username,
-                      value: "Ahmedddd",
+                      value: user['username'],
                       disabled: true,
                     ),
                     const SizedBox(
@@ -95,7 +87,7 @@ class AccountProfile extends StatelessWidget {
                     Input(
                       callback: (value) {},
                       label: AppLocalizations.of(context)!.password,
-                      value: "MynameIsAhmedPassword",
+                      value: user['password'],
                       isPassword: true,
                       disabled: true,
                     ),
@@ -105,7 +97,7 @@ class AccountProfile extends StatelessWidget {
                     Input(
                       callback: (value) {},
                       label: AppLocalizations.of(context)!.number,
-                      value: "01119683676",
+                      value: user['number'],
                       disabled: true,
                     ),
                     const SizedBox(
@@ -119,27 +111,29 @@ class AccountProfile extends StatelessWidget {
                     const SizedBox(
                       height: 15,
                     ),
-                    GridContainer(
-                      numberOfGrids: 4,
-                      widget: user['avatars']
-                          .map<Widget>((avatar) => SingleUsersAvatars(
-                                isSelected: user['selectedAvatar']['image'] ==
-                                    avatar['image'],
-                                image: avatar['image'],
-                                buttonText: user['selectedAvatar']['image'] ==
-                                        avatar['image']
-                                    ? AppLocalizations.of(context)!.selected
-                                    : AppLocalizations.of(context)!.select,
-                                api: 'users/${user['_id']}',
-                                body: {"selectedAvatar": avatar},
-                                callback: (res) {
-                                  Provider.of<LocaleProvider>(context,
-                                          listen: false)
-                                      .setUser(res);
-                                },
-                                errorCallback: () {},
-                              ))
-                          .toList(),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: user['avatars']
+                            .map<Widget>((avatar) => SingleUsersAvatars(
+                                  isSelected: user['selectedAvatar']['image'] ==
+                                      avatar['image'],
+                                  image: avatar['image'],
+                                  buttonText: user['selectedAvatar']['image'] ==
+                                          avatar['image']
+                                      ? AppLocalizations.of(context)!.selected
+                                      : AppLocalizations.of(context)!.select,
+                                  api: 'users/${user['_id']}',
+                                  body: {"selectedAvatar": avatar},
+                                  callback: (res) {
+                                    Provider.of<LocaleProvider>(context,
+                                            listen: false)
+                                        .setUser(res);
+                                  },
+                                  errorCallback: () {},
+                                ))
+                            .toList(),
+                      ),
                     ),
                     const SizedBox(
                       height: 15,
@@ -183,64 +177,66 @@ class AccountProfile extends StatelessWidget {
                     const SizedBox(
                       height: 15,
                     ),
-                    GridContainer(
-                      numberOfGrids: 4,
-                      widget: avatars
-                          .map((avatar) => SingleUsersAvatars(
-                                isSelected: false,
-                                image: avatar['image'],
-                                buttonText: 'Selected',
-                                isWidget: true,
-                                widget: Column(
-                                  children: [
-                                    TextWidget(
-                                      title:
-                                          AppLocalizations.of(context)!.buyNow,
-                                      fontSize: 16,
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        TextWidget(
-                                          title: avatar['price'].toString(),
-                                          fontSize: 14,
-                                        ),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                        const Icon(
-                                          Icons.donut_large,
-                                          color: Colors.yellow,
-                                          size: 18,
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                api: 'buy-avatar/${user['_id']}',
-                                body: {"avatar": avatar},
-                                callback: (res) {
-                                  Provider.of<LocaleProvider>(context,
-                                          listen: false)
-                                      .setUser(res['user']);
-                                },
-                                errorCallback: (err) {
-                                  String message = Provider.of<LocaleProvider>(
-                                                  context,
-                                                  listen: false)
-                                              .locale ==
-                                          'ar'
-                                      ? err['message']['ar']
-                                      : err['message']['en'];
-                                  SnackbarMessage().snackbar(context, message,
-                                      color: Colors.red);
-                                },
-                              ))
-                          .toList(),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: avatars
+                            .map((avatar) => SingleUsersAvatars(
+                                  isSelected: false,
+                                  image: avatar['image'],
+                                  buttonText: 'Selected',
+                                  isWidget: true,
+                                  widget: Column(
+                                    children: [
+                                      TextWidget(
+                                        title:
+                                            AppLocalizations.of(context)!.buyNow,
+                                        fontSize: 16,
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          TextWidget(
+                                            title: avatar['price'].toString(),
+                                            fontSize: 14,
+                                          ),
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
+                                          const Icon(
+                                            Icons.donut_large,
+                                            color: Colors.yellow,
+                                            size: 18,
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  api: 'buy-avatar/${user['_id']}',
+                                  body: {"avatar": avatar},
+                                  callback: (res) {
+                                    Provider.of<LocaleProvider>(context,
+                                            listen: false)
+                                        .setUser(res['user']);
+                                  },
+                                  errorCallback: (err) {
+                                    String message = Provider.of<LocaleProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .locale ==
+                                            'ar'
+                                        ? err['message']['ar']
+                                        : err['message']['en'];
+                                    SnackbarMessage().snackbar(context, message,
+                                        color: Colors.red);
+                                  },
+                                ))
+                            .toList(),
+                      ),
                     ),
                   ],
                 ),
