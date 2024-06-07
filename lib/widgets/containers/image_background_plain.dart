@@ -13,7 +13,7 @@ class ImageBackgroundPlain extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Image.asset(
-            'assets/images/main_background.jpg',
+            'assets/images/background_new.jpg',
             fit: BoxFit.cover,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,

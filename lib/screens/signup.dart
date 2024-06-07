@@ -12,16 +12,17 @@ class Signup extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageContainerWithFooter(
         body: ImageBackgroundContainer(
+            width: 350,
             body: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        TextWidget(
-          title: AppLocalizations.of(context)!.createAccount,
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-        ),
-        const SignupForm()
-      ],
-    )));
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextWidget(
+                  title: AppLocalizations.of(context)!.createAccount,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
+                const SignupForm()
+              ],
+            )));
   }
 }

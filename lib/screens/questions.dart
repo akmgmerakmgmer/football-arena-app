@@ -209,6 +209,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   void getToNextQuestion() {
     if ((currentQuestion - 1) % 15 == 0 &&
         currentQuestion != 0 &&
+        currentQuestion != 1 &&
         lives != 1 &&
         lives != 0 &&
         advertisments.isNotEmpty) {
@@ -469,7 +470,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   getAdvertisments() {
-    FetchApi('advertisments?page=1&company=&advertiseAt=gamePage', (res) {
+    FetchApi('advertisments?page=1&company=&advertiseAt=websitePages', (res) {
       setState(() {
         advertisments = res['advertisments'];
       });
@@ -558,7 +559,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     return PopScope(
       canPop: true,
       onPopInvoked: (bool didPop) {
-        saveGame(true);
+        if (!args.status) {
+          saveGame(true);
+        }
       },
       child: PagePlainContainer(
           body: ImageBackgroundPlain(

@@ -47,12 +47,22 @@ class _PagePlainContainerState extends State<PagePlainContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    // Get the padding values from MediaQuery
+    EdgeInsets padding = MediaQuery.of(context).padding;
+
+    // Get the total height of the screen
+    double totalHeight = MediaQuery.of(context).size.height;
+
+    // Calculate the height of the safe area
+    double pageHeight = totalHeight - padding.top - padding.bottom;
+    return SafeArea(
+      child: Scaffold(
         body: SingleChildScrollView(
             child: Container(
+                height: pageHeight,
                 color: widget.background,
                 child: widget.body)),
-      
+      ),
     );
   }
 }

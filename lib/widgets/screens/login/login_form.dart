@@ -36,6 +36,7 @@ class _LoginFormState extends State<LoginForm> {
       // ignore: use_build_context_synchronously
       Navigator.pushNamed(context, '/');
     }, errorCallback: (value) {
+      print(value);
       if (value.containsKey('username') &&
           value['username'] == 'field_required') {
         errors['username'] = AppLocalizations.of(context)!.field_required;
@@ -47,6 +48,10 @@ class _LoginFormState extends State<LoginForm> {
       if (value.containsKey('username') &&
           value['username'] == 'username_min_length') {
         errors['username'] = AppLocalizations.of(context)!.username_min_length;
+      }
+      if (value.containsKey('username') &&
+          value['username'] == 'username_not_correct') {
+        errors['username'] = AppLocalizations.of(context)!.username_not_correct;
       }
       if (value.containsKey('number') && value['number'] == 'field_required') {
         errors['number'] = AppLocalizations.of(context)!.field_required;
@@ -62,6 +67,10 @@ class _LoginFormState extends State<LoginForm> {
       if (value.containsKey('password') &&
           value['password'] == 'password_min_length') {
         errors['password'] = AppLocalizations.of(context)!.password_min_length;
+      }
+      if (value.containsKey('password') &&
+          value['password'] == 'password_not_correct') {
+        errors['password'] = AppLocalizations.of(context)!.password_not_correct;
       }
       setState(() {
         loading = false;
@@ -84,6 +93,7 @@ class _LoginFormState extends State<LoginForm> {
           error: errors['username'],
           label: AppLocalizations.of(context)!.username,
           loading: loading,
+          icon: const Icon(Icons.person_outlined),
         ),
         const SizedBox(
           height: 15,
@@ -96,6 +106,7 @@ class _LoginFormState extends State<LoginForm> {
           label: AppLocalizations.of(context)!.password,
           loading: loading,
           isPassword: true,
+          icon: const Icon(Icons.lock_outlined),
         ),
         const SizedBox(
           height: 15,

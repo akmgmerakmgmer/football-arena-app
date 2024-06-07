@@ -34,6 +34,11 @@ class _RankingsState extends State<Rankings> {
       "value": 'weekly'
     },
     {
+      "nameAr": 'الترتيب اليومي',
+      "nameEn": "Daily Ranking",
+      "value": 'daily'
+    },
+    {
       "nameAr": 'الترتيب الشهري',
       "nameEn": "Monthly Ranking",
       "value": 'monthly'
@@ -178,10 +183,7 @@ class _RankingsState extends State<Rankings> {
                   getRankings();
                 });
               },
-              show: searchTime != 'weekly',
-            ),
-            const SizedBox(
-              height: 15,
+              show: searchTime == 'yearly',
             ),
             DropDownWidget(
               items: months,

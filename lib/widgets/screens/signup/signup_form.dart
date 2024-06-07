@@ -87,6 +87,7 @@ class _SignupFormState extends State<SignupForm> {
           error: errors['username'],
           label: AppLocalizations.of(context)!.username,
           loading: loading,
+          icon: const Icon(Icons.person_outlined),
         ),
         const SizedBox(
           height: 15,
@@ -99,6 +100,7 @@ class _SignupFormState extends State<SignupForm> {
           label: AppLocalizations.of(context)!.password,
           loading: loading,
           isPassword: true,
+          icon: const Icon(Icons.lock_outlined),
         ),
         const SizedBox(
           height: 15,
@@ -111,6 +113,7 @@ class _SignupFormState extends State<SignupForm> {
           label: AppLocalizations.of(context)!.number,
           loading: loading,
           type: TextInputType.number,
+          icon: const Icon(Icons.phone_outlined),
         ),
         const SizedBox(
           height: 15,

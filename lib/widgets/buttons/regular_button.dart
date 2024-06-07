@@ -23,7 +23,7 @@ class RegularButton extends StatelessWidget {
           color: Colors.white.withOpacity(0.1),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.6),
+              color: Colors.black.withOpacity(0.4),
               blurRadius: 20, // Equivalent to backdrop-blur-md
               spreadRadius: 2, // Optional
               offset: const Offset(0, 3), // Optional

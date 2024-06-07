@@ -12,6 +12,7 @@ class Input extends StatefulWidget {
   final bool disabled;
   final bool isPassword;
   final int maxLines;
+  final Widget icon;
   const Input(
       {super.key,
       required this.callback,
@@ -22,7 +23,7 @@ class Input extends StatefulWidget {
       this.loading = false,
       this.disabled = false,
       this.isPassword = false,
-      this.maxLines = 1});
+      this.maxLines = 1, required this.icon});
 
   @override
   State<Input> createState() => _InputState();
@@ -53,16 +54,20 @@ class _InputState extends State<Input> {
           fontWeight: FontWeight.bold,
           fontSize: 14), // Set text color to white
       decoration: InputDecoration(
+        suffixIcon: widget.icon,
+        suffixIconColor: Colors.white,
+        enabledBorder: OutlineInputBorder(borderSide: const BorderSide(color: Colors.white),borderRadius: BorderRadius.circular(100)),
         alignLabelWithHint: true,
         enabled: !widget.disabled && !widget.loading,
         errorText: widget.error.isEmpty ? null : widget.error,
         errorStyle: const TextStyle(
           color: Colors.red,
+          fontWeight: FontWeight.bold
         ),
-        disabledBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(100)),
+        disabledBorder: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(100)),
           borderSide: BorderSide(
-            color: Colors.grey.shade700,
+            color: Colors.white,
           ),
         ),
         errorBorder: OutlineInputBorder(
@@ -71,16 +76,16 @@ class _InputState extends State<Input> {
             color: widget.error.isNotEmpty
                 ? Colors.red
                 : myFocusNode.hasFocus
-                    ? Colors.grey
-                    : Colors.grey.shade300,
+                    ? Colors.white
+                    : Colors.white,
           ),
         ),
         focusedErrorBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: BorderSide(color: Colors.white),
           borderRadius: BorderRadius.all(Radius.circular(100)),
         ),
         focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: BorderSide(color: Colors.white),
           borderRadius: BorderRadius.all(Radius.circular(100)),
         ),
         border: const OutlineInputBorder(
@@ -97,10 +102,10 @@ class _InputState extends State<Input> {
                     : 'Oswald',
           ),
         ),
-        labelStyle: const TextStyle(color: Colors.grey),
-        fillColor: Colors.grey,
+        labelStyle: const TextStyle(color: Colors.white),
+        fillColor: Colors.white,
       ),
-      cursorColor: Colors.grey,
+      cursorColor: Colors.white,
     );
   }
 }

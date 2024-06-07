@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_challenge_mobile/providers/locale_provider.dart';
+import 'package:flutter_challenge_mobile/utilities/api_methods.dart';
 import 'package:flutter_challenge_mobile/utilities/auth.dart';
 import 'package:flutter_challenge_mobile/widgets/drawer/drawer_widget.dart';
 import 'package:flutter_challenge_mobile/widgets/footer/footer.dart';
 import 'package:flutter_challenge_mobile/widgets/loadings/primary_loading.dart';
+import 'package:flutter_challenge_mobile/widgets/screens/questions/advertisment.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,6 +25,10 @@ class PageContainerWithFooter extends StatefulWidget {
 
 class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
   bool loading = false;
+  int currentAd = 0;
+  int currentAdCountDown = 6;
+  var overlayController = OverlayPortalController();
+
   void getLocale() async {
     if (Provider.of<LocaleProvider>(context, listen: false).locale == '') {
       SharedPreferences locale = await SharedPreferences.getInstance();
@@ -30,7 +39,12 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
     }
   }
 
-  Future<void> getUser() async {
+  getInitialData() {
+    fetchUsers();
+    fetchAdvertisments();
+  }
+
+  Future<void> fetchUsers() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     String? token = localStorage.getString(('token'));
     if (token!.isNotEmpty &&
@@ -43,21 +57,82 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
       });
       // ignore: use_build_context_synchronously
       await Auth().getUser(token, context);
+    }
+  }
+
+  Future<void> fetchAdvertisments() async {
+    if (Provider.of<LocaleProvider>(context, listen: false)
+        .advertisments
+        .isEmpty) {
+      await FetchApi('advertisments?page=1&company=&advertiseAt=websitePages',
+          (advertisments) {
+        Provider.of<LocaleProvider>(context, listen: false)
+            .setAdvertisments(advertisments['advertisments']);
+        // ignore: use_build_context_synchronously
+      }).fetch(context);
+      adTimer();
       setState(() {
         loading = false;
       });
     }
+    decreaseAdCount();
+  }
+
+  void adTimer() {
+    Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      Provider.of<LocaleProvider>(context, listen: false).setAdCountDown(
+          Provider.of<LocaleProvider>(context, listen: false).adCountDown - 1);
+      if (Provider.of<LocaleProvider>(context, listen: false).adCountDown ==
+          0) {
+        overlayController.toggle();
+      }
+    });
+  }
+
+  void adClicked(id) {
+    PutApi('ad-clicked/$id', {}, (res) {}).put(context);
+  }
+
+  skipAdMethod() {
+    if (currentAdCountDown <= 0) {
+      overlayController.toggle();
+      setState(() {
+        Provider.of<LocaleProvider>(context, listen: false)
+            .setAdCountDown(5 * 60);
+        currentAdCountDown = 6;
+      });
+      List advertisments =
+          Provider.of<LocaleProvider>(context, listen: false).advertisments;
+      if (currentAd == advertisments.length - 1) {
+        currentAd = 0;
+      } else {
+        currentAd++;
+      }
+    }
+  }
+
+  void decreaseAdCount() {
+    Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      if (Provider.of<LocaleProvider>(context, listen: false).adCountDown <=
+          0) {
+        setState(() {
+          currentAdCountDown -= 1;
+        });
+      }
+    });
   }
 
   @override
   void initState() {
     getLocale();
-    getUser();
+    getInitialData();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    List advertisments =
+        Provider.of<LocaleProvider>(context, listen: false).advertisments;
     return SafeArea(
       child: Scaffold(
         endDrawer: const DrawerWidget(),
@@ -79,23 +154,38 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
           ),
         ),
         body: SingleChildScrollView(
-            child: Container(
-          color: widget.background,
-          child: loading
-              ? Container(
-                  height: MediaQuery.of(context).size.height - 56,
-                  color: Theme.of(context).splashColor,
-                  child: const PrimaryLoading())
-              : Column(
-                  children: [
-                    ConstrainedBox(
-                        constraints: BoxConstraints(
-                            minHeight:
-                                MediaQuery.of(context).size.height - 200),
-                        child: widget.body),
-                    const Footer()
-                  ],
-                ),
+            child: Stack(
+          children: [
+            Container(
+              color: widget.background,
+              child: loading
+                  ? Container(
+                      height: MediaQuery.of(context).size.height - 56,
+                      color: Theme.of(context).splashColor,
+                      child: const PrimaryLoading())
+                  : Column(
+                      children: [
+                        OverlayPortal(
+                          controller: overlayController,
+                          overlayChildBuilder: (BuildContext context) {
+                            return Advertisment(
+                                adClicked: () =>
+                                    adClicked(advertisments[currentAd]['_id']),
+                                seconds: currentAdCountDown,
+                                skipAdMethod: skipAdMethod,
+                                image: advertisments[currentAd]['image']);
+                          },
+                          child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                  minHeight:
+                                      MediaQuery.of(context).size.height - 200),
+                              child: widget.body),
+                        ),
+                        const Footer()
+                      ],
+                    ),
+            ),
+          ],
         )),
       ),
     );

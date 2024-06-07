@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_challenge_mobile/widgets/containers/black_modal_container.dart';
+import 'package:flutter_challenge_mobile/widgets/containers/blur_background_container.dart';
 import 'package:flutter_challenge_mobile/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -38,23 +39,17 @@ class Advertisment extends StatelessWidget {
             right: 10,
             child: GestureDetector(
               onTap: skipAdMethod,
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.6),
-                        blurRadius: 20, // Equivalent to backdrop-blur-md
-                        spreadRadius: 2, // Optional
-                        offset: const Offset(0, 3), // Optional
-                      ),
-                    ],
-                    borderRadius: const BorderRadius.all(Radius.circular(100))),
-                child: TextWidget(
-                    title: seconds == 0
-                        ? AppLocalizations.of(context)!.skipAd
-                        : '${AppLocalizations.of(context)!.skipAdIn} $seconds ${AppLocalizations.of(context)!.seconds}'),
+              child: BlurBackgroundContainer(
+                border: 100,
+                body: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(100))),
+                  child: TextWidget(
+                      title: seconds <= 0
+                          ? AppLocalizations.of(context)!.skipAd
+                          : '${AppLocalizations.of(context)!.skipAdIn} $seconds ${AppLocalizations.of(context)!.seconds}'),
+                ),
               ),
             ),
           )

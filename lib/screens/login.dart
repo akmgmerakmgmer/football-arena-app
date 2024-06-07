@@ -12,16 +12,17 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageContainerWithFooter(
         body: ImageBackgroundContainer(
+            width: 350,
             body: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        TextWidget(
-          title: AppLocalizations.of(context)!.login,
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-        ),
-        const LoginForm()
-      ],
-    )));
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextWidget(
+                  title: AppLocalizations.of(context)!.login,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
+                const LoginForm()
+              ],
+            )));
   }
 }

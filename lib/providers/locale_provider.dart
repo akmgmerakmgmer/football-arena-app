@@ -16,10 +16,29 @@ class LocaleProvider with ChangeNotifier {
   Map get user {
     return _user;
   }
-  
+
   void setUser(value) {
     _user = value;
     notifyListeners();
   }
 
+  List _advertisments = [];
+  List get advertisments {
+    return _advertisments;
+  }
+
+  void setAdvertisments(value) {
+    _advertisments = value;
+    notifyListeners();
+  }
+
+  int _adCountDown = 5 * 60;
+  int get adCountDown {
+    return _adCountDown;
+  }
+
+  void setAdCountDown(value) {
+    _adCountDown = value;
+    notifyListeners();
+  }
 }

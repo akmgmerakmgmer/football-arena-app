@@ -14,9 +14,7 @@ import 'providers/locale_provider.dart';
 import './my_I18n.dart';
 
 void main() async {
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive).then((_) {
-    runApp(const MyApp());
-  });
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {

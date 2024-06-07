@@ -84,6 +84,7 @@ flutter:
     - assets/images/image90.png
     - assets/images/prize.png
     - assets/images/gameOver.png
+    - assets/images/background_new.jpg
     - assets/audio/correct.wav
     - assets/audio/buzzer.mp3
 

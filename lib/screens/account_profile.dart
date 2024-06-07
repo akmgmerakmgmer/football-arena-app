@@ -80,26 +80,27 @@ class AccountProfile extends StatelessWidget {
                       label: AppLocalizations.of(context)!.username,
                       value: user['username'],
                       disabled: true,
+                      icon: const Icon(Icons.person_outlined),
                     ),
                     const SizedBox(
                       height: 15,
                     ),
                     Input(
-                      callback: (value) {},
-                      label: AppLocalizations.of(context)!.password,
-                      value: user['password'],
-                      isPassword: true,
-                      disabled: true,
-                    ),
+                        callback: (value) {},
+                        label: AppLocalizations.of(context)!.password,
+                        value: user['password'],
+                        isPassword: true,
+                        disabled: true,
+                        icon: const Icon(Icons.lock_outlined)),
                     const SizedBox(
                       height: 15,
                     ),
                     Input(
-                      callback: (value) {},
-                      label: AppLocalizations.of(context)!.number,
-                      value: user['number'],
-                      disabled: true,
-                    ),
+                        callback: (value) {},
+                        label: AppLocalizations.of(context)!.number,
+                        value: user['number'],
+                        disabled: true,
+                        icon: const Icon(Icons.phone_outlined)),
                     const SizedBox(
                       height: 15,
                     ),
@@ -189,8 +190,8 @@ class AccountProfile extends StatelessWidget {
                                   widget: Column(
                                     children: [
                                       TextWidget(
-                                        title:
-                                            AppLocalizations.of(context)!.buyNow,
+                                        title: AppLocalizations.of(context)!
+                                            .buyNow,
                                         fontSize: 16,
                                       ),
                                       const SizedBox(
@@ -224,13 +225,13 @@ class AccountProfile extends StatelessWidget {
                                         .setUser(res['user']);
                                   },
                                   errorCallback: (err) {
-                                    String message = Provider.of<LocaleProvider>(
-                                                    context,
-                                                    listen: false)
-                                                .locale ==
-                                            'ar'
-                                        ? err['message']['ar']
-                                        : err['message']['en'];
+                                    String message =
+                                        Provider.of<LocaleProvider>(context,
+                                                        listen: false)
+                                                    .locale ==
+                                                'ar'
+                                            ? err['message']['ar']
+                                            : err['message']['en'];
                                     SnackbarMessage().snackbar(context, message,
                                         color: Colors.red);
                                   },
