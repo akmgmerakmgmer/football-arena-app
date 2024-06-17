@@ -146,7 +146,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
               child: Image.asset(
                 'assets/images/logo.png',
                 fit: BoxFit.cover,
-                width: 55,
+                width: 50,
               ),
             ),
             elevation: 0, // Remove AppBar shadow

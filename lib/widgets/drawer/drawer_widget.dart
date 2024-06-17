@@ -45,7 +45,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           ),
           isUserExists
               ? DrawerItem(
-                  text: 'Welcome, Ahmed',
+                  text: '${AppLocalizations.of(context)!.welcome} ${Provider.of<LocaleProvider>(context, listen: false)
+                      .user['username']}',
                   icon: Icons.account_circle,
                   textSize: 18,
                   iconSize: 30,

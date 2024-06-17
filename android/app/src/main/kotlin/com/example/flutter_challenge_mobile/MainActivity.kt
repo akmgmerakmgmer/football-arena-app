@@ -1,4 +1,4 @@
-package com.example.flutter_challenge_mobile
+package in_zone_app
 
 import io.flutter.embedding.android.FlutterActivity
 

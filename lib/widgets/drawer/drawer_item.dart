@@ -26,11 +26,12 @@ class DrawerItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 5, bottom: isTitle ? 0 : 12, left: selected?16:0),
+      margin: EdgeInsets.only(
+          top: 5, bottom: isTitle ? 0 : 12, left: selected ? 16 : 0),
       padding:
           Provider.of<LocaleProvider>(context, listen: false).locale == 'en'
-              ? const EdgeInsets.only(left: 16, top: 5, bottom: 5)
-              : const EdgeInsets.only(right: 16, top: 5, bottom: 5),
+              ? EdgeInsets.only(left: 16, top: 5, bottom: isTitle ? 0 : 5)
+              : EdgeInsets.only(right: 16, top: 5, bottom: isTitle ? 0 : 5),
       decoration: BoxDecoration(
           color: selected ? Colors.white : Colors.transparent,
           borderRadius: const BorderRadius.only(
@@ -40,7 +41,7 @@ class DrawerItem extends StatelessWidget {
           action();
         },
         contentPadding: const EdgeInsets.all(0),
-        horizontalTitleGap: 10,
+        horizontalTitleGap: 8,
         leading: Icon(
           icon,
           color: selected ? Colors.black : Colors.white,
