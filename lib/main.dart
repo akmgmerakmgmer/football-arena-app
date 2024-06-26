@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/screens/account_profile.dart';
-import 'package:flutter_challenge_mobile/screens/home.dart';
-import 'package:flutter_challenge_mobile/screens/login.dart';
-import 'package:flutter_challenge_mobile/screens/questions.dart';
-import 'package:flutter_challenge_mobile/screens/rankings.dart';
-import 'package:flutter_challenge_mobile/screens/signup.dart';
+import 'package:in_zone_app/screens/account_profile.dart';
+import 'package:in_zone_app/screens/home.dart';
+import 'package:in_zone_app/screens/login.dart';
+import 'package:in_zone_app/screens/questions.dart';
+import 'package:in_zone_app/screens/rankings.dart';
+import 'package:in_zone_app/screens/signup.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';

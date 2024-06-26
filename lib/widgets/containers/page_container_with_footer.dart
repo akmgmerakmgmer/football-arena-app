@@ -2,21 +2,25 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_challenge_mobile/providers/locale_provider.dart';
-import 'package:flutter_challenge_mobile/utilities/api_methods.dart';
-import 'package:flutter_challenge_mobile/utilities/auth.dart';
-import 'package:flutter_challenge_mobile/widgets/drawer/drawer_widget.dart';
-import 'package:flutter_challenge_mobile/widgets/footer/footer.dart';
-import 'package:flutter_challenge_mobile/widgets/loadings/primary_loading.dart';
-import 'package:flutter_challenge_mobile/widgets/screens/questions/advertisment.dart';
+import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/utilities/api_methods.dart';
+import 'package:in_zone_app/utilities/auth.dart';
+import 'package:in_zone_app/widgets/drawer/drawer_widget.dart';
+import 'package:in_zone_app/widgets/footer/footer.dart';
+import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
+import 'package:in_zone_app/widgets/screens/questions/advertisment.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PageContainerWithFooter extends StatefulWidget {
   final Widget body;
   final Color background;
+  final Color footerBackground;
   const PageContainerWithFooter(
-      {super.key, required this.body, this.background = Colors.transparent});
+      {super.key,
+      required this.body,
+      this.background = Colors.transparent,
+      this.footerBackground = const Color(0xFF111111)});
 
   @override
   State<PageContainerWithFooter> createState() =>
@@ -181,7 +185,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
                                       MediaQuery.of(context).size.height - 200),
                               child: widget.body),
                         ),
-                        const Footer()
+                        Footer(backgroundColor: widget.footerBackground)
                       ],
                     ),
             ),

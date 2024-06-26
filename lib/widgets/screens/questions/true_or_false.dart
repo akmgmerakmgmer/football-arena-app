@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/widgets/buttons/main_button.dart';
+import 'package:in_zone_app/widgets/buttons/main_button.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class TrueOrFalse extends StatelessWidget {

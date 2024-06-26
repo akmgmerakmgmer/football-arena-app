@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/providers/locale_provider.dart';
-import 'package:flutter_challenge_mobile/widgets/containers/grid_container.dart';
-import 'package:flutter_challenge_mobile/widgets/containers/home_section_containers.dart';
-import 'package:flutter_challenge_mobile/widgets/general_widgets/descriptions.dart';
-import 'package:flutter_challenge_mobile/widgets/general_widgets/titles.dart';
-import 'package:flutter_challenge_mobile/widgets/screens/home/single_challenge.dart';
+import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/widgets/containers/grid_container.dart';
+import 'package:in_zone_app/widgets/containers/home_section_containers.dart';
+import 'package:in_zone_app/widgets/general_widgets/descriptions.dart';
+import 'package:in_zone_app/widgets/general_widgets/titles.dart';
+import 'package:in_zone_app/widgets/screens/home/single_challenge.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 

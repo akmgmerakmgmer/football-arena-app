@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/widgets/buttons/main_button_no_width.dart';
-import 'package:flutter_challenge_mobile/widgets/general_widgets/text_widget.dart';
-import 'package:flutter_challenge_mobile/widgets/screens/rankings/user_data.dart';
+import 'package:in_zone_app/widgets/buttons/main_button_no_width.dart';
+import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
+import 'package:in_zone_app/widgets/screens/rankings/user_data.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SingleUser extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/widgets/buttons/main_button.dart';
-import 'package:flutter_challenge_mobile/widgets/buttons/regular_button.dart';
+import 'package:in_zone_app/widgets/buttons/main_button.dart';
+import 'package:in_zone_app/widgets/buttons/regular_button.dart';
 
 class MultipleChoices extends StatelessWidget {
   final String locale;

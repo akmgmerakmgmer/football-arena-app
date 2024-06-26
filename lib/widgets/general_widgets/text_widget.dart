@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/providers/locale_provider.dart';
+import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:provider/provider.dart';
 
 class TextWidget extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/widgets/containers/glass_background_container.dart';
-import 'package:flutter_challenge_mobile/widgets/general_widgets/text_widget.dart';
-import 'package:flutter_challenge_mobile/widgets/screens/questions/single_perk.dart';
+import 'package:in_zone_app/widgets/containers/glass_background_container.dart';
+import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
+import 'package:in_zone_app/widgets/screens/questions/single_perk.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Stats extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/widgets/containers/image_background_container.dart';
-import 'package:flutter_challenge_mobile/widgets/containers/page_container_with_footer.dart';
-import 'package:flutter_challenge_mobile/widgets/general_widgets/text_widget.dart';
-import 'package:flutter_challenge_mobile/widgets/screens/signup/signup_form.dart';
+import 'package:in_zone_app/widgets/containers/image_background_container.dart';
+import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
+import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
+import 'package:in_zone_app/widgets/screens/signup/signup_form.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Signup extends StatelessWidget {

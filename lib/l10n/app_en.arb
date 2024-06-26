@@ -69,6 +69,8 @@
     "coins": "Coins",
     "gamesPlayed": "Games Played",
     "tableRankings": "Table Rankings",
+    "note": "Note: collecting points weekly prizes will be distributed every Saturday. Please ensure your mobile number is correct and available to collect your prize.",
+    "additionalNote":"Please note that the deadline for collecting points for each week will be by the end of Friday. Points accumulated after this deadline will be counted towards the following week's prizes.",
     "noRankedUsers": "No Users Played Yet",
     "accountProfile": "Account Profile",
     "username": "Username",

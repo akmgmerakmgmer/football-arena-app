@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/widgets/containers/fade_transition.dart';
+import 'package:in_zone_app/widgets/containers/fade_transition.dart';
 
 class BlackModalContainer extends StatelessWidget {
   final Widget body;

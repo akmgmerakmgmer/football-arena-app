@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/widgets/containers/home_section_containers.dart';
-import 'package:flutter_challenge_mobile/widgets/footer/single_icon.dart';
-import 'package:flutter_challenge_mobile/widgets/general_widgets/text_widget.dart';
+import 'package:in_zone_app/utilities/external_url.dart';
+import 'package:in_zone_app/widgets/containers/home_section_containers.dart';
+import 'package:in_zone_app/widgets/footer/single_icon.dart';
+import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class Footer extends StatelessWidget {
   final Color backgroundColor;
-  const Footer({super.key, this.backgroundColor = const Color(0xFF191919)});
-  Future<void> _launchUrl(url) async {
-    final Uri updatedUrl = Uri.parse(url);
-    if (!await launchUrl(updatedUrl)) {
-      throw Exception('Could not launch $updatedUrl');
-    }
-  }
+  const Footer({super.key, this.backgroundColor = const Color(0xFF111111)});
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +20,9 @@ class Footer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SingleIcon(
-                icon: 'assets/images/icons8-facebook.svg',
-                action: () => _launchUrl(
-                    'https://www.facebook.com/profile.php?id=61560132416554'),
-              ),
+                  icon: 'assets/images/icons8-facebook.svg',
+                  action: () => ExternalUrl().launchNewUrl(
+                      'https://www.facebook.com/profile.php?id=61560132416554')),
               const SizedBox(
                 width: 12,
               ),
@@ -38,7 +31,7 @@ class Footer extends StatelessWidget {
               ),
               SingleIcon(
                 icon: 'assets/images/icons8-youtube.svg',
-                action: () => _launchUrl(
+                action: () =>  ExternalUrl().launchNewUrl(
                     'https://www.facebook.com/profile.php?id=61560132416554'),
               ),
               const SizedBox(
@@ -46,16 +39,15 @@ class Footer extends StatelessWidget {
               ),
               SingleIcon(
                 icon: 'assets/images/icons8-tiktok.svg',
-                action: () => _launchUrl(
-                    'https://www.tiktok.com/@inzone2024'),
+                action: () =>  ExternalUrl().launchNewUrl('https://www.tiktok.com/@inzone2024'),
               ),
               const SizedBox(
                 width: 12,
               ),
               SingleIcon(
                 icon: 'assets/images/icons8-instagram.svg',
-                action: () => _launchUrl(
-                    'https://www.instagram.com/inzone2024'),
+                action: () =>
+                     ExternalUrl().launchNewUrl('https://www.instagram.com/inzone2024'),
               ),
             ],
           ),

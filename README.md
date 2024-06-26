@@ -1,4 +1,4 @@
-# flutter_challenge_mobile
+# in_zone_app
 
 A new Flutter project.
 

@@ -1,5 +1,5 @@
-import 'package:flutter_challenge_mobile/providers/locale_provider.dart';
-import 'package:flutter_challenge_mobile/utilities/api_methods.dart';
+import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

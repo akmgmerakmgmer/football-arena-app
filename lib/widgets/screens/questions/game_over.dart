@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/widgets/buttons/save_exit_button.dart';
-import 'package:flutter_challenge_mobile/widgets/containers/fade_transition.dart';
+import 'package:in_zone_app/widgets/buttons/save_exit_button.dart';
+import 'package:in_zone_app/widgets/containers/fade_transition.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GameOver extends StatelessWidget {

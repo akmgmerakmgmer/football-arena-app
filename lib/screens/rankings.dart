@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/providers/locale_provider.dart';
-import 'package:flutter_challenge_mobile/utilities/api_methods.dart';
-import 'package:flutter_challenge_mobile/widgets/containers/fade_transition.dart';
-import 'package:flutter_challenge_mobile/widgets/containers/page_container_with_footer.dart';
-import 'package:flutter_challenge_mobile/widgets/general_widgets/text_widget.dart';
-import 'package:flutter_challenge_mobile/widgets/loadings/primary_loading.dart';
-import 'package:flutter_challenge_mobile/widgets/general_widgets/title_with_border.dart';
-import 'package:flutter_challenge_mobile/widgets/screens/rankings/single_user.dart';
-import 'package:flutter_challenge_mobile/widgets/user_inputs/dropdown_widget.dart';
+import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/utilities/api_methods.dart';
+import 'package:in_zone_app/widgets/containers/fade_transition.dart';
+import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
+import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
+import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
+import 'package:in_zone_app/widgets/general_widgets/title_with_border.dart';
+import 'package:in_zone_app/widgets/screens/rankings/single_user.dart';
+import 'package:in_zone_app/widgets/user_inputs/dropdown_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
@@ -33,11 +33,7 @@ class _RankingsState extends State<Rankings> {
       "nameEn": "Weekly Ranking",
       "value": 'weekly'
     },
-    {
-      "nameAr": 'الترتيب اليومي',
-      "nameEn": "Daily Ranking",
-      "value": 'daily'
-    },
+    {"nameAr": 'الترتيب اليومي', "nameEn": "Daily Ranking", "value": 'daily'},
     {
       "nameAr": 'الترتيب الشهري',
       "nameEn": "Monthly Ranking",
@@ -140,6 +136,7 @@ class _RankingsState extends State<Rankings> {
 
     return PageContainerWithFooter(
       background: Theme.of(context).splashColor,
+      footerBackground: Theme.of(context).primaryColorDark,
       body: Container(
         margin: const EdgeInsets.all(16.0),
         child: Column(
@@ -195,6 +192,32 @@ class _RankingsState extends State<Rankings> {
                 });
               },
               show: searchTime == 'monthly',
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration:
+                  BoxDecoration(color: Theme.of(context).primaryColorDark),
+              child: Column(
+                children: [
+                  TextWidget(
+                    title: AppLocalizations.of(context)!.note,
+                    fontSize: 12.5,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextWidget(
+                    title: AppLocalizations.of(context)!.additionalNote,
+                    fontSize: 12.5,
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 5,
             ),
             loading
                 ? Container(

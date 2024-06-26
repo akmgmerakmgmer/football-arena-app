@@ -1,4 +1,4 @@
-name: flutter_challenge_mobile
+name: in_zone_app
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -105,6 +105,20 @@ flutter:
     - assets/images/prize.png
     - assets/images/gameOver.png
     - assets/images/background_new.jpg
+    - assets/images/argentinaImage.jpg
+    - assets/images/arsenalImage.jpg
+    - assets/images/belgiumImage.jpg
+    - assets/images/spainImage.jpg
+    - assets/images/messiImage.jpg
+    - assets/images/germanyImage.jpg
+    - assets/images/lewaImage.jpg
+    - assets/images/liverpoolImage.jpg
+    - assets/images/madridImage.jpg
+    - assets/images/maradonaImage.jpg
+    - assets/images/neymarImage.jpg
+    - assets/images/cristianoImage.webp
+    - assets/images/parisImage.jpg
+    - assets/images/juventusImage.jpg
     - assets/audio/correct.wav
     - assets/audio/buzzer.mp3
 

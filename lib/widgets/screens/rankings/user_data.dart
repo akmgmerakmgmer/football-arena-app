@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/widgets/general_widgets/text_widget.dart';
+import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 
 class UserData extends StatelessWidget {
   final String title;

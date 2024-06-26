@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/my_I18n.dart';
-import 'package:flutter_challenge_mobile/providers/locale_provider.dart';
+import 'package:in_zone_app/my_I18n.dart';
+import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/utilities/url.dart';
-import 'package:flutter_challenge_mobile/widgets/general_widgets/snackbar_message.dart';
+import 'package:in_zone_app/utilities/url.dart';
+import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 

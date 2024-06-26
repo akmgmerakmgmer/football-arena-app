@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/providers/locale_provider.dart';
-import 'package:flutter_challenge_mobile/widgets/general_widgets/text_widget.dart';
+import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
 class DropDownWidget extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/widgets/general_widgets/text_widget.dart';
-import 'package:flutter_challenge_mobile/widgets/loadings/primary_loading.dart';
+import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
+import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
 
 class MainButton extends StatelessWidget {
   final String buttonText;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_challenge_mobile/utilities/api_methods.dart';
-import 'package:flutter_challenge_mobile/widgets/buttons/main_button.dart';
+import 'package:in_zone_app/utilities/api_methods.dart';
+import 'package:in_zone_app/widgets/buttons/main_button.dart';
 
 class SingleUsersAvatars extends StatefulWidget {
   final bool isSelected;

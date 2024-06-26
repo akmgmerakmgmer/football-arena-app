@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/providers/locale_provider.dart';
-import 'package:flutter_challenge_mobile/widgets/buttons/main_button.dart';
-import 'package:flutter_challenge_mobile/widgets/buttons/regular_button.dart';
-import 'package:flutter_challenge_mobile/widgets/containers/image_background_container.dart';
+import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/widgets/buttons/main_button.dart';
+import 'package:in_zone_app/widgets/buttons/regular_button.dart';
+import 'package:in_zone_app/widgets/containers/image_background_container.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 

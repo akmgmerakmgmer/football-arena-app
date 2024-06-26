@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/widgets/containers/blur_background_container.dart';
+import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
 
 class ImageBackgroundContainer extends StatelessWidget {
   final Widget body;

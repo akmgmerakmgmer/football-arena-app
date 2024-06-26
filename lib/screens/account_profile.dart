@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_challenge_mobile/providers/locale_provider.dart';
-import 'package:flutter_challenge_mobile/widgets/buttons/main_button_no_width.dart';
-import 'package:flutter_challenge_mobile/widgets/containers/page_container_with_footer.dart';
-import 'package:flutter_challenge_mobile/widgets/general_widgets/snackbar_message.dart';
-import 'package:flutter_challenge_mobile/widgets/general_widgets/text_widget.dart';
-import 'package:flutter_challenge_mobile/widgets/general_widgets/title_with_border.dart';
-import 'package:flutter_challenge_mobile/widgets/screens/profile/single_users_avatars.dart';
-import 'package:flutter_challenge_mobile/widgets/user_inputs/input.dart';
+import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/widgets/buttons/main_button_no_width.dart';
+import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
+import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
+import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
+import 'package:in_zone_app/widgets/general_widgets/title_with_border.dart';
+import 'package:in_zone_app/widgets/screens/profile/single_users_avatars.dart';
+import 'package:in_zone_app/widgets/user_inputs/input.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
