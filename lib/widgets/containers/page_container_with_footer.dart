@@ -45,54 +45,41 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
   }
 
   getInitialData() async {
-    await fetchUsers();
     await fetchAdvertisments();
-    await fetchChallenges();
     adTimer();
     decreaseAdCount();
+    await fetchUsers();
   }
 
   Future<void> fetchUsers() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     String? token = localStorage.getString(('token'));
-    if (token!.isNotEmpty &&
+    if (token.toString() != 'null' &&
         // ignore: use_build_context_synchronously
         !Provider.of<LocaleProvider>(context, listen: false)
             .user
             .containsKey('username')) {
-      setState(() {
-        loading = true;
-      });
       // ignore: use_build_context_synchronously
       await Auth().getUser(token, context);
     }
+    setState(() {
+      loading = false;
+    });
   }
 
   Future<void> fetchAdvertisments() async {
     if (Provider.of<LocaleProvider>(context, listen: false)
         .advertisments
         .isEmpty) {
+      setState(() {
+        loading = true;
+      });
       await FetchApi('advertisments?page=1&company=&advertiseAt=websitePages',
           (advertisments) {
         Provider.of<LocaleProvider>(context, listen: false)
             .setAdvertisments(advertisments['advertisments']);
         // ignore: use_build_context_synchronously
       }).fetch(context);
-    }
-  }
-
-  Future<void> fetchChallenges() async {
-    if (Provider.of<LocaleProvider>(context, listen: false)
-        .challenges
-        .isEmpty) {
-      await FetchApi('challenges', (challenges) {
-        Provider.of<LocaleProvider>(context, listen: false)
-            .setChallenges(challenges);
-        // ignore: use_build_context_synchronously
-      }).fetch(context);
-      setState(() {
-        loading = false;
-      });
     }
   }
 
@@ -116,8 +103,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
     if (currentAdCountDown <= 0) {
       overlayController.toggle();
       setState(() {
-        Provider.of<LocaleProvider>(context, listen: false)
-            .setAdCountDown(181);
+        Provider.of<LocaleProvider>(context, listen: false).setAdCountDown(181);
         currentAdCountDown = 6;
       });
       List advertisments =
