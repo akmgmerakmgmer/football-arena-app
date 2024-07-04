@@ -52,7 +52,9 @@ class PerksIllustrations extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlackModalContainer(
       body: Container(
-        width: MediaQuery.of(context).size.width * 0.9,
+        width: MediaQuery.of(context).size.width > 360
+            ? MediaQuery.of(context).size.width * 0.9
+            : MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
             color: Theme.of(context).splashColor,
@@ -71,7 +73,9 @@ class PerksIllustrations extends StatelessWidget {
                   .map((perk) => SinglePerkIllustration(perk: perk))
                   .toList(),
             ),
-            const SizedBox(height: 3,),
+            const SizedBox(
+              height: 3,
+            ),
             MainButton(
                 radius: 10,
                 letterSpacing: 0.8,

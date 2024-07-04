@@ -19,7 +19,7 @@
     "contactUs": "اتصل بنا",
     "about": "عنا",
     "prizes": "الجوائز",
-    "challenges": "التحديات",
+    "challengesWord": "التحديات",
     "home": "الصفحة الرئيسية",
     "rankings": "ترتيب اللاعبين و الجوائز",
     "playNow": "ابدأ اللعب الان",
@@ -86,5 +86,10 @@
     "unlimitedText": "لانهاية",
     "skipAdIn": "تخطي الاعلان خلال",
     "skipAd": "تخطي الاعلان",
-    "seconds": "ثواني"
+    "seconds": "ثواني",
+    "questionsAbout": "أسئلة عن",
+    "playersChallenge": "تحدي اللاعبين",
+    "teamsChallenge": "تحدي الفرق",
+    "nationalTeamsChallenge": "تحدي المنتخبات",
+    "tournamentsChallenge": "تحدي البطولات"
 }

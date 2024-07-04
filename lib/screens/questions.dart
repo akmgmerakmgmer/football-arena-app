@@ -10,7 +10,6 @@ import 'package:in_zone_app/widgets/containers/image_background_plain.dart';
 import 'package:in_zone_app/widgets/containers/page_plain_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
-import 'package:in_zone_app/widgets/screens/home/main_menu.dart';
 import 'package:in_zone_app/widgets/screens/questions/advertisment.dart';
 import 'package:in_zone_app/widgets/screens/questions/game_over.dart';
 import 'package:in_zone_app/widgets/screens/questions/multiple_choices.dart';
@@ -22,7 +21,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:just_audio/just_audio.dart';
 
 class Questions extends StatefulWidget {
-  const Questions({super.key});
+  final String mode;
+  final bool practice;
+  const Questions({super.key, this.mode = '', this.practice = false});
 
   @override
   State<Questions> createState() => _QuestionsState();
@@ -30,6 +31,7 @@ class Questions extends StatefulWidget {
 
 class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   // States
+  Timer? _timer;
   List questions = [];
   int currentPage = 1;
   bool pageLoading = false;
@@ -75,7 +77,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
         pageLoading = true;
       });
     }
-    FetchApi('questions?page=$currentPage', (res) {
+    FetchApi('questions?page=$currentPage&search=${widget.mode}', (res) {
       setState(() {
         questions = [...questions, ...res['questions']];
         pageLoading = false;
@@ -104,7 +106,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void decreaseCount() {
-    Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       if (!stopCount && lives != 0) {
         if (countDown > 0) {
           setState(() {
@@ -520,6 +522,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -550,17 +553,18 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
-    final args = ModalRoute.of(context)?.settings.arguments as PageArguments;
-    if (args.status) {
+    if (widget.practice) {
       setState(() {
         lives = 10000000000;
       });
     }
     return PopScope(
-      canPop: true,
+      canPop: false,
       onPopInvoked: (bool didPop) {
-        if (!args.status) {
+        if (!widget.practice && widget.mode == '') {
           saveGame(true);
+        } else {
+          Navigator.pushReplacementNamed(context, '/rankings');
         }
       },
       child: PagePlainContainer(
@@ -575,11 +579,11 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                         bottom: 10,
                         right: 10,
                         child: SaveExitButton(
-                          buttonText: args.status
+                          buttonText: (widget.practice || widget.mode != '')
                               ? AppLocalizations.of(context)!.exitGame
                               : AppLocalizations.of(context)!.saveAndClose,
                           radius: 100,
-                          action: args.status
+                          action: (widget.practice || widget.mode != '')
                               ? () =>
                                   {Navigator.pushReplacementNamed(context, '/')}
                               : () => saveGame(true),

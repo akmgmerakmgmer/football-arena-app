@@ -16,7 +16,7 @@ class SaveExitButton extends StatelessWidget {
     required this.buttonText,
     required this.action,
     this.uppercase = false,
-    this.fontSize = 18,
+    this.fontSize = 14,
     this.letterSpacing = 1.0,
     this.radius = 0,
     this.loading = false, required this.icon,

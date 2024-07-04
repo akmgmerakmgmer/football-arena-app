@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/auth.dart';
@@ -28,6 +27,8 @@ class PageContainerWithFooter extends StatefulWidget {
 }
 
 class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
+  Timer? _adTimer;
+  Timer? _skipAdTimer;
   bool loading = false;
   int currentAd = 0;
   int currentAdCountDown = 6;
@@ -43,9 +44,12 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
     }
   }
 
-  getInitialData() {
-    fetchUsers();
-    fetchAdvertisments();
+  getInitialData() async {
+    await fetchUsers();
+    await fetchAdvertisments();
+    await fetchChallenges();
+    adTimer();
+    decreaseAdCount();
   }
 
   Future<void> fetchUsers() async {
@@ -74,18 +78,29 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
             .setAdvertisments(advertisments['advertisments']);
         // ignore: use_build_context_synchronously
       }).fetch(context);
-      adTimer();
+    }
+  }
+
+  Future<void> fetchChallenges() async {
+    if (Provider.of<LocaleProvider>(context, listen: false)
+        .challenges
+        .isEmpty) {
+      await FetchApi('challenges', (challenges) {
+        Provider.of<LocaleProvider>(context, listen: false)
+            .setChallenges(challenges);
+        // ignore: use_build_context_synchronously
+      }).fetch(context);
       setState(() {
         loading = false;
       });
     }
-    decreaseAdCount();
   }
 
   void adTimer() {
-    Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+    _adTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       Provider.of<LocaleProvider>(context, listen: false).setAdCountDown(
           Provider.of<LocaleProvider>(context, listen: false).adCountDown - 1);
+
       if (Provider.of<LocaleProvider>(context, listen: false).adCountDown ==
           0) {
         overlayController.toggle();
@@ -102,7 +117,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
       overlayController.toggle();
       setState(() {
         Provider.of<LocaleProvider>(context, listen: false)
-            .setAdCountDown(5 * 60);
+            .setAdCountDown(181);
         currentAdCountDown = 6;
       });
       List advertisments =
@@ -116,7 +131,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
   }
 
   void decreaseAdCount() {
-    Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+    _skipAdTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       if (Provider.of<LocaleProvider>(context, listen: false).adCountDown <=
           0) {
         setState(() {
@@ -134,6 +149,14 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
   }
 
   @override
+  void dispose() {
+    // Cancel the timer when the page is disposed
+    _adTimer?.cancel();
+    _skipAdTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     List advertisments =
         Provider.of<LocaleProvider>(context, listen: false).advertisments;
@@ -146,7 +169,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
             iconTheme: IconThemeData(color: Colors.grey.shade400),
             automaticallyImplyLeading: false,
             title: GestureDetector(
-              onTap: () => {Navigator.pushNamed(context, '/')},
+              onTap: () => {Navigator.pushReplacementNamed(context, '/')},
               child: Image.asset(
                 'assets/images/logo.png',
                 fit: BoxFit.cover,

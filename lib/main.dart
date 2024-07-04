@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/screens/account_profile.dart';
+import 'package:in_zone_app/screens/challenges.dart';
 import 'package:in_zone_app/screens/home.dart';
 import 'package:in_zone_app/screens/login.dart';
 import 'package:in_zone_app/screens/questions.dart';
@@ -58,6 +59,7 @@ class _MyAppState extends State<MyApp> {
                   '/login': (context) => const Login(),
                   '/questions': (context) => const Questions(),
                   '/rankings': (context) => const Rankings(),
+                  '/challenges': (context) => const Challenges(),
                   '/profile': (context) => AccountProfile()
                 },
                 title: 'InZone',
