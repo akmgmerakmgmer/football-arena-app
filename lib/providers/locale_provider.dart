@@ -22,8 +22,8 @@ class LocaleProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  List _advertisments = [];
-  List get advertisments {
+  Map _advertisments = {};
+  Map get advertisments {
     return _advertisments;
   }
 
@@ -32,13 +32,23 @@ class LocaleProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  int _adCountDown = 5 * 60;
+  int _adCountDown = 181;
   int get adCountDown {
     return _adCountDown;
   }
 
   void setAdCountDown(value) {
     _adCountDown = value;
+    notifyListeners();
+  }
+
+  Map _challenges = {};
+  Map get challenges {
+    return _challenges;
+  }
+
+  void setChallenges(value) {
+    _challenges = value;
     notifyListeners();
   }
 }

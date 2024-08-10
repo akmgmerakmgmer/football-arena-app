@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/auth.dart';
@@ -28,6 +27,8 @@ class PageContainerWithFooter extends StatefulWidget {
 }
 
 class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
+  Timer? _adTimer;
+  Timer? _skipAdTimer;
   bool loading = false;
   int currentAd = 0;
   int currentAdCountDown = 6;
@@ -43,49 +44,50 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
     }
   }
 
-  getInitialData() {
-    fetchUsers();
-    fetchAdvertisments();
+  getInitialData() async {
+    await fetchAdvertisments();
+    adTimer();
+    decreaseAdCount();
+    await fetchUsers();
   }
 
   Future<void> fetchUsers() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     String? token = localStorage.getString(('token'));
-    if (token!.isNotEmpty &&
+    if (token.toString() != 'null' &&
+        token != '' &&
         // ignore: use_build_context_synchronously
         !Provider.of<LocaleProvider>(context, listen: false)
             .user
             .containsKey('username')) {
-      setState(() {
-        loading = true;
-      });
       // ignore: use_build_context_synchronously
       await Auth().getUser(token, context);
     }
+    setState(() {
+      loading = false;
+    });
   }
 
   Future<void> fetchAdvertisments() async {
     if (Provider.of<LocaleProvider>(context, listen: false)
         .advertisments
         .isEmpty) {
-      await FetchApi('advertisments?page=1&company=&advertiseAt=websitePages',
-          (advertisments) {
+      setState(() {
+        loading = true;
+      });
+      await FetchApi('advertisments?page=1', (advertisments) {
         Provider.of<LocaleProvider>(context, listen: false)
-            .setAdvertisments(advertisments['advertisments']);
+            .setAdvertisments(advertisments);
         // ignore: use_build_context_synchronously
       }).fetch(context);
-      adTimer();
-      setState(() {
-        loading = false;
-      });
     }
-    decreaseAdCount();
   }
 
   void adTimer() {
-    Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+    _adTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       Provider.of<LocaleProvider>(context, listen: false).setAdCountDown(
           Provider.of<LocaleProvider>(context, listen: false).adCountDown - 1);
+
       if (Provider.of<LocaleProvider>(context, listen: false).adCountDown ==
           0) {
         overlayController.toggle();
@@ -101,12 +103,11 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
     if (currentAdCountDown <= 0) {
       overlayController.toggle();
       setState(() {
-        Provider.of<LocaleProvider>(context, listen: false)
-            .setAdCountDown(5 * 60);
+        Provider.of<LocaleProvider>(context, listen: false).setAdCountDown(181);
         currentAdCountDown = 6;
       });
-      List advertisments =
-          Provider.of<LocaleProvider>(context, listen: false).advertisments;
+      List advertisments = Provider.of<LocaleProvider>(context, listen: false)
+          .advertisments['advertisments'];
       if (currentAd == advertisments.length - 1) {
         currentAd = 0;
       } else {
@@ -116,7 +117,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
   }
 
   void decreaseAdCount() {
-    Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+    _skipAdTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       if (Provider.of<LocaleProvider>(context, listen: false).adCountDown <=
           0) {
         setState(() {
@@ -134,9 +135,24 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
   }
 
   @override
+  void dispose() {
+    // Cancel the timer when the page is disposed
+    _adTimer?.cancel();
+    _skipAdTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    List advertisments =
-        Provider.of<LocaleProvider>(context, listen: false).advertisments;
+    List advertisments = Provider.of<LocaleProvider>(context, listen: false)
+                .advertisments
+                .isNotEmpty &&
+            Provider.of<LocaleProvider>(context, listen: false)
+                .advertisments['advertisments']
+                .isNotEmpty
+        ? Provider.of<LocaleProvider>(context, listen: false)
+            .advertisments['advertisments']
+        : [];
     return SafeArea(
       child: Scaffold(
         endDrawer: const DrawerWidget(),
@@ -146,7 +162,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
             iconTheme: IconThemeData(color: Colors.grey.shade400),
             automaticallyImplyLeading: false,
             title: GestureDetector(
-              onTap: () => {Navigator.pushNamed(context, '/')},
+              onTap: () => {Navigator.pushReplacementNamed(context, '/')},
               child: Image.asset(
                 'assets/images/logo.png',
                 fit: BoxFit.cover,
@@ -168,25 +184,36 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
                       color: Theme.of(context).splashColor,
                       child: const PrimaryLoading())
                   : Column(
-                      children: [
-                        OverlayPortal(
-                          controller: overlayController,
-                          overlayChildBuilder: (BuildContext context) {
-                            return Advertisment(
-                                adClicked: () =>
-                                    adClicked(advertisments[currentAd]['_id']),
-                                seconds: currentAdCountDown,
-                                skipAdMethod: skipAdMethod,
-                                image: advertisments[currentAd]['image']);
-                          },
-                          child: ConstrainedBox(
-                              constraints: BoxConstraints(
-                                  minHeight:
-                                      MediaQuery.of(context).size.height - 200),
-                              child: widget.body),
-                        ),
-                        Footer(backgroundColor: widget.footerBackground)
-                      ],
+                      children: advertisments.isNotEmpty
+                          ? [
+                              OverlayPortal(
+                                controller: overlayController,
+                                overlayChildBuilder: (BuildContext context) {
+                                  return Advertisment(
+                                      adClicked: () => adClicked(
+                                          advertisments[currentAd]['_id']),
+                                      seconds: currentAdCountDown,
+                                      skipAdMethod: skipAdMethod,
+                                      image: advertisments[currentAd]['image']);
+                                },
+                                child: ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                        minHeight:
+                                            MediaQuery.of(context).size.height -
+                                                200),
+                                    child: widget.body),
+                              ),
+                              Footer(backgroundColor: widget.footerBackground)
+                            ]
+                          : [
+                              ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                      minHeight:
+                                          MediaQuery.of(context).size.height -
+                                              200),
+                                  child: widget.body),
+                              Footer(backgroundColor: widget.footerBackground)
+                            ],
                     ),
             ),
           ],

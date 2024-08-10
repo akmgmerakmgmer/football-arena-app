@@ -64,7 +64,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             text: AppLocalizations.of(context)!.home,
             icon: Icons.home,
             action: () {
-              Navigator.pushNamed(context, '/');
+              Navigator.pushReplacementNamed(context, '/');
             },
             selected: currentPath == '/',
           ),
@@ -77,9 +77,17 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             text: AppLocalizations.of(context)!.rankings,
             icon: Icons.view_list,
             action: () {
-              Navigator.pushNamed(context, '/rankings');
+              Navigator.pushReplacementNamed(context, '/rankings');
             },
             selected: currentPath == '/rankings',
+          ),
+          DrawerItem(
+            text: AppLocalizations.of(context)!.challengesWord,
+            icon: Icons.webhook,
+            action: () {
+              Navigator.pushReplacementNamed(context, '/challenges');
+            },
+            selected: currentPath == '/challenges',
           ),
           // DrawerItem(
           //   text: AppLocalizations.of(context)!.challenges,
@@ -96,7 +104,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   text: AppLocalizations.of(context)!.accountProfile,
                   icon: Icons.person,
                   action: () {
-                    Navigator.pushNamed(context, '/profile');
+                    Navigator.pushReplacementNamed(context, '/profile');
                   },
                   selected: currentPath == '/profile',
                 )
@@ -112,7 +120,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   text: AppLocalizations.of(context)!.login,
                   icon: Icons.login,
                   action: () {
-                    Navigator.pushNamed(context, '/login');
+                    Navigator.pushReplacementNamed(context, '/login');
                   },
                   selected: currentPath == '/login',
                 ),
@@ -120,7 +128,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             text: AppLocalizations.of(context)!.createAccount,
             icon: Icons.login,
             action: () {
-              Navigator.pushNamed(context, '/signup');
+              Navigator.pushReplacementNamed(context, '/signup');
             },
             selected: currentPath == '/signup',
           ),

@@ -12,18 +12,19 @@ class MainButton extends StatelessWidget {
   final bool loading;
   final bool isWidget;
   final dynamic widget;
-  const MainButton({
-    super.key,
-    required this.buttonText,
-    required this.action,
-    this.uppercase = false,
-    this.fontSize = 18,
-    this.letterSpacing = 2.0,
-    this.radius = 0,
-    this.loading = false,
-    this.isWidget = false,
-    this.widget,
-  });
+  final bool isChallengesPage;
+  const MainButton(
+      {super.key,
+      required this.buttonText,
+      required this.action,
+      this.uppercase = false,
+      this.fontSize = 18,
+      this.letterSpacing = 2.0,
+      this.radius = 0,
+      this.loading = false,
+      this.isWidget = false,
+      this.widget,
+      this.isChallengesPage = false});
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +56,11 @@ class MainButton extends StatelessWidget {
             ),
           ],
         ),
-        padding: isWidget && !loading
-            ? const EdgeInsets.all(8.0)
-            : const EdgeInsets.all(12.0),
+        padding: isChallengesPage
+            ? const EdgeInsets.all(10.0)
+            : isWidget && !loading
+                ? const EdgeInsets.all(8.0)
+                : const EdgeInsets.all(12.0),
         child: loading
             ? const PrimaryLoading()
             : isWidget

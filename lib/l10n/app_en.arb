@@ -19,7 +19,6 @@
     "contactUs": "Contact Us",
     "about": "About Us",
     "prizes": "Prizes",
-    "challenges": "Challenges",
     "home": "Home",
     "rankings": "Rankings",
     "playNow": "Play Now",
@@ -86,5 +85,12 @@
     "unlimitedText": "Unlimited",
     "skipAdIn": "Skip Ad in",
     "skipAd": "Skip Ad",
-    "seconds": "Seconds"
+    "seconds": "Seconds",
+    "challengesWord": "Challenges",
+    "challengesDesc": "Football fanatics, get ready! Exciting challenges are coming your way, spanning the Champions League, Premier League, La Liga. Brace for intense moments and unexpected twists. Sharpen your knowledge, stay tuned, and don't miss the countdown to football greatness! ⚽🔥",
+    "questionsAbout": "Questions about",
+    "playersChallenge": "Players Challenge",
+    "teamsChallenge": "Teams Challenge",
+    "nationalTeamsChallenge": "National Teams Challenge",
+    "tournamentsChallenge": "Tournaments Challenge"
 }
