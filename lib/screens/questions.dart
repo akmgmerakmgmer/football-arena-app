@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/widgets/buttons/save_exit_button.dart';
+import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
 import 'package:in_zone_app/widgets/containers/fade_transition.dart';
-import 'package:in_zone_app/widgets/containers/glass_background_container.dart';
 import 'package:in_zone_app/widgets/containers/image_background_plain.dart';
 import 'package:in_zone_app/widgets/containers/page_plain_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
@@ -611,7 +611,12 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
                               ),
-                              GlassBackgroundContainer(
+                              const SizedBox(
+                                height: 12,
+                              ),
+                              BlurBackgroundContainer(
+                                padding: 12,
+                                margin: 10,
                                 body: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -623,6 +628,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                                     ),
                                   ],
                                 ),
+                              ),
+                              const SizedBox(
+                                height: 16,
                               ),
                               MultipleChoices(
                                 locale: locale,

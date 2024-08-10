@@ -1,5 +1,5 @@
 class Url {
-  final String url = 'http://localhost:4000/api/';
+  final String url = 'https://football-challenge-backend.vercel.app/api/';
   Map<String, String> requestHeaders = {
     'Content-type': 'application/json',
     'Accept': 'application/json',

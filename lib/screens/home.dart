@@ -14,7 +14,7 @@ class Home extends StatelessWidget {
         children: [
           const MainMenu(),
           const AboutUs(),
-          UpcomingChallenges(),
+          // UpcomingChallenges(),
           // Prizes()
         ],
       ),

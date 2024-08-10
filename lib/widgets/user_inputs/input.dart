@@ -23,7 +23,8 @@ class Input extends StatefulWidget {
       this.loading = false,
       this.disabled = false,
       this.isPassword = false,
-      this.maxLines = 1, required this.icon});
+      this.maxLines = 1,
+      required this.icon});
 
   @override
   State<Input> createState() => _InputState();
@@ -49,21 +50,29 @@ class _InputState extends State<Input> {
       onChanged: (value) => widget.callback(value),
       initialValue: widget.value,
       keyboardType: widget.type,
-      style: const TextStyle(
+      textDirection:
+          Provider.of<LocaleProvider>(context, listen: false).locale == 'ar'
+              ? TextDirection.rtl
+              : TextDirection.ltr,
+      style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
+          fontFamily:
+              Provider.of<LocaleProvider>(context, listen: false).locale == 'ar'
+                  ? 'NotoKufiArabic'
+                  : 'Oswald',
           fontSize: 14), // Set text color to white
       decoration: InputDecoration(
         suffixIcon: widget.icon,
         suffixIconColor: Colors.white,
-        enabledBorder: OutlineInputBorder(borderSide: const BorderSide(color: Colors.white),borderRadius: BorderRadius.circular(100)),
+        enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.white),
+            borderRadius: BorderRadius.circular(100)),
         alignLabelWithHint: true,
         enabled: !widget.disabled && !widget.loading,
         errorText: widget.error.isEmpty ? null : widget.error,
-        errorStyle: const TextStyle(
-          color: Colors.red,
-          fontWeight: FontWeight.bold
-        ),
+        errorStyle:
+            const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
         disabledBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(100)),
           borderSide: BorderSide(
