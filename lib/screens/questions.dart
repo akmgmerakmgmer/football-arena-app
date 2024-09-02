@@ -22,8 +22,15 @@ import 'package:just_audio/just_audio.dart';
 
 class Questions extends StatefulWidget {
   final String mode;
+  final String userId;
+  final String name;
   final bool practice;
-  const Questions({super.key, this.mode = '', this.practice = false});
+  const Questions(
+      {super.key,
+      this.mode = '',
+      this.userId = '',
+      this.name = '',
+      this.practice = false});
 
   @override
   State<Questions> createState() => _QuestionsState();
@@ -65,6 +72,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   int currentAdCountDown = 6;
   bool stopAdCount = true;
   bool gameSaved = false;
+  List usedPerks = [];
+  bool nextPatchisLoaded = true;
   final audioPlayer = AudioPlayer();
   String correctAudio =
       'https://res.cloudinary.com/do0qe5hin/video/upload/v1713830132/vdnaipfdraveg92re1bi.mp4';
@@ -77,10 +86,13 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
         pageLoading = true;
       });
     }
-    FetchApi('questions?page=$currentPage&search=${widget.mode}', (res) {
+    FetchApi(
+        'questions?page=$currentPage&search=${widget.mode}&userId=${widget.userId}&name=${widget.name}',
+        (res) {
       setState(() {
         questions = [...questions, ...res['questions']];
         pageLoading = false;
+        nextPatchisLoaded = true;
       });
       if (res['questions'].length == 0) {
         currentPage = 0;
@@ -170,7 +182,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void getNextPatchOfQuestions() {
-    if (questions.length - currentQuestion <= 7) {
+    if (questions.length - currentQuestion <= 7 && nextPatchisLoaded) {
+      nextPatchisLoaded = false;
       currentPage++;
       getQuestions();
     }
@@ -358,10 +371,11 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void saveGame(navigate) {
+    stopCount = true;
     if (points == 0 && navigate) {
       Navigator.pushReplacementNamed(context, '/rankings');
     } else {
-      Map payload = {'points': points, 'coins': coins};
+      Map payload = {'points': points, 'coins': coins, 'usedPerks': usedPerks};
       String userId =
           Provider.of<LocaleProvider>(context, listen: false).user['_id'];
       setState(() {
@@ -392,12 +406,14 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     return false;
   }
 
-  void penaltyMethod() {
+  void penaltyMethod(id) {
     if (!penaltyActivated &&
         !showPlayerSearch() &&
         questions[currentQuestion]['questionMode'] != 'trueOrFalse') {
       int numberOfChoicesRemoved = 0;
-
+      setState(() {
+        usedPerks.add(id);
+      });
       while (numberOfChoicesRemoved != 2) {
         List indeces = [];
         int randomIndex = (Random().nextDouble() *
@@ -423,28 +439,39 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     }
   }
 
-  void varMethod() {
+  void varMethod(id) {
     if (allowVarActivation) {
+      setState(() {
+        usedPerks.add(id);
+      });
       activateVar = true;
       allowVarActivation = false;
     }
   }
 
-  void stoppageTimeMethod() {
+  void stoppageTimeMethod(id) {
     stoppageTimeActivated = true;
-    multiplyPoints = 2;
-    Timer.periodic(const Duration(seconds: 30), (Timer timer) {
-      stoppageTimeActivated = false;
-      multiplyPoints = 1;
-    });
+    if (!stoppageTimeActivated) {
+      setState(() {
+        usedPerks.add(id);
+      });
+      multiplyPoints = 2;
+      Timer.periodic(const Duration(seconds: 30), (Timer timer) {
+        stoppageTimeActivated = false;
+        multiplyPoints = 1;
+      });
+    }
   }
 
-  void stopTimeMethod() {
+  void stopTimeMethod(id) {
     if (!stopCountActivated) {
+      setState(() {
+        usedPerks.add(id);
+      });
+      stopCountActivated = true;
       stopCount = true;
-      Timer.periodic(const Duration(seconds: 10), (Timer timer) {
+      Timer.periodic(const Duration(seconds: 30), (Timer timer) {
         stopCount = false;
-        stopCountActivated = true;
       });
     }
   }
@@ -553,6 +580,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
+    Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     if (widget.practice) {
       setState(() {
         lives = 10000000000;
@@ -561,7 +589,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
-        if (!widget.practice && widget.mode == '') {
+        if (!widget.practice) {
           saveGame(true);
         } else {
           Navigator.pushReplacementNamed(context, '/rankings');
@@ -579,11 +607,11 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                         bottom: 10,
                         right: 10,
                         child: SaveExitButton(
-                          buttonText: (widget.practice || widget.mode != '')
+                          buttonText: (widget.practice)
                               ? AppLocalizations.of(context)!.exitGame
                               : AppLocalizations.of(context)!.saveAndClose,
                           radius: 100,
-                          action: (widget.practice || widget.mode != '')
+                          action: (widget.practice)
                               ? () =>
                                   {Navigator.pushReplacementNamed(context, '/')}
                               : () => saveGame(true),
@@ -594,9 +622,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                         ),
                       ),
                       Stats(
-                        user:
-                            Provider.of<LocaleProvider>(context, listen: false)
-                                .user,
+                        usedPerks: usedPerks,
+                        user: user,
                         points: points,
                         coins: coins,
                         lives: lives,
@@ -655,6 +682,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                       showTut
                           ? PerksIllustrations(
                               action: finishTutorialAction,
+                              user: Provider.of<LocaleProvider>(context,
+                                      listen: false)
+                                  .user,
                             )
                           : Container(),
                       showAd && advertisments.isNotEmpty

@@ -24,6 +24,7 @@ class ChallengeSegment extends StatelessWidget {
           child: Row(
             children: data
                 .map((item) => Challenge(
+                    mode: item['_id'],
                     image: item['image'],
                     title: Provider.of<LocaleProvider>(context, listen: false)
                                 .locale ==

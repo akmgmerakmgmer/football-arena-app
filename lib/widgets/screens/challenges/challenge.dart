@@ -4,18 +4,39 @@ import 'package:in_zone_app/screens/questions.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Challenge extends StatelessWidget {
   final String image;
   final String title;
   final String description;
+  final String mode;
   const Challenge({
     super.key,
     required this.image,
     required this.title,
     required this.description,
+    required this.mode,
   });
+
+  bool isPlayedToday(context) {
+    Map user = Provider.of<LocaleProvider>(context, listen: false).user;
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('yyyy-MM-dd').format(now);
+    if (user.isNotEmpty && user.containsKey('username')) {
+      List currentChallenge = user['challenges']
+          .where((challenge) => challenge['id'] == mode)
+          .toList();
+      if (currentChallenge.isNotEmpty &&
+          currentChallenge[0]['id'] == mode &&
+          currentChallenge[0]['lastPlayedDate'] == formattedDate) {
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,12 +96,20 @@ class Challenge extends StatelessWidget {
                           width: MediaQuery.of(context).size.width * 0.6,
                           constraints: const BoxConstraints(maxWidth: 200),
                           child: MainButton(
-                              buttonText: AppLocalizations.of(context)!.playNow,
-                              fontSize: 13.5,
+                              disabled: isPlayedToday(context),
+                              buttonText: isPlayedToday(context)
+                                  ? AppLocalizations.of(context)!
+                                      .alreadyPlayedOnce
+                                  : AppLocalizations.of(context)!.playNow,
+                              fontSize: 12.5,
                               uppercase: true,
                               letterSpacing: 1.1,
                               isChallengesPage: true,
+                              radius: 10,
                               action: () {
+                                if (isPlayedToday(context)) {
+                                  return;
+                                }
                                 if (Provider.of<LocaleProvider>(context,
                                         listen: false)
                                     .user
@@ -89,12 +118,18 @@ class Challenge extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => Questions(
-                                        mode: title,
+                                        mode: mode,
+                                        name: title,
+                                        userId: Provider.of<LocaleProvider>(
+                                                context,
+                                                listen: false)
+                                            .user['_id'],
                                       ),
                                     ),
                                   );
                                 } else {
-                                  Navigator.pushReplacementNamed(context, '/login');
+                                  Navigator.pushReplacementNamed(
+                                      context, '/login');
                                 }
                               }),
                         )

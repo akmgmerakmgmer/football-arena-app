@@ -113,8 +113,7 @@ class SingleUser extends StatelessWidget {
             Row(
               children: [
                 UserData(
-                    title: AppLocalizations.of(context)!.gamesPlayed,
-                    stat: gamesPlayed),
+                    title: AppLocalizations.of(context)!.points, stat: points),
                 const SizedBox(
                   width: 10,
                 ),
@@ -124,7 +123,8 @@ class SingleUser extends StatelessWidget {
                   width: 10,
                 ),
                 UserData(
-                    title: AppLocalizations.of(context)!.points, stat: points)
+                    title: AppLocalizations.of(context)!.gamesPlayed,
+                    stat: gamesPlayed)
               ],
             )
           ],

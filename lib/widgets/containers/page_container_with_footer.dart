@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/auth.dart';
@@ -15,11 +17,13 @@ class PageContainerWithFooter extends StatefulWidget {
   final Widget body;
   final Color background;
   final Color footerBackground;
+  final dynamic scroll;
   const PageContainerWithFooter(
       {super.key,
       required this.body,
       this.background = Colors.transparent,
-      this.footerBackground = const Color(0xFF111111)});
+      this.footerBackground = const Color(0xFF111111),
+      this.scroll});
 
   @override
   State<PageContainerWithFooter> createState() =>
@@ -174,50 +178,58 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
           ),
         ),
         body: SingleChildScrollView(
+            controller: widget.scroll,
+            // physics: const ScrollPhysics(parent:PageScrollPhysics() ),
             child: Stack(
-          children: [
-            Container(
-              color: widget.background,
-              child: loading
-                  ? Container(
-                      height: MediaQuery.of(context).size.height - 56,
-                      color: Theme.of(context).splashColor,
-                      child: const PrimaryLoading())
-                  : Column(
-                      children: advertisments.isNotEmpty
-                          ? [
-                              OverlayPortal(
-                                controller: overlayController,
-                                overlayChildBuilder: (BuildContext context) {
-                                  return Advertisment(
-                                      adClicked: () => adClicked(
-                                          advertisments[currentAd]['_id']),
-                                      seconds: currentAdCountDown,
-                                      skipAdMethod: skipAdMethod,
-                                      image: advertisments[currentAd]['image']);
-                                },
-                                child: ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                        minHeight:
-                                            MediaQuery.of(context).size.height -
+              children: [
+                Container(
+                  color: widget.background,
+                  child: loading
+                      ? Container(
+                          height: MediaQuery.of(context).size.height - 56,
+                          color: Theme.of(context).splashColor,
+                          child: const PrimaryLoading())
+                      : Column(
+                          children: advertisments.isNotEmpty
+                              ? [
+                                  OverlayPortal(
+                                    controller: overlayController,
+                                    overlayChildBuilder:
+                                        (BuildContext context) {
+                                      return Advertisment(
+                                          adClicked: () => adClicked(
+                                              advertisments[currentAd]['_id']),
+                                          seconds: currentAdCountDown,
+                                          skipAdMethod: skipAdMethod,
+                                          image: advertisments[currentAd]
+                                              ['image']);
+                                    },
+                                    child: ConstrainedBox(
+                                        constraints: BoxConstraints(
+                                            minHeight: MediaQuery.of(context)
+                                                    .size
+                                                    .height -
                                                 200),
-                                    child: widget.body),
-                              ),
-                              Footer(backgroundColor: widget.footerBackground)
-                            ]
-                          : [
-                              ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                      minHeight:
-                                          MediaQuery.of(context).size.height -
+                                        child: widget.body),
+                                  ),
+                                  Footer(
+                                      backgroundColor: widget.footerBackground)
+                                ]
+                              : [
+                                  ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                          minHeight: MediaQuery.of(context)
+                                                  .size
+                                                  .height -
                                               200),
-                                  child: widget.body),
-                              Footer(backgroundColor: widget.footerBackground)
-                            ],
-                    ),
-            ),
-          ],
-        )),
+                                      child: widget.body),
+                                  Footer(
+                                      backgroundColor: widget.footerBackground)
+                                ],
+                        ),
+                ),
+              ],
+            )),
       ),
     );
   }

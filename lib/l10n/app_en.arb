@@ -92,5 +92,17 @@
     "playersChallenge": "Players Challenge",
     "teamsChallenge": "Teams Challenge",
     "nationalTeamsChallenge": "National Teams Challenge",
-    "tournamentsChallenge": "Tournaments Challenge"
+    "tournamentsChallenge": "Tournaments Challenge",
+    "bestOffers": "Best Offers",
+    "checkOffer": "Check Offer",
+    "alreadyPlayedOnce": "Playable once a day",
+    "yourPerks": "Your Perks",
+    "youHave": "You Have",
+    "selectPerk": "Select",
+    "perksTitle": "Buy More Perks",
+    "congratsText": "Congratulations you have made your purchase successfully",
+    "close": "Close",
+    "remove": "Remove",
+    "shop": "Shop",
+    "perksError": "You already have 4 perks selected you have to remove at least 1 to select from the others"
 }

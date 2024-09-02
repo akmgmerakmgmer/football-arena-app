@@ -7,47 +7,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PerksIllustrations extends StatelessWidget {
   final Function action;
-  PerksIllustrations({super.key, required this.action});
+  final Map user;
+  const PerksIllustrations(
+      {super.key, required this.action, required this.user});
 
-  final List<Map> helpingPerks = [
-    {
-      'image': 'assets/images/image90.png',
-      'index': 0,
-      'text': {
-        'en':
-            "ُEvery question has it's time cut in half but your correct answer points are doubled",
-        'ar': "نقاط اجاباتك الصحيحة تتضاعف لكن كل سؤال وقته يقل للنصف"
-      },
-      'title': {'en': "+90", 'ar': "+90"}
-    },
-    {
-      'image': 'assets/images/halfTime.png',
-      'index': 1,
-      'text': {
-        'en': "ُYou can remove two answers in multiple choices questions",
-        'ar': "تستطيع حذف اجابتين في اسئلة الاختيارات المتعددة"
-      },
-      'title': {'en': "Penalty", 'ar': "ضربة جزاء"}
-    },
-    {
-      'image': 'assets/images/VAR.png',
-      'index': 2,
-      'text': {
-        'en': "ُYour next incorrect answer will not affect your lives",
-        'ar': "إجابتك الخاطئة التالية لن تؤثر على نقاط حياتك"
-      },
-      'title': {'en': "VAR", 'ar': "تقنية الفيديو"}
-    },
-    {
-      'image': 'assets/images/stopTime.png',
-      'index': 3,
-      'text': {
-        'en': "ُTime stops for 30 Seconds",
-        'ar': "يتوقف الوقت 30 ثانية"
-      },
-      'title': {'en': "Extra Time", 'ar': "وقت اضافي"}
-    },
-  ];
   @override
   Widget build(BuildContext context) {
     return BlackModalContainer(
@@ -69,10 +32,20 @@ class PerksIllustrations extends StatelessWidget {
               height: 16,
             ),
             Column(
-              children: helpingPerks
-                  .map((perk) => SinglePerkIllustration(perk: perk))
-                  .toList(),
-            ),
+                children: user['perks']
+                    .where((perk) => perk['selected'] == true)
+                    .toList()
+                    .map<Widget>(((perk) => Column(
+                          children: [
+                            SinglePerkIllustration(
+                              perk: perk,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                          ],
+                        )))
+                    .toList()),
             const SizedBox(
               height: 3,
             ),

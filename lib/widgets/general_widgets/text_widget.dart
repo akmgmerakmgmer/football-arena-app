@@ -33,7 +33,10 @@ class TextWidget extends StatelessWidget {
       style: TextStyle(
           overflow: TextOverflow.clip,
           height: height,
-          fontSize: fontSize,
+          fontSize:
+              Provider.of<LocaleProvider>(context, listen: false).locale == 'ar'
+                  ? fontSize - 1
+                  : fontSize,
           fontWeight: fontWeight,
           fontFamily:
               Provider.of<LocaleProvider>(context, listen: false).locale == 'ar'

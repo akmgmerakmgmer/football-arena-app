@@ -4,7 +4,8 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 class GridContainer extends StatelessWidget {
   final List<Widget> widget;
   final int numberOfGrids;
-  const GridContainer({super.key, required this.widget,  this.numberOfGrids=3});
+  const GridContainer(
+      {super.key, required this.widget, this.numberOfGrids = 3});
 
   @override
   Widget build(BuildContext context) {

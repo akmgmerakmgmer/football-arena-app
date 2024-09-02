@@ -13,6 +13,8 @@ class MainButton extends StatelessWidget {
   final bool isWidget;
   final dynamic widget;
   final bool isChallengesPage;
+  final bool offersPage;
+  final bool disabled;
   const MainButton(
       {super.key,
       required this.buttonText,
@@ -24,7 +26,9 @@ class MainButton extends StatelessWidget {
       this.loading = false,
       this.isWidget = false,
       this.widget,
-      this.isChallengesPage = false});
+      this.isChallengesPage = false,
+      this.offersPage = false,
+      this.disabled = false});
 
   @override
   Widget build(BuildContext context) {
@@ -33,28 +37,36 @@ class MainButton extends StatelessWidget {
       child: Container(
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          borderRadius: BorderRadius.all(Radius.circular(radius)),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0xFFDC2626),
-              spreadRadius: 0,
-              blurRadius: 5,
-              offset: Offset(0, 0),
-            ),
-            BoxShadow(
-              color: Color(0xFFDC2626),
-              spreadRadius: 0,
-              blurRadius: 5,
-              offset: Offset(0, 0),
-            ),
-            BoxShadow(
-              color: Color(0xFFDC2626),
-              spreadRadius: 0,
-              blurRadius: 5,
-              offset: Offset(0, 0),
-            ),
-          ],
+          color: disabled
+              ? Colors.white.withOpacity(0.1)
+              : Theme.of(context).primaryColor,
+          borderRadius: offersPage
+              ? BorderRadius.only(
+                  bottomLeft: Radius.circular(radius),
+                  bottomRight: Radius.circular(radius))
+              : BorderRadius.all(Radius.circular(radius)),
+          boxShadow: disabled
+              ? null
+              : const [
+                  BoxShadow(
+                    color: Color(0xFFDC2626),
+                    spreadRadius: 0,
+                    blurRadius: 5,
+                    offset: Offset(0, 0),
+                  ),
+                  BoxShadow(
+                    color: Color(0xFFDC2626),
+                    spreadRadius: 0,
+                    blurRadius: 5,
+                    offset: Offset(0, 0),
+                  ),
+                  BoxShadow(
+                    color: Color(0xFFDC2626),
+                    spreadRadius: 0,
+                    blurRadius: 5,
+                    offset: Offset(0, 0),
+                  ),
+                ],
         ),
         padding: isChallengesPage
             ? const EdgeInsets.all(10.0)
@@ -68,7 +80,7 @@ class MainButton extends StatelessWidget {
                 : TextWidget(
                     title: uppercase ? buttonText.toUpperCase() : buttonText,
                     textAlign: TextAlign.center,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     fontSize: fontSize,
                     letterSpacing: letterSpacing,
                   ),

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/screens/account_profile.dart';
+import 'package:in_zone_app/screens/best_offers.dart';
 import 'package:in_zone_app/screens/challenges.dart';
 import 'package:in_zone_app/screens/home.dart';
 import 'package:in_zone_app/screens/login.dart';
 import 'package:in_zone_app/screens/questions.dart';
 import 'package:in_zone_app/screens/rankings.dart';
+import 'package:in_zone_app/screens/shop.dart';
 import 'package:in_zone_app/screens/signup.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -60,7 +62,9 @@ class _MyAppState extends State<MyApp> {
                   '/questions': (context) => const Questions(),
                   '/rankings': (context) => const Rankings(),
                   '/challenges': (context) => const Challenges(),
-                  '/profile': (context) => AccountProfile()
+                  '/profile': (context) => AccountProfile(),
+                  '/best-offers': (context) => const BestOffers(),
+                  '/shop': (context) => const Shop(),
                 },
                 title: 'InZone',
                 localizationsDelegates: const [

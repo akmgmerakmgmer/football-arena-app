@@ -4,16 +4,25 @@ import 'package:flutter/widgets.dart';
 class SinglePerk extends StatelessWidget {
   final Function action;
   final String image;
-  const SinglePerk({super.key, required this.action, required this.image});
+  final bool disabled;
+  const SinglePerk(
+      {super.key,
+      required this.action,
+      required this.image,
+      required this.disabled});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () => action(),
-        child: Image.asset(
-          image,
-          fit: BoxFit.cover,
-          width: 35,
+        child: AnimatedOpacity(
+          opacity: disabled ? 0.4 : 1,
+          duration: const Duration(milliseconds: 200),
+          child: Image.network(
+            image,
+            fit: BoxFit.cover,
+            width: 35,
+          ),
         ));
   }
 }

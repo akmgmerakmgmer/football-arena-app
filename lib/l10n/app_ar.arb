@@ -77,7 +77,7 @@
     "buyNow": "أشتري الان",
     "yourAvatars": "رموزك",
     "buyMoreAvatars": "اشتري المزيد من الرموز",
-    "youHave": "انت لديك",
+    "youHave": "لديك",
     "select": "أختر هذا الرمز",
     "selected": "الرمز الاساسي",
     "number": "رقم التليفون",
@@ -91,5 +91,16 @@
     "playersChallenge": "تحدي اللاعبين",
     "teamsChallenge": "تحدي الفرق",
     "nationalTeamsChallenge": "تحدي المنتخبات",
-    "tournamentsChallenge": "تحدي البطولات"
+    "tournamentsChallenge": "تحدي البطولات",
+    "bestOffers": "أفضل العروض",
+    "checkOffer": "احصل علي العرض",
+    "alreadyPlayedOnce": "تلعب مرة واحدة يوميا",
+    "yourPerks": "وسائل المساعدة الخاصة بك",
+    "perksTitle": "اشتري وسائل مساعدة",
+    "congratsText": "تهانينا لقد قمت بعملية الشراء بنجاح",
+    "close": "اغلاق الرسالة",
+    "remove": "ازالة وسيلة المساعدة",
+    "selectPerk": "اضافة وسيلة المساعدة",
+    "shop": "المتجر",
+    "perksError": "لديك 4 وسائل مساعدة مستخدمين بالفعل برجاء حذف واحدة علي الاقل لتسطيع اختيار وسيلة أخري'"
 }

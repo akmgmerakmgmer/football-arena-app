@@ -18,8 +18,8 @@ class SinglePerkIllustration extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(15))),
           child: Row(
             children: [
-              Image.asset(
-                perk['image'],
+              Image.network(
+                perk['id']['image'],
                 fit: BoxFit.cover,
                 width: 50,
               ),
@@ -36,8 +36,8 @@ class SinglePerkIllustration extends StatelessWidget {
                       title: Provider.of<LocaleProvider>(context, listen: false)
                                   .locale ==
                               'ar'
-                          ? perk['title']['ar']
-                          : perk['title']['en']),
+                          ? perk['id']['title']['ar']
+                          : perk['id']['title']['en']),
                   const SizedBox(
                     height: 5,
                   ),
@@ -48,8 +48,8 @@ class SinglePerkIllustration extends StatelessWidget {
                       title: Provider.of<LocaleProvider>(context, listen: false)
                                   .locale ==
                               'ar'
-                          ? perk['text']['ar']
-                          : perk['text']['en'],
+                          ? perk['id']['description']['ar']
+                          : perk['id']['description']['en'],
                       color: Colors.grey.shade400,
                     ),
                   )

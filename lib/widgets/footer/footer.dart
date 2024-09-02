@@ -26,9 +26,6 @@ class Footer extends StatelessWidget {
               const SizedBox(
                 width: 12,
               ),
-              const SizedBox(
-                width: 12,
-              ),
               SingleIcon(
                 icon: 'assets/images/icons8-youtube.svg',
                 action: () =>  ExternalUrl().launchNewUrl(

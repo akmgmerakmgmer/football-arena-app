@@ -51,4 +51,24 @@ class LocaleProvider with ChangeNotifier {
     _challenges = value;
     notifyListeners();
   }
+
+  List _avatars = [];
+  List get avatars {
+    return _avatars;
+  }
+
+  void setAvatars(value) {
+    _avatars = value;
+    notifyListeners();
+  }
+
+  Map _shopItems = {};
+  Map get shopItems {
+    return _shopItems;
+  }
+
+  void setShopItems(value) {
+    _shopItems = value;
+    notifyListeners();
+  }
 }

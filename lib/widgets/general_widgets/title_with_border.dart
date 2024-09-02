@@ -9,11 +9,9 @@ class TitleWithBorder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
     return Align(
-      alignment:
-          Provider.of<LocaleProvider>(context, listen: false).locale == 'en'
-              ? Alignment.topLeft
-              : Alignment.topRight,
+      alignment: locale == 'en' ? Alignment.topLeft : Alignment.topRight,
       child: Container(
         decoration: BoxDecoration(
             border: Border(
@@ -25,7 +23,7 @@ class TitleWithBorder extends StatelessWidget {
         )),
         child: TextWidget(
           title: title,
-          fontSize: 28,
+          fontSize: locale == 'en' ? 28 : 24,
           fontWeight: FontWeight.bold,
           textAlign: TextAlign.left,
         ),

@@ -45,8 +45,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           ),
           isUserExists
               ? DrawerItem(
-                  text: '${AppLocalizations.of(context)!.welcome} ${Provider.of<LocaleProvider>(context, listen: false)
-                      .user['username']}',
+                  text:
+                      '${AppLocalizations.of(context)!.welcome} ${Provider.of<LocaleProvider>(context, listen: false).user['username']}',
                   icon: Icons.account_circle,
                   textSize: 18,
                   iconSize: 30,
@@ -99,6 +99,22 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           //   icon: Icons.attach_money,
           //   action: () {},
           // ),
+          DrawerItem(
+            text: AppLocalizations.of(context)!.bestOffers,
+            icon: Icons.discount,
+            action: () {
+              Navigator.pushReplacementNamed(context, '/best-offers');
+            },
+            selected: currentPath == '/best-offers',
+          ),
+          DrawerItem(
+            text: AppLocalizations.of(context)!.shop,
+            icon: Icons.shopping_bag,
+            action: () {
+              Navigator.pushReplacementNamed(context, '/shop');
+            },
+            selected: currentPath == '/shop',
+          ),
           isUserExists
               ? DrawerItem(
                   text: AppLocalizations.of(context)!.accountProfile,

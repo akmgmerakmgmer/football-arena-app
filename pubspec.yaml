@@ -98,15 +98,13 @@ flutter:
     - assets/images/icons8-youtube.svg
     - assets/images/icons8-tiktok.svg
     - assets/images/icons8-instagram.svg
-    - assets/images/halfTime.png
-    - assets/images/stopTime.png
-    - assets/images/VAR.png
-    - assets/images/image90.png
     - assets/images/prize.png
     - assets/images/gameOver.png
     - assets/images/background_new.jpg
+    - assets/images/coin.png
     - assets/audio/correct.wav
     - assets/audio/buzzer.mp3
+    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

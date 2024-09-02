@@ -13,6 +13,7 @@ class Stats extends StatelessWidget {
   final Function penalty;
   final Function varMethod;
   final Function stoppageTime;
+  final List usedPerks;
   const Stats(
       {super.key,
       required this.user,
@@ -22,7 +23,32 @@ class Stats extends StatelessWidget {
       required this.stopTime,
       required this.penalty,
       required this.varMethod,
-      required this.stoppageTime});
+      required this.stoppageTime,
+      required this.usedPerks});
+
+  void action(perk) {
+    if (perk['quantity'] > 0) {
+      switch (perk['id']['title']['en']) {
+        case '+90':
+          stoppageTime(perk['id']['_id']);
+        case 'Penalty':
+          penalty(perk['id']['_id']);
+        case 'VAR':
+          varMethod(perk['id']['_id']);
+        case 'Stop Time':
+          stopTime(perk['id']['_id']);
+        default:
+          () => {};
+      }
+    }
+  }
+
+  bool isPerkDisabled(perk) {
+    if (perk['quantity'] == 0 || usedPerks.contains(perk['id']['_id'])) {
+      return true;
+    }
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +81,7 @@ class Stats extends StatelessWidget {
                           title: points.toString(),
                           fontSize: 13,
                           color: Colors.black,
+                          fontWeight: FontWeight.w600,
                         )
                       ],
                     ),
@@ -75,6 +102,7 @@ class Stats extends StatelessWidget {
                               : lives.toString(),
                           fontSize: 13,
                           color: Colors.black,
+                          fontWeight: FontWeight.w600,
                         )
                       ],
                     ),
@@ -84,15 +112,18 @@ class Stats extends StatelessWidget {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
-                          Icons.donut_large,
-                          color: Colors.yellow,
-                          size: 28,
+                        Image.asset(
+                          'assets/images/coin.png',
+                          width: 25,
+                        ),
+                        const SizedBox(
+                          height: 5,
                         ),
                         TextWidget(
                           title: coins.toString(),
                           fontSize: 13,
                           color: Colors.black,
+                          fontWeight: FontWeight.w600,
                         )
                       ],
                     )
@@ -104,27 +135,21 @@ class Stats extends StatelessWidget {
                   margin: 0,
                   padding: 3,
                   body: Row(
-                    children: [
-                      SinglePerk(
-                          action: stoppageTime,
-                          image: 'assets/images/image90.png'),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      SinglePerk(
-                          action: penalty, image: 'assets/images/halfTime.png'),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      SinglePerk(
-                          action: varMethod, image: 'assets/images/VAR.png'),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      SinglePerk(
-                          action: stopTime, image: 'assets/images/stopTime.png')
-                    ],
-                  )),
+                      children: user['perks']
+                          .where((perk) => perk['selected'] == true).toList()
+                          .map<Widget>(((perk) => Column(
+                                children: [
+                                  SinglePerk(
+                                    action: () => action(perk),
+                                    image: perk['id']['image'],
+                                    disabled: isPerkDisabled(perk),
+                                  ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                ],
+                              )))
+                          .toList())),
             ],
           ),
         ),

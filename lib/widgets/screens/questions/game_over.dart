@@ -30,6 +30,7 @@ class GameOver extends StatelessWidget {
                   buttonText: AppLocalizations.of(context)!.playAgain,
                   action: () => playAgain(),
                   icon: Icons.restart_alt,
+                  radius: 10,
                 ),
                 const SizedBox(
                   width: 15,
@@ -38,6 +39,7 @@ class GameOver extends StatelessWidget {
                   buttonText: AppLocalizations.of(context)!.exitGame,
                   action: () => exitGame(),
                   icon: Icons.exit_to_app,
+                  radius: 10,
                 ),
               ],
             )
