@@ -64,7 +64,7 @@ class _MyAppState extends State<MyApp> {
                   '/challenges': (context) => const Challenges(),
                   '/profile': (context) => AccountProfile(),
                   '/best-offers': (context) => const BestOffers(),
-                  '/shop': (context) => const Shop(),
+                  '/shop': (context) =>  const Shop(),
                 },
                 title: 'InZone',
                 localizationsDelegates: const [

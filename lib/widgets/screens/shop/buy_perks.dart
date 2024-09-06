@@ -19,9 +19,6 @@ class BuyPerks extends StatelessWidget {
         child: Column(
           children: [
             TitleWithBorder(title: AppLocalizations.of(context)!.perksTitle),
-            const SizedBox(
-              height: 16,
-            ),
             const UserCoins(),
             const SizedBox(
               height: 16,

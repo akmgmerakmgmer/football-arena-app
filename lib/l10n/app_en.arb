@@ -100,9 +100,11 @@
     "youHave": "You Have",
     "selectPerk": "Select",
     "perksTitle": "Buy More Perks",
+    "coinsTitle": "Buy More Coins",
     "congratsText": "Congratulations you have made your purchase successfully",
     "close": "Close",
     "remove": "Remove",
     "shop": "Shop",
-    "perksError": "You already have 4 perks selected you have to remove at least 1 to select from the others"
+    "perksError": "You already have 4 perks selected you have to remove at least 1 to select from the others",
+    "currency": "EGP"
 }

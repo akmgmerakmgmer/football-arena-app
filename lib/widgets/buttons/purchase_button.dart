@@ -8,12 +8,14 @@ class PurchaseButton extends StatelessWidget {
   final Function action;
   final bool loading;
   final String price;
+  final bool currency;
   const PurchaseButton({
     super.key,
     required this.buttonText,
     required this.action,
     this.loading = false,
     required this.price,
+    this.currency = false,
   });
 
   @override
@@ -83,10 +85,16 @@ class PurchaseButton extends StatelessWidget {
                         const SizedBox(
                           width: 3,
                         ),
-                        Image.asset(
-                          'assets/images/coin.png',
-                          width: 23,
-                        ),
+                        currency
+                            ? TextWidget(
+                                title: AppLocalizations.of(context)!.currency,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              )
+                            : Image.asset(
+                                'assets/images/coin.png',
+                                width: 23,
+                              ),
                       ],
                     )
                   ],

@@ -10,7 +10,7 @@ class UserCoins extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map user = Provider.of<LocaleProvider>(context, listen: false).user;
+    Map user = Provider.of<LocaleProvider>(context, listen: true).user;
 
     return user.isEmpty
         ? Container()
@@ -20,27 +20,30 @@ class UserCoins extends StatelessWidget {
                         'en'
                     ? Alignment.topLeft
                     : Alignment.topRight,
-            child: MainButtonNoWidth(
-              buttonText: '',
-              action: () {},
-              isWidget: true,
-              radius: 12,
-              widget: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextWidget(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      title:
-                          '${AppLocalizations.of(context)!.youHave} ${Provider.of<LocaleProvider>(context, listen: false).user['coins']}'),
-                  const SizedBox(
-                    width: 3,
-                  ),
-                  Image.asset(
-                    'assets/images/coin.png',
-                    width: 25,
-                  ),
-                ],
+            child: Container(
+              margin: const EdgeInsets.only(top: 16),
+              child: MainButtonNoWidth(
+                buttonText: '',
+                action: () {},
+                isWidget: true,
+                radius: 12,
+                widget: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextWidget(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        title:
+                            '${AppLocalizations.of(context)!.youHave} ${Provider.of<LocaleProvider>(context, listen: false).user['coins']}'),
+                    const SizedBox(
+                      width: 3,
+                    ),
+                    Image.asset(
+                      'assets/images/coin.png',
+                      width: 25,
+                    ),
+                  ],
+                ),
               ),
             ),
           );

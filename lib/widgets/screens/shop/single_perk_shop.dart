@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/widgets/buttons/purchase_button.dart';
@@ -172,41 +174,50 @@ class _SinglePerkShopState extends State<SinglePerkShop> {
                 BlurBackgroundContainer(
                     border: 100,
                     padding: 8,
-                    body: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: decreaseQuantity,
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(100))),
-                              child: const Icon(
-                                Icons.remove,
-                                color: Colors.white,
-                                size: 26,
-                              )),
-                        ),
-                        TextWidget(
-                          title: quantity.toString(),
-                          number: true,
-                          fontSize: 16,
-                        ),
-                        GestureDetector(
-                          onTap: addQuantity,
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(100))),
-                              child: const Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: 26,
-                              )),
-                        ),
-                      ],
+                    body: SizedBox(
+                      width: width > 1280
+                          ? width * 0.2
+                          : width > 1024
+                              ? width * 0.3
+                              : width > 450
+                                  ? width * 0.4
+                                  : width * 0.8,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: decreaseQuantity,
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColor,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(100))),
+                                child: const Icon(
+                                  Icons.remove,
+                                  color: Colors.white,
+                                  size: 26,
+                                )),
+                          ),
+                          TextWidget(
+                            title: quantity.toString(),
+                            number: true,
+                            fontSize: 16,
+                          ),
+                          GestureDetector(
+                            onTap: addQuantity,
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColor,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(100))),
+                                child: const Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                  size: 26,
+                                )),
+                          ),
+                        ],
+                      ),
                     )),
                 const SizedBox(
                   height: 12,

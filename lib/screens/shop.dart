@@ -4,6 +4,7 @@ import 'package:in_zone_app/widgets/screens/shop/buy_avatars.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
 import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
+import 'package:in_zone_app/widgets/screens/shop/buy_coins.dart';
 import 'package:in_zone_app/widgets/screens/shop/buy_perks.dart';
 import 'package:in_zone_app/widgets/screens/shop/tabs_button.dart';
 import 'package:provider/provider.dart';
@@ -24,10 +25,9 @@ class _ShopState extends State<Shop> {
   final ScrollController _scrollController = ScrollController();
   int activeTabIndex = 1;
   List activeTabs = [
-    // {"nameEn": "Coins", "nameAr": "العملات", "index": 1},
+    {"nameEn": "Coins", "nameAr": "العملات", "index": 1},
     {"nameEn": "Perks", "nameAr": "وسائل المساعدة", "index": 2},
-    // {"nameEn": "Bundles", "nameAr": "عروض مجمعة", "index": 3},
-    {"nameEn": "Avatars", "nameAr": "رموزك", "index": 4},
+    {"nameEn": "Avatars", "nameAr": "رموزك", "index": 3},
   ];
 
   void tabAction(index) {
@@ -123,12 +123,17 @@ class _ShopState extends State<Shop> {
                     const SizedBox(
                       height: 8,
                     ),
+                    activeTabIndex == 1
+                        ? BuyCoins(
+                            coins: shopItems['coins'],
+                          )
+                        : Container(),
                     activeTabIndex == 2
                         ? BuyPerks(
                             perks: shopItems['perks'],
                           )
                         : Container(),
-                    activeTabIndex == 4
+                    activeTabIndex == 3
                         ? BuyAvatars(
                             avatars: avatars,
                           )
