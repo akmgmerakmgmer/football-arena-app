@@ -19,7 +19,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
   void logoutMethod() async {
     String currentPath = ModalRoute.of(context)?.settings.name ?? '/';
     if (currentPath == '/profile') {
-      Navigator.pushReplacementNamed(context, '/');
+      Navigator.pushNamed(context, '/');
     }
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     localStorage.setString('token', '');
@@ -64,7 +64,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             text: AppLocalizations.of(context)!.home,
             icon: Icons.home,
             action: () {
-              Navigator.pushReplacementNamed(context, '/');
+              Navigator.pushNamed(context, '/');
             },
             selected: currentPath == '/',
           ),
@@ -77,7 +77,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             text: AppLocalizations.of(context)!.rankings,
             icon: Icons.view_list,
             action: () {
-              Navigator.pushReplacementNamed(context, '/rankings');
+              Navigator.pushNamed(context, '/rankings');
             },
             selected: currentPath == '/rankings',
           ),
@@ -85,7 +85,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             text: AppLocalizations.of(context)!.challengesWord,
             icon: Icons.webhook,
             action: () {
-              Navigator.pushReplacementNamed(context, '/challenges');
+              Navigator.pushNamed(context, '/challenges');
             },
             selected: currentPath == '/challenges',
           ),
@@ -103,7 +103,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             text: AppLocalizations.of(context)!.bestOffers,
             icon: Icons.discount,
             action: () {
-              Navigator.pushReplacementNamed(context, '/best-offers');
+              Navigator.pushNamed(context, '/best-offers');
             },
             selected: currentPath == '/best-offers',
           ),
@@ -111,7 +111,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             text: AppLocalizations.of(context)!.shop,
             icon: Icons.shopping_bag,
             action: () {
-              Navigator.pushReplacementNamed(context, '/shop');
+              Navigator.pushNamed(context, '/shop');
             },
             selected: currentPath == '/shop',
           ),
@@ -120,7 +120,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   text: AppLocalizations.of(context)!.accountProfile,
                   icon: Icons.person,
                   action: () {
-                    Navigator.pushReplacementNamed(context, '/profile');
+                    Navigator.pushNamed(context, '/profile');
                   },
                   selected: currentPath == '/profile',
                 )
@@ -136,7 +136,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   text: AppLocalizations.of(context)!.login,
                   icon: Icons.login,
                   action: () {
-                    Navigator.pushReplacementNamed(context, '/login');
+                    Navigator.pushNamed(context, '/login');
                   },
                   selected: currentPath == '/login',
                 ),
@@ -144,7 +144,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             text: AppLocalizations.of(context)!.createAccount,
             icon: Icons.login,
             action: () {
-              Navigator.pushReplacementNamed(context, '/signup');
+              Navigator.pushNamed(context, '/signup');
             },
             selected: currentPath == '/signup',
           ),

@@ -37,7 +37,7 @@ class _SignupFormState extends State<SignupForm> {
         loading = false;
       });
       // ignore: use_build_context_synchronously
-      Navigator.pushReplacementNamed(context, '/');
+      Navigator.pushNamed(context, '/');
     }, errorCallback: (value) {
       if (value.containsKey('username') &&
           value['username'] == 'field_required') {
@@ -131,7 +131,7 @@ class _SignupFormState extends State<SignupForm> {
         ),
         GestureDetector(
           onTap: () {
-            Navigator.pushReplacementNamed(context, '/login');
+            Navigator.pushNamed(context, '/login');
           },
           child: TextWidget(
               title: AppLocalizations.of(context)!.alreadyHaveAnAccount),

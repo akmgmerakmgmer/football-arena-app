@@ -112,7 +112,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       }
     }, errorCallback: () {
       setState(() {
-        Navigator.pushReplacementNamed(context, '/');
+        Navigator.pushNamed(context, '/');
       });
     }).fetch(context);
   }
@@ -317,7 +317,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
         saveGame(false);
       }
       answeredConsecutively = 0;
-      if (points != 0) {
+      if (points != 0 && !activateVar) {
         setState(() {
           points = points - 1;
         });
@@ -373,7 +373,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   void saveGame(navigate) {
     stopCount = true;
     if (points == 0 && navigate) {
-      Navigator.pushReplacementNamed(context, '/rankings');
+      Navigator.pushNamed(context, '/rankings');
     } else {
       Map payload = {'points': points, 'coins': coins, 'usedPerks': usedPerks};
       String userId =
@@ -385,7 +385,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
         Provider.of<LocaleProvider>(context, listen: false)
             .setUser(res['user']);
         if (navigate) {
-          Navigator.pushReplacementNamed(context, '/rankings');
+          Navigator.pushNamed(context, '/rankings');
         } else {
           setState(() {
             saveLoading = false;
@@ -450,16 +450,16 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void stoppageTimeMethod(id) {
-    stoppageTimeActivated = true;
     if (!stoppageTimeActivated) {
       setState(() {
         usedPerks.add(id);
       });
       multiplyPoints = 2;
       Timer.periodic(const Duration(seconds: 30), (Timer timer) {
-        stoppageTimeActivated = false;
         multiplyPoints = 1;
+        defaultCountDown = 20;
       });
+      stoppageTimeActivated = true;
     }
   }
 
@@ -488,7 +488,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void exitGame() {
-    Navigator.pushReplacementNamed(context, '/rankings');
+    Navigator.pushNamed(context, '/rankings');
   }
 
   void finishTutorialAction() {
@@ -592,12 +592,13 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
         if (!widget.practice) {
           saveGame(true);
         } else {
-          Navigator.pushReplacementNamed(context, '/rankings');
+          Navigator.pushNamed(context, '/rankings');
         }
       },
       child: PagePlainContainer(
           body: ImageBackgroundPlain(
-        body: pageLoading || questions[currentQuestion] == null
+        body: pageLoading ||
+                (questions.isNotEmpty && questions[currentQuestion] == null)
             ? const PrimaryLoading()
             : lives == 0
                 ? GameOver(playAgain: playAgain, exitGame: exitGame)
@@ -612,8 +613,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                               : AppLocalizations.of(context)!.saveAndClose,
                           radius: 100,
                           action: (widget.practice)
-                              ? () =>
-                                  {Navigator.pushReplacementNamed(context, '/')}
+                              ? () => {Navigator.pushNamed(context, '/')}
                               : () => saveGame(true),
                           letterSpacing: 0,
                           fontSize: 15,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
+import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 
 class SingleUsersAvatars extends StatefulWidget {
   final bool isSelected;
@@ -70,9 +71,8 @@ class _SingleUsersAvatarsState extends State<SingleUsersAvatars> {
                           : Colors.transparent)),
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(15)),
-                child: Image.network(
-                  widget.image,
-                  fit: BoxFit.cover,
+                child: CachedImage(
+                  image: widget.image,
                   width: 260,
                   height: 180,
                 ),

@@ -6,6 +6,7 @@ import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/widgets/buttons/purchase_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
+import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/user_perks_quantity.dart';
@@ -44,7 +45,7 @@ class _SinglePerkShopState extends State<SinglePerkShop> {
   Future<void> buyPerk() async {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     if (user.isEmpty) {
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.pushNamed(context, '/login');
     } else {
       setState(() {
         loading = true;
@@ -103,9 +104,8 @@ class _SinglePerkShopState extends State<SinglePerkShop> {
             width: width,
             child: ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(15)),
-              child: Image.network(
-                widget.perk['backgroundImage'],
-                fit: BoxFit.cover,
+              child: CachedImage(
+                image: widget.perk['backgroundImage'],
                 height: 450,
               ),
             ),
@@ -131,9 +131,8 @@ class _SinglePerkShopState extends State<SinglePerkShop> {
               children: [
                 Row(
                   children: [
-                    Image.network(
-                      widget.perk['image'],
-                      fit: BoxFit.cover,
+                    CachedImage(
+                      image: widget.perk['image'],
                       width: 50,
                     ),
                     const SizedBox(

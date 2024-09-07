@@ -3,6 +3,7 @@ import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/widgets/buttons/default_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/user_perks_quantity.dart';
@@ -84,10 +85,10 @@ class _SinglePerkShopState extends State<SinglePerkProfile> {
               width: width,
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(15)),
-                child: Image.network(
-                  widget.perk['id']['backgroundImage'],
-                  fit: BoxFit.cover,
+                child: CachedImage(
+                  image: widget.perk['id']['backgroundImage'],
                   height: 450,
+                  width: MediaQuery.of(context).size.width,
                 ),
               ),
             ),
@@ -114,9 +115,8 @@ class _SinglePerkShopState extends State<SinglePerkProfile> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Image.network(
-                        widget.perk['id']['image'],
-                        fit: BoxFit.cover,
+                      CachedImage(
+                        image: widget.perk['id']['image'],
                         width: 50,
                       ),
                       const SizedBox(

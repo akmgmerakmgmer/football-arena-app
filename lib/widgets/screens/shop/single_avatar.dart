@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/widgets/buttons/purchase_button.dart';
+import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,7 @@ class _SingleAvatarState extends State<SingleAvatar> {
   Future<void> onClick() async {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     if (user.isEmpty) {
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.pushNamed(context, '/login');
     } else {
       setState(() {
         loading = true;
@@ -69,9 +70,8 @@ class _SingleAvatarState extends State<SingleAvatar> {
               ),
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(15)),
-                child: Image.network(
-                  widget.avatar['image'],
-                  fit: BoxFit.cover,
+                child: CachedImage(
+                  image: widget.avatar['image'],
                   height: 300,
                 ),
               ),

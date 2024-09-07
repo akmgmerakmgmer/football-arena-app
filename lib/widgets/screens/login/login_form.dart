@@ -34,7 +34,7 @@ class _LoginFormState extends State<LoginForm> {
         loading = false;
       });
       // ignore: use_build_context_synchronously
-      Navigator.pushReplacementNamed(context, '/');
+      Navigator.pushNamed(context, '/');
     }, errorCallback: (value) {
       print(value);
       if (value.containsKey('username') &&
@@ -124,7 +124,7 @@ class _LoginFormState extends State<LoginForm> {
         ),
         GestureDetector(
           onTap: () {
-            Navigator.pushReplacementNamed(context, '/signup');
+            Navigator.pushNamed(context, '/signup');
           },
           child: TextWidget(
               title: AppLocalizations.of(context)!.doesntHaveAccount),

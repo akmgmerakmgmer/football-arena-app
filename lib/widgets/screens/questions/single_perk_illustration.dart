@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -18,9 +19,8 @@ class SinglePerkIllustration extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(15))),
           child: Row(
             children: [
-              Image.network(
-                perk['id']['image'],
-                fit: BoxFit.cover,
+              CachedImage(
+                image:perk['id']['image'],
                 width: 50,
               ),
               const SizedBox(

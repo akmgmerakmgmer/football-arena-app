@@ -4,6 +4,7 @@ import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/external_url.dart';
 import 'package:in_zone_app/widgets/buttons/purchase_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +21,7 @@ class _SingleCoinShopState extends State<SingleCoinShop> {
   Future<void> buyCoins(amount, quantity) async {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     if (user.isEmpty) {
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.pushNamed(context, '/login');
     } else {
       setState(() {
         loading = true;
@@ -55,9 +56,8 @@ class _SingleCoinShopState extends State<SingleCoinShop> {
             width: width,
             child: ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(15)),
-              child: Image.network(
-                widget.coin['image'],
-                fit: BoxFit.cover,
+              child: CachedImage(
+                image: widget.coin['image'],
                 height: 450,
               ),
             ),

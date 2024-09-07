@@ -166,7 +166,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
             iconTheme: IconThemeData(color: Colors.grey.shade400),
             automaticallyImplyLeading: false,
             title: GestureDetector(
-              onTap: () => {Navigator.pushReplacementNamed(context, '/')},
+              onTap: () => {Navigator.pushNamed(context, '/')},
               child: Image.asset(
                 'assets/images/logo.png',
                 fit: BoxFit.cover,

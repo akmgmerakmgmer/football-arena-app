@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
+import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 
 class ImageBackgroundContainer extends StatelessWidget {
   final Widget body;
@@ -13,9 +14,8 @@ class ImageBackgroundContainer extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        Image.asset(
-          'assets/images/background_new.jpg',
-          fit: BoxFit.cover,
+        CachedImage(
+          image:'http://res.cloudinary.com/do0qe5hin/image/upload/v1725714122/ygxws6bwae22gyqiqspd.jpg',
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
         ),

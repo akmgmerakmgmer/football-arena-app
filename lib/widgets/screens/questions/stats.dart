@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/containers/glass_background_container.dart';
+import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/screens/questions/single_perk.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -136,7 +137,8 @@ class Stats extends StatelessWidget {
                   padding: 3,
                   body: Row(
                       children: user['perks']
-                          .where((perk) => perk['selected'] == true).toList()
+                          .where((perk) => perk['selected'] == true)
+                          .toList()
                           .map<Widget>(((perk) => Column(
                                 children: [
                                   SinglePerk(
@@ -163,9 +165,8 @@ class Stats extends StatelessWidget {
                       color: Theme.of(context).primaryColor, width: 4)),
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(100)),
-                child: Image.network(
-                  user['selectedAvatar']['image'],
-                  fit: BoxFit.cover,
+                child: CachedImage(
+                  image: user['selectedAvatar']['image'],
                   height: 75,
                   width: 75,
                 ),

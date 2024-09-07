@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 
 class SinglePerk extends StatelessWidget {
   final Function action;
@@ -18,9 +19,8 @@ class SinglePerk extends StatelessWidget {
         child: AnimatedOpacity(
           opacity: disabled ? 0.4 : 1,
           duration: const Duration(milliseconds: 200),
-          child: Image.network(
-            image,
-            fit: BoxFit.cover,
+          child: CachedImage(
+            image: image,
             width: 35,
           ),
         ));

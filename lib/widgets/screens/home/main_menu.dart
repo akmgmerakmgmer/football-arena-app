@@ -20,12 +20,12 @@ class MainMenu extends StatelessWidget {
             if (Provider.of<LocaleProvider>(context, listen: false)
                 .user
                 .containsKey('username')) {
-              Navigator.pushReplacementNamed(
+              Navigator.pushNamed(
                 context,
                 '/questions',
               );
             } else {
-              Navigator.pushReplacementNamed(context, '/login');
+              Navigator.pushNamed(context, '/login');
             }
           },
           uppercase: true,
@@ -36,7 +36,7 @@ class MainMenu extends StatelessWidget {
         RegularButton(
           buttonText: AppLocalizations.of(context)!.challengesWord,
           action: () {
-            Navigator.pushReplacementNamed(context, '/challenges');
+            Navigator.pushNamed(context, '/challenges');
           },
           uppercase: true,
         ),
@@ -46,7 +46,7 @@ class MainMenu extends StatelessWidget {
         RegularButton(
             buttonText: AppLocalizations.of(context)!.rankings,
             action: () {
-              Navigator.pushReplacementNamed(context, '/rankings');
+              Navigator.pushNamed(context, '/rankings');
             },
             uppercase: true),
         const SizedBox(
@@ -55,7 +55,7 @@ class MainMenu extends StatelessWidget {
         RegularButton(
             buttonText: AppLocalizations.of(context)!.shop,
             action: () {
-              Navigator.pushReplacementNamed(context, '/shop');
+              Navigator.pushNamed(context, '/shop');
             },
             uppercase: true),
       ],
