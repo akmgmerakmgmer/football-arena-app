@@ -1,8 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/auth.dart';
@@ -174,9 +172,10 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
               ),
             ),
             elevation: 0, // Remove AppBar shadow
-            backgroundColor: const Color(0xFF191919),
+            backgroundColor: Theme.of(context).splashColor,
           ),
         ),
+        // floatingActionButton: const FloatingButton(),
         body: SingleChildScrollView(
             controller: widget.scroll,
             // physics: const ScrollPhysics(parent:PageScrollPhysics() ),

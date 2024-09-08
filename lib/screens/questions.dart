@@ -112,7 +112,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       }
     }, errorCallback: () {
       setState(() {
-        Navigator.pushNamed(context, '/');
+        Navigator.pushReplacementNamed(context, '/');
       });
     }).fetch(context);
   }
@@ -373,7 +373,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   void saveGame(navigate) {
     stopCount = true;
     if (points == 0 && navigate) {
-      Navigator.pushNamed(context, '/rankings');
+      Navigator.pushReplacementNamed(context, '/rankings');
     } else {
       Map payload = {'points': points, 'coins': coins, 'usedPerks': usedPerks};
       String userId =
@@ -385,7 +385,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
         Provider.of<LocaleProvider>(context, listen: false)
             .setUser(res['user']);
         if (navigate) {
-          Navigator.pushNamed(context, '/rankings');
+          Navigator.pushReplacementNamed(context, '/rankings');
         } else {
           setState(() {
             saveLoading = false;
@@ -488,7 +488,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void exitGame() {
-    Navigator.pushNamed(context, '/rankings');
+    Navigator.pushReplacementNamed(context, '/rankings');
   }
 
   void finishTutorialAction() {
@@ -592,7 +592,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
         if (!widget.practice) {
           saveGame(true);
         } else {
-          Navigator.pushNamed(context, '/rankings');
+          Navigator.pushReplacementNamed(context, '/rankings');
         }
       },
       child: PagePlainContainer(
@@ -613,7 +613,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                               : AppLocalizations.of(context)!.saveAndClose,
                           radius: 100,
                           action: (widget.practice)
-                              ? () => {Navigator.pushNamed(context, '/')}
+                              ? () =>
+                                  {Navigator.pushReplacementNamed(context, '/')}
                               : () => saveGame(true),
                           letterSpacing: 0,
                           fontSize: 15,

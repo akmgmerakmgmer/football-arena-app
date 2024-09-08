@@ -3,7 +3,6 @@ import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/widgets/screens/shop/buy_avatars.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
-import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
 import 'package:in_zone_app/widgets/screens/shop/buy_coins.dart';
 import 'package:in_zone_app/widgets/screens/shop/buy_perks.dart';
 import 'package:in_zone_app/widgets/screens/shop/tabs_button.dart';
@@ -96,50 +95,42 @@ class _ShopState extends State<Shop> {
     return PageContainerWithFooter(
         background: Theme.of(context).splashColor,
         scroll: _scrollController,
-        body: loading
-            ? Container(
-                margin: const EdgeInsets.all(16.0),
-                child: const PrimaryLoading(),
-              )
-            : Container(
-                margin: const EdgeInsets.symmetric(vertical: 32),
-                child: Column(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: activeTabs
-                          .map((tab) => TabsButton(
-                              selected: activeTabIndex == tab['index'],
-                              action: () => tabAction(tab['index']),
-                              title: Provider.of<LocaleProvider>(context,
-                                              listen: false)
-                                          .locale ==
-                                      'en'
-                                  ? tab['nameEn']
-                                  : tab['nameAr']))
-                          .toList(),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    activeTabIndex == 1
-                        ? BuyCoins(
-                            coins: shopItems['coins'],
-                          )
-                        : Container(),
-                    activeTabIndex == 2
-                        ? BuyPerks(
-                            perks: shopItems['perks'],
-                          )
-                        : Container(),
-                    activeTabIndex == 3
-                        ? BuyAvatars(
-                            avatars: avatars,
-                          )
-                        : Container()
-                  ],
-                ),
-              ));
+        body: Container(
+          margin: const EdgeInsets.symmetric(vertical: 32),
+          child: Column(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: activeTabs
+                    .map((tab) => TabsButton(
+                        selected: activeTabIndex == tab['index'],
+                        action: () => tabAction(tab['index']),
+                        title:
+                            Provider.of<LocaleProvider>(context, listen: false)
+                                        .locale ==
+                                    'en'
+                                ? tab['nameEn']
+                                : tab['nameAr']))
+                    .toList(),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              activeTabIndex == 1
+                  ? BuyCoins(
+                      coins: shopItems.isEmpty ? [] : shopItems['coins'],
+                      loading: loading,
+                    )
+                  : activeTabIndex == 2
+                      ? BuyPerks(
+                          perks: shopItems.isEmpty ? [] : shopItems['perks'],
+                        )
+                      : BuyAvatars(
+                          avatars: avatars.isEmpty ? [] : avatars,
+                        )
+            ],
+          ),
+        ));
   }
 }

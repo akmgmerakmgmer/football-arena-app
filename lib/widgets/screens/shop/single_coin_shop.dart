@@ -47,12 +47,12 @@ class _SingleCoinShopState extends State<SingleCoinShop> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
-    return ClipRRect(
-      borderRadius: const BorderRadius.all(Radius.circular(15)),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          SizedBox(
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(15)),
+          child: SizedBox(
             width: width,
             child: ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(15)),
@@ -62,86 +62,78 @@ class _SingleCoinShopState extends State<SingleCoinShop> {
               ),
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(15)),
-              color: Colors.black.withOpacity(0.6),
-            ),
-            width: MediaQuery.of(context).size.width,
-            height: 450,
+        ),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(15)),
+            color: Colors.black.withOpacity(0.6),
           ),
-          Positioned(
-            bottom: 15,
-            width: width * 0.9,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      'assets/images/coin.png',
-                      fit: BoxFit.cover,
-                      width: 30,
-                    ),
-                    const SizedBox(
-                      width: 3,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextWidget(
+          width: width,
+          height: 450,
+        ),
+        Positioned(
+          bottom: 15,
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    'assets/images/coin.png',
+                    fit: BoxFit.cover,
+                    width: 30,
+                  ),
+                  const SizedBox(
+                    width: 3,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextWidget(
+                        title: locale == 'en'
+                            ? widget.coin['title']['en']
+                            : widget.coin['title']['ar'],
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      const SizedBox(
+                        height: 3,
+                      ),
+                      SizedBox(
+                        width: width * 0.8,
+                        child: TextWidget(
                           title: locale == 'en'
-                              ? widget.coin['title']['en']
-                              : widget.coin['title']['ar'],
-                          fontSize: 16,
+                              ? widget.coin['description']['en']
+                              : widget.coin['description']['ar'],
+                          fontSize: 14,
+                          color: Colors.grey.shade400,
                           fontWeight: FontWeight.w600,
                         ),
-                        const SizedBox(
-                          height: 3,
-                        ),
-                        SizedBox(
-                          width: width * 0.8,
-                          child: TextWidget(
-                            title: locale == 'en'
-                                ? widget.coin['description']['en']
-                                : widget.coin['description']['ar'],
-                            fontSize: 14,
-                            color: Colors.grey.shade400,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                SizedBox(
-                    width: width > 1280
-                        ? width * 0.1
-                        : width > 1024
-                            ? width * 0.2
-                            : width > 450
-                                ? width * 0.3
-                                : width * 0.6,
-                    child: PurchaseButton(
-                      currency: true,
-                      price: widget.coin['price'].toString(),
-                      buttonText: AppLocalizations.of(context)!.buyNow,
-                      action: () {
-                        buyCoins(
-                            widget.coin['price'], widget.coin['numberOfCoins']);
-                      },
-                      loading: loading,
-                    ))
-              ],
-            ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+              Container(
+                alignment: Alignment.center,
+                width: width*0.8,
+                  margin: const EdgeInsets.all(12.0),
+                  child: PurchaseButton(
+                    currency: true,
+                    price: widget.coin['price'].toString(),
+                    buttonText: AppLocalizations.of(context)!.buyNow,
+                    action: () {
+                      buyCoins(
+                          widget.coin['price'], widget.coin['numberOfCoins']);
+                    },
+                    loading: loading,
+                  ))
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

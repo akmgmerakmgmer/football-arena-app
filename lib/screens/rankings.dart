@@ -7,6 +7,7 @@ import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
 import 'package:in_zone_app/widgets/general_widgets/title_with_border.dart';
 import 'package:in_zone_app/widgets/screens/rankings/single_user.dart';
+import 'package:in_zone_app/widgets/screens/rankings/user_loading_card.dart';
 import 'package:in_zone_app/widgets/user_inputs/dropdown_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -220,9 +221,7 @@ class _RankingsState extends State<Rankings> {
               height: 5,
             ),
             loading
-                ? Container(
-                    margin: const EdgeInsets.only(top: 20),
-                    child: const PrimaryLoading())
+                ? const UserLoadingCard()
                 : rankedUsers.isNotEmpty
                     ? FadeTransitionContainer(
                         body: Container(

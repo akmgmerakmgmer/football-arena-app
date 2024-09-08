@@ -5,11 +5,13 @@ import 'package:in_zone_app/widgets/containers/grid_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/title_with_border.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:in_zone_app/widgets/general_widgets/user_coins.dart';
+import 'package:in_zone_app/widgets/screens/shop/shop_loading_cards.dart';
 import 'package:in_zone_app/widgets/screens/shop/single_coin_shop.dart';
 
 class BuyCoins extends StatelessWidget {
   final List coins;
-  const BuyCoins({super.key, required this.coins});
+  final bool loading;
+  const BuyCoins({super.key, required this.coins, required this.loading});
 
   @override
   Widget build(BuildContext context) {
@@ -23,15 +25,17 @@ class BuyCoins extends StatelessWidget {
             const SizedBox(
               height: 16,
             ),
-            GridContainer(
-                widget: coins
-                    .map((coin) => SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: SingleCoinShop(
-                            coin: coin,
-                          ),
-                        ))
-                    .toList())
+            loading
+                ? const ShopLoadingCards()
+                : GridContainer(
+                    widget: coins
+                        .map((coin) => SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: SingleCoinShop(
+                                coin: coin,
+                              ),
+                            ))
+                        .toList())
           ],
         ),
       ),
