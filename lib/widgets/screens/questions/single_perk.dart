@@ -21,7 +21,7 @@ class SinglePerk extends StatelessWidget {
           duration: const Duration(milliseconds: 200),
           child: CachedImage(
             image: image,
-            width: 35,
+            width: 40,
           ),
         ));
   }

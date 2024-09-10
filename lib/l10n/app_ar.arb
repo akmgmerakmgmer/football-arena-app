@@ -104,5 +104,8 @@
     "selectPerk": "اضافة وسيلة المساعدة",
     "shop": "المتجر",
     "perksError": "لديك 4 وسائل مساعدة مستخدمين بالفعل برجاء حذف واحدة علي الاقل لتسطيع اختيار وسيلة أخري'",
-    "currency": "جنيه مصري"
+    "currency": "جنيه مصري",
+    "navigationHome": "الرئيسية",
+    "navigationRankings": "الترتيب",
+    "navigationBestOffers": "عروضك"
 }

@@ -290,7 +290,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void playCorrectSound() async {
-    await _audioPlayer.play(AssetSource('audio/correct.wav'));
+    await _audioPlayer.play(AssetSource('audio/correct.mp3'));
   }
 
   void playWrongSound() async {
@@ -637,6 +637,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                         penalty: penaltyMethod,
                         varMethod: varMethod,
                         stoppageTime: stoppageTimeMethod,
+                        locale: locale,
                       ),
                       FadeTransitionContainer(
                         body: Center(

@@ -15,6 +15,7 @@ class Stats extends StatelessWidget {
   final Function varMethod;
   final Function stoppageTime;
   final List usedPerks;
+  final String locale;
   const Stats(
       {super.key,
       required this.user,
@@ -25,7 +26,8 @@ class Stats extends StatelessWidget {
       required this.penalty,
       required this.varMethod,
       required this.stoppageTime,
-      required this.usedPerks});
+      required this.usedPerks,
+      required this.locale});
 
   void action(perk) {
     if (perk['quantity'] > 0) {
@@ -59,6 +61,9 @@ class Stats extends StatelessWidget {
           top: 22,
           left: 75,
           child: Column(
+            crossAxisAlignment: locale == 'en'
+                ? CrossAxisAlignment.start
+                : CrossAxisAlignment.end,
             children: [
               Container(
                 padding:
@@ -147,7 +152,7 @@ class Stats extends StatelessWidget {
                                     disabled: isPerkDisabled(perk),
                                   ),
                                   const SizedBox(
-                                    width: 5,
+                                    width: 43,
                                   ),
                                 ],
                               )))

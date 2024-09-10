@@ -101,7 +101,7 @@ flutter:
     - assets/images/gameOver.png
     - assets/images/background_new.jpg
     - assets/images/coin.png
-    - assets/audio/correct.wav
+    - assets/audio/correct.mp3
     - assets/audio/buzzer.mp3
     
 

@@ -106,5 +106,8 @@
     "remove": "Remove",
     "shop": "Shop",
     "perksError": "You already have 4 perks selected you have to remove at least 1 to select from the others",
-    "currency": "EGP"
+    "currency": "EGP",
+    "navigationHome": "Home",
+    "navigationRankings": "Rankings",
+    "navigationBestOffers": "Offers"
 }

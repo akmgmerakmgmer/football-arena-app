@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/auth.dart';
 import 'package:in_zone_app/widgets/drawer/drawer_widget.dart';
 import 'package:in_zone_app/widgets/footer/footer.dart';
+import 'package:in_zone_app/widgets/general_widgets/bottom_navigation.dart';
 import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
 import 'package:in_zone_app/widgets/screens/questions/advertisment.dart';
 import 'package:provider/provider.dart';
@@ -160,7 +162,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
         endDrawer: const DrawerWidget(),
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: AppBar(
+          child: AppBar(foregroundColor: Theme.of(context).splashColor,
             iconTheme: IconThemeData(color: Colors.grey.shade400),
             automaticallyImplyLeading: false,
             title: GestureDetector(
@@ -168,7 +170,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
               child: Image.asset(
                 'assets/images/logo.png',
                 fit: BoxFit.cover,
-                width: 50,
+                width: 55,
               ),
             ),
             elevation: 0, // Remove AppBar shadow
@@ -176,59 +178,75 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
           ),
         ),
         // floatingActionButton: const FloatingButton(),
-        body: SingleChildScrollView(
-            controller: widget.scroll,
-            // physics: const ScrollPhysics(parent:PageScrollPhysics() ),
-            child: Stack(
-              children: [
-                Container(
-                  color: widget.background,
-                  child: loading
-                      ? Container(
-                          height: MediaQuery.of(context).size.height - 56,
-                          color: Theme.of(context).splashColor,
-                          child: const PrimaryLoading())
-                      : Column(
-                          children: advertisments.isNotEmpty
-                              ? [
-                                  OverlayPortal(
-                                    controller: overlayController,
-                                    overlayChildBuilder:
-                                        (BuildContext context) {
-                                      return Advertisment(
-                                          adClicked: () => adClicked(
-                                              advertisments[currentAd]['_id']),
-                                          seconds: currentAdCountDown,
-                                          skipAdMethod: skipAdMethod,
-                                          image: advertisments[currentAd]
-                                              ['image']);
-                                    },
-                                    child: ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                            minHeight: MediaQuery.of(context)
-                                                    .size
-                                                    .height -
-                                                200),
-                                        child: widget.body),
-                                  ),
-                                  Footer(
-                                      backgroundColor: widget.footerBackground)
-                                ]
-                              : [
-                                  ConstrainedBox(
-                                      constraints: BoxConstraints(
-                                          minHeight: MediaQuery.of(context)
-                                                  .size
-                                                  .height -
-                                              200),
-                                      child: widget.body),
-                                  Footer(
-                                      backgroundColor: widget.footerBackground)
-                                ],
-                        ),
-                ),
-              ],
-            )),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                  // physics: const ScrollPhysics(parent:PageScrollPhysics() ),
+                  child: Stack(
+                children: [
+                  Container(
+                    color: widget.background,
+                    child: loading
+                        ? Container(
+                            height: MediaQuery.of(context).size.height,
+                            color: Theme.of(context).splashColor,
+                            child: const PrimaryLoading())
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: advertisments.isNotEmpty
+                                ? [
+                                    OverlayPortal(
+                                      controller: overlayController,
+                                      overlayChildBuilder:
+                                          (BuildContext context) {
+                                        return Advertisment(
+                                            adClicked: () => adClicked(
+                                                advertisments[currentAd]
+                                                    ['_id']),
+                                            seconds: currentAdCountDown,
+                                            skipAdMethod: skipAdMethod,
+                                            image: advertisments[currentAd]
+                                                ['image']);
+                                      },
+                                      child: ConstrainedBox(
+                                          constraints: BoxConstraints(
+                                              minHeight: MediaQuery.of(context)
+                                                      .size
+                                                      .height -
+                                                  200),
+                                          child: widget.body),
+                                    ),
+                                    Footer(
+                                        backgroundColor:
+                                            widget.footerBackground)
+                                  ]
+                                : [
+                                    Column(
+                                      children: [
+                                        ConstrainedBox(
+                                            constraints: BoxConstraints(
+                                                minHeight:
+                                                    MediaQuery.of(context)
+                                                            .size
+                                                            .height -
+                                                        200),
+                                            child: widget.body),
+                                        Footer(
+                                            backgroundColor:
+                                                widget.footerBackground)
+                                      ],
+                                    ),
+                                  ],
+                          ),
+                  ),
+                ],
+              )),
+            ),
+            const BottomNavigation()
+          ],
+        ),
       ),
     );
   }

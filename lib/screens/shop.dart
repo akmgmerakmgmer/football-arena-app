@@ -24,9 +24,9 @@ class _ShopState extends State<Shop> {
   final ScrollController _scrollController = ScrollController();
   int activeTabIndex = 1;
   List activeTabs = [
-    {"nameEn": "Coins", "nameAr": "العملات", "index": 1},
+    {"nameEn": "Avatars", "nameAr": "رموزك", "index": 1},
     {"nameEn": "Perks", "nameAr": "وسائل المساعدة", "index": 2},
-    {"nameEn": "Avatars", "nameAr": "رموزك", "index": 3},
+    {"nameEn": "Coins", "nameAr": "العملات", "index": 3},
   ];
 
   void tabAction(index) {
@@ -117,7 +117,7 @@ class _ShopState extends State<Shop> {
               const SizedBox(
                 height: 8,
               ),
-              activeTabIndex == 1
+              activeTabIndex == 3
                   ? BuyCoins(
                       coins: shopItems.isEmpty ? [] : shopItems['coins'],
                       loading: loading,
