@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/containers/grid_container.dart';
-import 'package:in_zone_app/widgets/loadings/loading_card.dart';
+import 'package:in_zone_app/widgets/screens/shop/single_shop_loading_card.dart';
 
 class ShopLoadingCards extends StatelessWidget {
   const ShopLoadingCards({super.key});
@@ -11,7 +11,7 @@ class ShopLoadingCards extends StatelessWidget {
     return GridContainer(
         widget: numberOfIterations
             .map((item) => SizedBox(
-                width: width, child: LoadingCard(height: 450, width: width)))
+                width: width, child: const SingleShopLoadingCard()))
             .toList());
   }
 }

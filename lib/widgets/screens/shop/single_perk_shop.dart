@@ -92,7 +92,14 @@ class _SinglePerkShopState extends State<SinglePerkShop> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
+    double defaultWidth = MediaQuery.of(context).size.width;
+    double width = MediaQuery.of(context).size.width > 1280
+        ? defaultWidth * 1 / 4
+        : MediaQuery.of(context).size.width > 1024
+            ? defaultWidth * 1 / 3
+            : MediaQuery.of(context).size.width > 450
+                ? defaultWidth * 1 / 2
+                : defaultWidth;
     String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     return ClipRRect(

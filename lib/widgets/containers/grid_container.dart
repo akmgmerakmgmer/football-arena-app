@@ -5,7 +5,7 @@ class GridContainer extends StatelessWidget {
   final List<Widget> widget;
   final int numberOfGrids;
   const GridContainer(
-      {super.key, required this.widget, this.numberOfGrids = 3});
+      {super.key, required this.widget, this.numberOfGrids = 4});
 
   @override
   Widget build(BuildContext context) {

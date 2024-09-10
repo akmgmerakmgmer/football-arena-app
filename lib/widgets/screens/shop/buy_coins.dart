@@ -17,7 +17,7 @@ class BuyCoins extends StatelessWidget {
   Widget build(BuildContext context) {
     return FadeTransitionContainer(
       body: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(top: 16.0, right: 16.0, left: 16.0),
         child: Column(
           children: [
             TitleWithBorder(title: AppLocalizations.of(context)!.coinsTitle),
@@ -29,11 +29,8 @@ class BuyCoins extends StatelessWidget {
                 ? const ShopLoadingCards()
                 : GridContainer(
                     widget: coins
-                        .map((coin) => SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: SingleCoinShop(
-                                coin: coin,
-                              ),
+                        .map((coin) => SingleCoinShop(
+                              coin: coin,
                             ))
                         .toList())
           ],

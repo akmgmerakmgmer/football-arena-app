@@ -4,12 +4,15 @@ class LoadingCard extends StatefulWidget {
   final double height;
   final double width;
   final double radius;
-
+  final Color bgColor;
+  final double scaleEnd;
   const LoadingCard(
       {super.key,
       required this.height,
       required this.width,
-      this.radius = 16.0});
+      this.radius = 16.0,
+      this.bgColor = const Color(0xFF191919),
+      this.scaleEnd = 1.05});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -32,7 +35,7 @@ class _LoadingCardState extends State<LoadingCard>
     )..repeat(reverse: true); // Makes the animation repeat forever in a loop
 
     // Define a scaling animation
-    _animation = Tween<double>(begin: 1.0, end: 1.02).animate(
+    _animation = Tween<double>(begin: 1.0, end: widget.scaleEnd).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
   }
@@ -52,7 +55,7 @@ class _LoadingCardState extends State<LoadingCard>
         height: widget.height,
         width: widget.width,
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColorDark,
+          color: widget.bgColor,
           borderRadius: BorderRadius.circular(
               widget.radius), // Ensures the borderRadius stays the same
         ),

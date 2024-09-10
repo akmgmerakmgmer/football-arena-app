@@ -45,7 +45,14 @@ class _SingleCoinShopState extends State<SingleCoinShop> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
+    double defaultWidth = MediaQuery.of(context).size.width;
+    double width = MediaQuery.of(context).size.width > 1280
+        ? defaultWidth * 1 / 4
+        : MediaQuery.of(context).size.width > 1024
+            ? defaultWidth * 1 / 3
+            : MediaQuery.of(context).size.width > 450
+                ? defaultWidth * 1 / 2
+                : defaultWidth;
     String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
     return Stack(
       alignment: Alignment.center,
@@ -117,8 +124,8 @@ class _SingleCoinShopState extends State<SingleCoinShop> {
                 ],
               ),
               Container(
-                alignment: Alignment.center,
-                width: width*0.8,
+                  alignment: Alignment.center,
+                  width: width * 0.8,
                   margin: const EdgeInsets.all(12.0),
                   child: PurchaseButton(
                     currency: true,

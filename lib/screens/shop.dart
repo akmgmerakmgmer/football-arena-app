@@ -125,9 +125,11 @@ class _ShopState extends State<Shop> {
                   : activeTabIndex == 2
                       ? BuyPerks(
                           perks: shopItems.isEmpty ? [] : shopItems['perks'],
+                          loading: loading,
                         )
                       : BuyAvatars(
                           avatars: avatars.isEmpty ? [] : avatars,
+                          loading: loading,
                         )
             ],
           ),

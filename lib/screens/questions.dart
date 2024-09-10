@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
@@ -18,7 +19,6 @@ import 'package:in_zone_app/widgets/screens/questions/stats.dart';
 import 'package:in_zone_app/widgets/screens/questions/true_or_false.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:just_audio/just_audio.dart';
 
 class Questions extends StatefulWidget {
   final String mode;
@@ -74,11 +74,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   bool gameSaved = false;
   List usedPerks = [];
   bool nextPatchisLoaded = true;
-  final audioPlayer = AudioPlayer();
-  String correctAudio =
-      'https://res.cloudinary.com/do0qe5hin/video/upload/v1713830132/vdnaipfdraveg92re1bi.mp4';
-  String buzzerAudio =
-      'https://res.cloudinary.com/do0qe5hin/video/upload/v1713830128/pxay0ehplbk4p1vmcdzf.mp4';
+  bool anyTimePerkActive = false;
+  final AudioPlayer _audioPlayer = AudioPlayer();
   // Methods
   Future<void> getQuestions() async {
     if (questions.isEmpty) {
@@ -130,7 +127,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
             currentQuestion = currentQuestion + 1;
           });
           if (lives > 0) {
-            soundPlayMethod(buzzerAudio);
+            playWrongSound();
             setState(() {
               lives = lives - 1;
             });
@@ -292,13 +289,16 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     });
   }
 
-  void soundPlayMethod(audio) {
-    audioPlayer.setUrl(audio);
-    audioPlayer.play();
+  void playCorrectSound() async {
+    await _audioPlayer.play(AssetSource('audio/correct.wav'));
+  }
+
+  void playWrongSound() async {
+    await _audioPlayer.play(AssetSource('audio/buzzer.mp3'));
   }
 
   void rightAnswer() {
-    soundPlayMethod(correctAudio);
+    playCorrectSound();
     rightAnswerPoints();
     getToNextQuestion();
     answeredConsecutively += 1;
@@ -307,7 +307,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   void wrongAnswer(index) {
     if (!questions[currentQuestion]['choices'][index]
         .containsKey('wrongAnswer')) {
-      soundPlayMethod(buzzerAudio);
+      playWrongSound();
       if (lives > 1) {
         getToNextQuestion();
       } else {
@@ -450,28 +450,32 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void stoppageTimeMethod(id) {
-    if (!stoppageTimeActivated) {
+    if (!stoppageTimeActivated && !anyTimePerkActive) {
       setState(() {
         usedPerks.add(id);
       });
+      anyTimePerkActive = true;
       multiplyPoints = 2;
       Timer.periodic(const Duration(seconds: 30), (Timer timer) {
         multiplyPoints = 1;
         defaultCountDown = 20;
+        anyTimePerkActive = false;
       });
       stoppageTimeActivated = true;
     }
   }
 
   void stopTimeMethod(id) {
-    if (!stopCountActivated) {
+    if (!stopCountActivated && !anyTimePerkActive) {
       setState(() {
         usedPerks.add(id);
       });
       stopCountActivated = true;
       stopCount = true;
+      anyTimePerkActive = true;
       Timer.periodic(const Duration(seconds: 30), (Timer timer) {
         stopCount = false;
+        anyTimePerkActive = false;
       });
     }
   }
@@ -550,6 +554,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _timer?.cancel();
+    _audioPlayer.dispose();
     super.dispose();
   }
 

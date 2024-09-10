@@ -4,7 +4,6 @@ import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/widgets/containers/fade_transition.dart';
 import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
-import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
 import 'package:in_zone_app/widgets/general_widgets/title_with_border.dart';
 import 'package:in_zone_app/widgets/screens/rankings/single_user.dart';
 import 'package:in_zone_app/widgets/screens/rankings/user_loading_card.dart';
