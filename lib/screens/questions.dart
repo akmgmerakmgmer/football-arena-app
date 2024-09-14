@@ -289,12 +289,25 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     });
   }
 
-  void playCorrectSound() async {
-    await _audioPlayer.play(AssetSource('audio/correct.mp3'));
+  void playCorrectSound({gameStart = false}) async {
+    if (gameStart) {
+      await _audioPlayer.setVolume(0);
+      _audioPlayer.play(AssetSource('audio/correct.mp3'));
+      Timer(const Duration(seconds: 3), () async {
+        await _audioPlayer.setVolume(1);
+      });
+    }
+    _audioPlayer.stop();
+    _audioPlayer.play(AssetSource('audio/correct.mp3'));
   }
 
-  void playWrongSound() async {
-    await _audioPlayer.play(AssetSource('audio/buzzer.mp3'));
+  void playWrongSound({gameStart = false}) async {
+    if (gameStart) {
+      await _audioPlayer.setVolume(0);
+      _audioPlayer.play(AssetSource('audio/buzzer.mp3'));
+    }
+    _audioPlayer.stop();
+    _audioPlayer.play(AssetSource('audio/buzzer.mp3'));
   }
 
   void rightAnswer() {
@@ -529,6 +542,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
 
   void initialFetch() async {
     gameSaved = true;
+    playWrongSound(gameStart: true);
+    playCorrectSound(gameStart: true);
     await getAdvertisments();
     getQuestions();
   }

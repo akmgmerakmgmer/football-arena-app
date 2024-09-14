@@ -21,7 +21,7 @@ class SingleChallengeLoadingCard extends StatelessWidget {
                     padding: const EdgeInsets.all(20.0),
                     width: 225,
                     decoration: BoxDecoration(
-                        color:  Theme.of(context).splashColor,
+                        color:  Theme.of(context).splashColor.withOpacity(0.55),
                         borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20),

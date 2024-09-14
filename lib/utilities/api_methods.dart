@@ -12,7 +12,7 @@ class FetchApi {
   FetchApi(this.api, this.callback, {this.errorCallback = ''});
   Future<void> fetch(context) async {
     final Uri url = Uri.parse("${Url().url}$api");
-    await http.get(url, headers: Url().requestHeaders).then((response) => {
+    await http.get(url, headers: await Url().requestHeaders()).then((response) => {
           if (response.statusCode >= 200 && response.statusCode < 300)
             {callback(jsonDecode(response.body))}
           else
@@ -37,7 +37,7 @@ class PostApi {
   Future<void> post(context) async {
     final Uri url = Uri.parse("${Url().url}$api");
     await http
-        .post(url, headers: Url().requestHeaders, body: jsonEncode(body))
+        .post(url, headers: await Url().requestHeaders(), body: jsonEncode(body))
         .then(
           (response) => {
             if (response.statusCode >= 200 && response.statusCode < 300)
@@ -72,7 +72,7 @@ class PutApi {
   Future<void> put(context) async {
     final Uri url = Uri.parse("${Url().url}$api");
     await http
-        .put(url, headers: Url().requestHeaders, body: jsonEncode(body))
+        .put(url, headers: await Url().requestHeaders(), body: jsonEncode(body))
         .then(
           (response) => {
             if (response.statusCode >= 200 && response.statusCode < 300)

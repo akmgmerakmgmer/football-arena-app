@@ -99,6 +99,7 @@
     "perksTitle": "اشتري وسائل مساعدة",
     "coinsTitle": "اشتري عملات",
     "congratsText": "تهانينا لقد قمت بعملية الشراء بنجاح",
+    "congratsAvatar": "تهانينا لقد قمت بعملية الشراء بنجاح, يمكنك اضافته كرمز رئيسي من الصفحة الخاصة بحسابك",
     "close": "اغلاق الرسالة",
     "remove": "ازالة وسيلة المساعدة",
     "selectPerk": "اضافة وسيلة المساعدة",
@@ -107,5 +108,6 @@
     "currency": "جنيه مصري",
     "navigationHome": "الرئيسية",
     "navigationRankings": "الترتيب",
-    "navigationBestOffers": "عروضك"
+    "navigationBestOffers": "عروضك",
+    "edit": "تعديل"
 }

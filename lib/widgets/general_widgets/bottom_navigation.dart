@@ -15,7 +15,7 @@ class BottomNavigation extends StatelessWidget {
         "action": () {
           Navigator.pushNamed(context, '/home');
         },
-        "selected": currentPath == '/'||currentPath=='/home',
+        "selected": currentPath == '/' || currentPath == '/home',
       },
       {
         "text": AppLocalizations.of(context)!.navigationRankings,
@@ -52,31 +52,35 @@ class BottomNavigation extends StatelessWidget {
     ];
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
+      decoration: BoxDecoration(
+          color: Theme.of(context).primaryColorDark,
+          border:
+              Border(top: BorderSide(width: 1, color: Colors.grey.shade900))),
       child: Row(
         children: navigationRoutes
             .map((route) => GestureDetector(
-              onTap: () => {route['action']()},
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.20,
-                child: Column(
+                  onTap: () => {route['action']()},
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.20,
+                    child: Column(
                       children: [
                         Icon(
                           route['icon'],
                           color: route['selected']
-                              ? Theme.of(context).primaryColor
-                              : Colors.grey.shade800,
+                              ? Colors.red.shade500
+                              : Colors.grey.shade300,
                         ),
                         TextWidget(
                           title: route['text'],
                           fontSize: 12,
                           color: route['selected']
-                              ? Theme.of(context).primaryColor
-                              : Colors.black,
+                              ? Colors.red.shade500
+                              : Colors.grey.shade300,
                         )
                       ],
                     ),
-              ),
-            ))
+                  ),
+                ))
             .toList(),
       ),
     );

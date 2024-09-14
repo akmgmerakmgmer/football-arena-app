@@ -134,7 +134,7 @@ class _SignupFormState extends State<SignupForm> {
             Navigator.pushNamed(context, '/login');
           },
           child: TextWidget(
-              title: AppLocalizations.of(context)!.alreadyHaveAnAccount),
+              title: AppLocalizations.of(context)!.alreadyHaveAnAccount,fontSize: 16,),
         )
       ],
     );

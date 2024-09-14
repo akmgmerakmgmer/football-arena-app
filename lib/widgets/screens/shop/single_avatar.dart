@@ -32,7 +32,7 @@ class _SingleAvatarState extends State<SingleAvatar> {
         Provider.of<LocaleProvider>(context, listen: false)
             .setUser(res['user']);
         SnackbarMessage().snackbar(
-            context, AppLocalizations.of(context)!.congratsText,
+            context, AppLocalizations.of(context)!.congratsAvatar,
             color: Colors.green[400]);
         setState(() {
           loading = false;

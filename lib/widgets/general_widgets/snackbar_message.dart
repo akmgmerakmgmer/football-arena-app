@@ -13,7 +13,7 @@ class SnackbarMessage {
       backgroundColor: color,
       elevation: 10,
       behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 70),
       showCloseIcon: true,
       closeIconColor: Colors.white,
       duration: const Duration(seconds: 3),

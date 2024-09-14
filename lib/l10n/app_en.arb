@@ -102,6 +102,7 @@
     "perksTitle": "Buy More Perks",
     "coinsTitle": "Buy More Coins",
     "congratsText": "Congratulations you have made your purchase successfully",
+    "congratsAvatar": "Congratulations you have made your purchase successfully, you will find it in your account profile",
     "close": "Close",
     "remove": "Remove",
     "shop": "Shop",
@@ -109,5 +110,6 @@
     "currency": "EGP",
     "navigationHome": "Home",
     "navigationRankings": "Rankings",
-    "navigationBestOffers": "Offers"
+    "navigationBestOffers": "Offers",
+    "edit": "Edit"
 }

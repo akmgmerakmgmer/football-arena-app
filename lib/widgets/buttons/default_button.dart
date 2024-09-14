@@ -7,12 +7,15 @@ class DefaultButton extends StatelessWidget {
   final String buttonText;
   final Function action;
   final bool loading;
-  const DefaultButton({
-    super.key,
-    required this.buttonText,
-    required this.action,
-    this.loading = false,
-  });
+  final Widget iconNext;
+  final bool isThereIconNext;
+  const DefaultButton(
+      {super.key,
+      required this.buttonText,
+      required this.action,
+      this.loading = false,
+      this.iconNext = const SizedBox(),
+      this.isThereIconNext = false});
 
   @override
   Widget build(BuildContext context) {
@@ -56,17 +59,31 @@ class DefaultButton extends StatelessWidget {
                       bottom: 0,
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
-                        child: const Center(child: PrimaryLoading(size: 10,)),
+                        child: const Center(
+                            child: PrimaryLoading(
+                          size: 10,
+                        )),
                       ))
                   : Container(),
               Align(
                 alignment: Alignment.center,
                 child: Opacity(
                   opacity: loading ? 0 : 1,
-                  child: TextWidget(
-                    title: buttonText,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextWidget(
+                        title: buttonText,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      isThereIconNext
+                          ? const SizedBox(
+                              width: 3,
+                            )
+                          : const SizedBox(),
+                      iconNext
+                    ],
                   ),
                 ),
               )

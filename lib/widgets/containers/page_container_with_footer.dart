@@ -1,14 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/auth.dart';
 import 'package:in_zone_app/widgets/drawer/drawer_widget.dart';
 import 'package:in_zone_app/widgets/footer/footer.dart';
 import 'package:in_zone_app/widgets/general_widgets/bottom_navigation.dart';
-import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
+import 'package:in_zone_app/widgets/loadings/logo_loading.dart';
 import 'package:in_zone_app/widgets/screens/questions/advertisment.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -162,7 +161,8 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
         endDrawer: const DrawerWidget(),
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: AppBar(foregroundColor: Theme.of(context).splashColor,
+          child: AppBar(
+            foregroundColor: Theme.of(context).splashColor,
             iconTheme: IconThemeData(color: Colors.grey.shade400),
             automaticallyImplyLeading: false,
             title: GestureDetector(
@@ -178,22 +178,21 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
           ),
         ),
         // floatingActionButton: const FloatingButton(),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                  // physics: const ScrollPhysics(parent:PageScrollPhysics() ),
-                  child: Stack(
+        body: loading
+            ? LogoLoading(
+              isVisible: loading,
+            )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    color: widget.background,
-                    child: loading
-                        ? Container(
-                            height: MediaQuery.of(context).size.height,
-                            color: Theme.of(context).splashColor,
-                            child: const PrimaryLoading())
-                        : Column(
+                  Expanded(
+                    child: SingleChildScrollView(
+                        // physics: const ScrollPhysics(parent:PageScrollPhysics() ),
+                        child: Stack(
+                      children: [
+                        Container(
+                          color: widget.background,
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: advertisments.isNotEmpty
                                 ? [
@@ -240,13 +239,13 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
                                     ),
                                   ],
                           ),
+                        ),
+                      ],
+                    )),
                   ),
+                  const BottomNavigation()
                 ],
-              )),
-            ),
-            const BottomNavigation()
-          ],
-        ),
+              ),
       ),
     );
   }

@@ -51,9 +51,9 @@ class _InputState extends State<Input> {
       initialValue: widget.value,
       keyboardType: widget.type,
       textDirection:
-          Provider.of<LocaleProvider>(context, listen: false).locale == 'ar'
-              ? TextDirection.rtl
-              : TextDirection.ltr,
+          Provider.of<LocaleProvider>(context, listen: false).locale == 'en'
+              ? TextDirection.ltr
+              : TextDirection.rtl,
       style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
@@ -71,8 +71,14 @@ class _InputState extends State<Input> {
         alignLabelWithHint: true,
         enabled: !widget.disabled && !widget.loading,
         errorText: widget.error.isEmpty ? null : widget.error,
-        errorStyle:
-            const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+        errorStyle: TextStyle(
+          color: Colors.red,
+          fontWeight: FontWeight.bold,
+          letterSpacing:
+              Provider.of<LocaleProvider>(context, listen: false).locale == 'ar'
+                  ? 0
+                  : 0.2,
+        ),
         disabledBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(100)),
           borderSide: BorderSide(
@@ -109,6 +115,11 @@ class _InputState extends State<Input> {
                         'ar'
                     ? 'NotoKufiArabic'
                     : 'Oswald',
+            letterSpacing:
+                Provider.of<LocaleProvider>(context, listen: false).locale ==
+                        'ar'
+                    ? 0
+                    : 0.2,
           ),
         ),
         labelStyle: const TextStyle(color: Colors.white),

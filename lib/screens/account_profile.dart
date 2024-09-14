@@ -3,9 +3,9 @@ import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/title_with_border.dart';
+import 'package:in_zone_app/widgets/screens/profile/profile_form.dart';
 import 'package:in_zone_app/widgets/screens/profile/single_perk_profile.dart';
 import 'package:in_zone_app/widgets/screens/profile/single_users_avatars.dart';
-import 'package:in_zone_app/widgets/user_inputs/input.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +16,7 @@ class AccountProfile extends StatelessWidget with ChangeNotifier {
   @override
   Widget build(BuildContext context) {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
+
     return PageContainerWithFooter(
         background: Theme.of(context).splashColor,
         body: Container(
@@ -36,32 +37,12 @@ class AccountProfile extends StatelessWidget with ChangeNotifier {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Input(
-                      callback: (value) {},
-                      label: AppLocalizations.of(context)!.username,
-                      value: user['username'],
-                      disabled: true,
-                      icon: const Icon(Icons.person_outlined),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Input(
-                        callback: (value) {},
-                        label: AppLocalizations.of(context)!.password,
-                        value: user['password'],
-                        isPassword: true,
-                        disabled: true,
-                        icon: const Icon(Icons.lock_outlined)),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Input(
-                        callback: (value) {},
-                        label: AppLocalizations.of(context)!.number,
-                        value: user['number'],
-                        disabled: true,
-                        icon: const Icon(Icons.phone_outlined)),
+                    ProfileForm(
+                        user: user,
+                        setUser: (value) {
+                          Provider.of<LocaleProvider>(context, listen: false)
+                              .setUser(value);
+                        }),
                     const SizedBox(
                       height: 15,
                     ),
