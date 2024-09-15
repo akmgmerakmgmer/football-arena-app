@@ -36,7 +36,6 @@ class _LoginFormState extends State<LoginForm> {
       // ignore: use_build_context_synchronously
       Navigator.pushNamed(context, '/');
     }, errorCallback: (value) {
-      print(value);
       if (value.containsKey('username') &&
           value['username'] == 'field_required') {
         errors['username'] = AppLocalizations.of(context)!.field_required;

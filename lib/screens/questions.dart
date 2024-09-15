@@ -51,7 +51,6 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   List displayChosenPlayers = [];
   List hints = [];
   int defaultCountDown = 20;
-  bool stoppageTimeActivated = false;
   int countDown = 20;
   int pointValue = 1;
   int pointDefaultValue = 0;
@@ -62,9 +61,6 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   bool stopCount = true;
   bool show = true;
   bool saveLoading = false;
-  bool penaltyActivated = false;
-  bool allowVarActivation = true;
-  bool stopCountActivated = false;
   bool showTut = true;
   List advertisments = [];
   bool showAd = false;
@@ -75,6 +71,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   List usedPerks = [];
   bool nextPatchisLoaded = true;
   bool anyTimePerkActive = false;
+  bool stoppageTimeActive = false;
   final AudioPlayer _audioPlayer = AudioPlayer();
   // Methods
   Future<void> getQuestions() async {
@@ -209,11 +206,10 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       defaultCountDown = 120;
     } else if (questionMode == 'guessTheTeam') {
       defaultCountDown = 180;
+    } else if (stoppageTimeActive) {
+      defaultCountDown = 10;
     } else {
       defaultCountDown = 20;
-    }
-    if (stoppageTimeActivated) {
-      defaultCountDown = (defaultCountDown / 2) as int;
     }
     return defaultCountDown;
   }
@@ -420,8 +416,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void penaltyMethod(id) {
-    if (!penaltyActivated &&
-        !showPlayerSearch() &&
+    if (!showPlayerSearch() &&
         questions[currentQuestion]['questionMode'] != 'trueOrFalse') {
       int numberOfChoicesRemoved = 0;
       setState(() {
@@ -448,42 +443,36 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       setState(() {
         questions = questions;
       });
-      penaltyActivated = true;
     }
   }
 
   void varMethod(id) {
-    if (allowVarActivation) {
-      setState(() {
-        usedPerks.add(id);
-      });
-      activateVar = true;
-      allowVarActivation = false;
-    }
+    setState(() {
+      usedPerks.add(id);
+    });
+    activateVar = true;
   }
 
   void stoppageTimeMethod(id) {
-    if (!stoppageTimeActivated && !anyTimePerkActive) {
-      setState(() {
-        usedPerks.add(id);
-      });
-      anyTimePerkActive = true;
-      multiplyPoints = 2;
-      Timer.periodic(const Duration(seconds: 30), (Timer timer) {
-        multiplyPoints = 1;
-        defaultCountDown = 20;
-        anyTimePerkActive = false;
-      });
-      stoppageTimeActivated = true;
-    }
+    setState(() {
+      usedPerks.add(id);
+    });
+    anyTimePerkActive = true;
+    stoppageTimeActive = true;
+    multiplyPoints = 2;
+    Timer.periodic(const Duration(seconds: 30), (Timer timer) {
+      multiplyPoints = 1;
+      defaultCountDown = 20;
+      anyTimePerkActive = false;
+      stoppageTimeActive = false;
+    });
   }
 
   void stopTimeMethod(id) {
-    if (!stopCountActivated && !anyTimePerkActive) {
+    if (!anyTimePerkActive) {
       setState(() {
         usedPerks.add(id);
       });
-      stopCountActivated = true;
       stopCount = true;
       anyTimePerkActive = true;
       Timer.periodic(const Duration(seconds: 30), (Timer timer) {
@@ -496,11 +485,13 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   void playAgain() {
     stopCount = false;
     currentAd = 0;
+    stoppageTimeActive = false;
     setState(() {
       currentQuestion = currentQuestion + 1;
       lives = 10;
       coins = 0;
       points = 0;
+      usedPerks = [];
     });
   }
 

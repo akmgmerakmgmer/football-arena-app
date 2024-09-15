@@ -30,7 +30,11 @@ class Stats extends StatelessWidget {
       required this.locale});
 
   void action(perk) {
-    if (perk['quantity'] > 0) {
+    bool isPerkUsed = usedPerks
+        .where((item) => item == perk['id']['_id'])
+        .toList()
+        .isNotEmpty;
+    if (perk['quantity'] > 0 && !isPerkUsed) {
       switch (perk['id']['title']['en']) {
         case '+90':
           stoppageTime(perk['id']['_id']);

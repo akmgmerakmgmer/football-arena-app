@@ -32,11 +32,11 @@ class SingleUser extends StatelessWidget {
   String prizeText() {
     if (currentFilter == 'weekly') {
       if (rank == '1') {
-        return locale == 'ar' ? '(جائزة 2000 جنيه مصري)' : '(2000 EGP Prize)';
-      } else if (rank == '2') {
         return locale == 'ar' ? '(جائزة 1500 جنيه مصري)' : '(1500 EGP Prize)';
-      } else if (rank == '3') {
+      } else if (rank == '2') {
         return locale == 'ar' ? '(جائزة 1000 جنيه مصري)' : '(1000 EGP Prize)';
+      } else if (rank == '3') {
+        return locale == 'ar' ? '(جائزة 500 جنيه مصري)' : '(500 EGP Prize)';
       } else {
         return '';
       }
