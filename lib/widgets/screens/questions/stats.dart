@@ -14,6 +14,8 @@ class Stats extends StatelessWidget {
   final Function penalty;
   final Function varMethod;
   final Function stoppageTime;
+  final Function pointsMultiplicationMethod;
+  final Function skipQuestion;
   final List usedPerks;
   final String locale;
   const Stats(
@@ -27,7 +29,9 @@ class Stats extends StatelessWidget {
       required this.varMethod,
       required this.stoppageTime,
       required this.usedPerks,
-      required this.locale});
+      required this.locale,
+      required this.pointsMultiplicationMethod,
+      required this.skipQuestion});
 
   void action(perk) {
     bool isPerkUsed = usedPerks
@@ -44,6 +48,12 @@ class Stats extends StatelessWidget {
           varMethod(perk['id']['_id']);
         case 'Stop Time':
           stopTime(perk['id']['_id']);
+        case 'Double Points':
+          pointsMultiplicationMethod(perk['id']['_id'], 2, 20000);
+        case 'Hero Personality':
+          pointsMultiplicationMethod(perk['id']['_id'], 3, 15000);
+        case 'Skip Question':
+          skipQuestion(perk['id']['_id']);
         default:
           () => {};
       }

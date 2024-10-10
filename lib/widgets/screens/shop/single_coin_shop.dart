@@ -28,14 +28,14 @@ class _SingleCoinShopState extends State<SingleCoinShop> {
       });
       Map payload = {
         "username": user['username'],
-        "amount": amount * 100,
+        "userId": user['_id'],
+        "amount": amount,
         "phoneNumber": user['number'],
         "itemBought": 'coins',
         "itemQuantity": quantity
       };
       PostApi('card-payment', payload, (res) {
-        ExternalUrl().launchNewUrl(
-            'https://accept.paymob.com/api/acceptance/iframes/859270?payment_token=${res['paymentKey']}');
+        ExternalUrl().launchNewUrl('${res['path']}');
         setState(() {
           loading = false;
         });

@@ -56,7 +56,7 @@ class _LogoLoadingState extends State<LogoLoading>
                 child: Image.asset(
                   'assets/images/logo.png',
                   fit: BoxFit.cover,
-                  width: 175,
+                  width: 125,
                 )),
             const SizedBox(
               height: 12,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/widgets/buttons/purchase_button.dart';
-import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -54,49 +53,37 @@ class _SingleAvatarState extends State<SingleAvatar> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 3),
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(15)),
-      ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(15)),
-            child: Container(
-              width: width,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(15)),
-                child: CachedImage(
-                  image: widget.avatar['image'],
-                  height: 300,
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-              bottom: 15,
-              child: SizedBox(
-                  width: width > 1280
-                      ? width * 0.1
-                      : width > 1024
-                          ? width * 0.2
-                          : width > 450
-                              ? width * 0.3
-                              : width * 0.6,
-                  child: PurchaseButton(
-                    price: widget.avatar['price'].toString(),
-                    buttonText: AppLocalizations.of(context)!.buyNow,
-                    action: () {
-                      onClick();
-                    },
-                    loading: loading,
-                  )))
-        ],
-      ),
-    );
+        height: 300,
+        margin: const EdgeInsets.symmetric(horizontal: 3),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: NetworkImage(widget.avatar['image']), fit: BoxFit.cover),
+          borderRadius: const BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+                width: width > 1280
+                    ? width * 0.1
+                    : width > 1024
+                        ? width * 0.2
+                        : width > 450
+                            ? width * 0.3
+                            : width * 0.6,
+                child: PurchaseButton(
+                  price: widget.avatar['price'].toString(),
+                  buttonText: AppLocalizations.of(context)!.buyNow,
+                  action: () {
+                    onClick();
+                  },
+                  loading: loading,
+                )),
+            const SizedBox(
+              height: 15,
+            )
+          ],
+        ));
   }
 }

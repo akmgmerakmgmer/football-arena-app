@@ -59,6 +59,7 @@ class _SinglePerkShopState extends State<SinglePerkShop> {
             .setUser(res['user']);
         SnackbarMessage().snackbar(
             context, AppLocalizations.of(context)!.congratsText,
+            label: AppLocalizations.of(context)!.about,
             color: Colors.green[400]);
         setState(() {
           loading = false;
@@ -175,7 +176,7 @@ class _SinglePerkShopState extends State<SinglePerkShop> {
                   ],
                 ),
                 const SizedBox(
-                  height: 12,
+                  height: 8,
                 ),
                 BlurBackgroundContainer(
                     border: 100,
@@ -190,6 +191,7 @@ class _SinglePerkShopState extends State<SinglePerkShop> {
                                   : width * 0.8,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        textDirection: TextDirection.ltr,
                         children: [
                           GestureDetector(
                             onTap: decreaseQuantity,

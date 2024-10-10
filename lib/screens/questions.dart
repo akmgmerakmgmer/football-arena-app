@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
+import 'package:in_zone_app/utilities/external_url.dart';
 import 'package:in_zone_app/widgets/buttons/save_exit_button.dart';
 import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
 import 'package:in_zone_app/widgets/containers/fade_transition.dart';
@@ -19,6 +20,8 @@ import 'package:in_zone_app/widgets/screens/questions/stats.dart';
 import 'package:in_zone_app/widgets/screens/questions/true_or_false.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'dart:convert'; // For utf8 encoding
+import 'package:crypto/crypto.dart'; // For SHA-256
 
 class Questions extends StatefulWidget {
   final String mode;
@@ -89,7 +92,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
         nextPatchisLoaded = true;
       });
       if (res['questions'].length == 0) {
-        currentPage = 0;
+        currentPage = 1;
       }
       if (!countStarted) {
         setState(() {
@@ -285,23 +288,12 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     });
   }
 
-  void playCorrectSound({gameStart = false}) async {
-    if (gameStart) {
-      await _audioPlayer.setVolume(0);
-      _audioPlayer.play(AssetSource('audio/correct.mp3'));
-      Timer(const Duration(seconds: 3), () async {
-        await _audioPlayer.setVolume(1);
-      });
-    }
+  void playCorrectSound() async {
     _audioPlayer.stop();
     _audioPlayer.play(AssetSource('audio/correct.mp3'));
   }
 
-  void playWrongSound({gameStart = false}) async {
-    if (gameStart) {
-      await _audioPlayer.setVolume(0);
-      _audioPlayer.play(AssetSource('audio/buzzer.mp3'));
-    }
+  void playWrongSound() async {
     _audioPlayer.stop();
     _audioPlayer.play(AssetSource('audio/buzzer.mp3'));
   }
@@ -345,9 +337,20 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     }
   }
 
+  String generateSHA256Hash(String input) {
+    // Convert the input string to a list of UTF-8 encoded bytes
+    List<int> bytes = utf8.encode(input);
+
+    // Generate the SHA-256 hash
+    Digest sha256Result = sha256.convert(bytes);
+
+    // Return the hash as a hexadecimal string
+    return sha256Result.toString();
+  }
+
   void choiceAction(answer, index) {
     getNextPatchOfQuestions();
-    if (answer == questions[currentQuestion]['answer']) {
+    if (generateSHA256Hash(answer) == questions[currentQuestion]['answer']) {
       rightAnswer();
     } else {
       wrongAnswer(index);
@@ -446,6 +449,23 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     }
   }
 
+  void skipQuestionMethod(id) {
+    setState(() {
+      usedPerks.add(id);
+    });
+    getToNextQuestion();
+  }
+
+  void multiplyPointsMethod(id, multiplicationNumber, int time) {
+    setState(() {
+      usedPerks.add(id);
+    });
+    multiplyPoints = multiplicationNumber;
+    Timer.periodic(Duration(milliseconds: time), (Timer timer) {
+      multiplyPoints = 1;
+    });
+  }
+
   void varMethod(id) {
     setState(() {
       usedPerks.add(id);
@@ -527,14 +547,13 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     });
   }
 
-  void adClicked(id) {
+  void adClicked(id, link) {
+    ExternalUrl().launchNewUrl(link);
     PutApi('ad-clicked/$id', {}, (res) {}).put(context);
   }
 
   void initialFetch() async {
     gameSaved = true;
-    playWrongSound(gameStart: true);
-    playCorrectSound(gameStart: true);
     await getAdvertisments();
     getQuestions();
   }
@@ -643,6 +662,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                         penalty: penaltyMethod,
                         varMethod: varMethod,
                         stoppageTime: stoppageTimeMethod,
+                        pointsMultiplicationMethod: multiplyPointsMethod,
+                        skipQuestion: skipQuestionMethod,
                         locale: locale,
                       ),
                       FadeTransitionContainer(
@@ -702,8 +723,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                           : Container(),
                       showAd && advertisments.isNotEmpty
                           ? Advertisment(
-                              adClicked: () =>
-                                  adClicked(advertisments[currentAd]['_id']),
+                              adClicked: () => adClicked(
+                                  advertisments[currentAd]['_id'],
+                                  advertisments[currentAd]['directionLink']),
                               seconds: currentAdCountDown,
                               skipAdMethod: skipAdMethod,
                               image: advertisments[currentAd]['image'])
