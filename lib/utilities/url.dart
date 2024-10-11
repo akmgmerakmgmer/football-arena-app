@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Url {
-  final String url = 'https://football-challenge-backend-eg83.vercel.app/api/';
+  final String url = 'https://football-challenge-backend.onrender.com/api/';
 
   getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

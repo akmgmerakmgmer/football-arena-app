@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/utilities/url.dart';
 import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 
 class FetchApi {
@@ -15,13 +14,6 @@ class FetchApi {
     await http.get(url, headers: await Url().requestHeaders()).then((response) => {
           if (response.statusCode >= 200 && response.statusCode < 300)
             {callback(jsonDecode(response.body))}
-          else
-            {
-              SnackbarMessage().snackbar(
-                  context, AppLocalizations.of(context)!.requestFailed,
-                  color: Colors.red),
-              errorCallback()
-            }
         });
   }
 }
@@ -51,12 +43,6 @@ class PostApi {
               }
             else if (response.statusCode == 422)
               {errorCallback(jsonDecode(response.body))}
-            else
-              {
-                SnackbarMessage().snackbar(
-                    context, AppLocalizations.of(context)!.requestFailed,
-                    color: Colors.red)
-              }
           },
         );
   }
@@ -79,12 +65,6 @@ class PutApi {
               {callback(jsonDecode(response.body))}
             else if (response.statusCode == 422)
               {errorCallback(jsonDecode(response.body))}
-            else
-              {
-                SnackbarMessage().snackbar(
-                    context, AppLocalizations.of(context)!.requestFailed,
-                    color: Colors.red)
-              }
           },
         );
   }
