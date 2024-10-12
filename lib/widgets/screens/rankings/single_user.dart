@@ -77,8 +77,8 @@ class SingleUser extends StatelessWidget {
                     borderRadius: const BorderRadius.all(Radius.circular(100)),
                     child: CachedImage(
                       image: image,
-                      width: 50,
-                      height: 50,
+                      width: 60,
+                      height: 60,
                     )),
                 const SizedBox(
                   width: 15,

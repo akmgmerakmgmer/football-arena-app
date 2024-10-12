@@ -32,7 +32,10 @@ class _SingleAvatarState extends State<SingleAvatar> {
             .setUser(res['user']);
         SnackbarMessage().snackbar(
             context, AppLocalizations.of(context)!.congratsAvatar,
-            color: Colors.green[400]);
+            label: AppLocalizations.of(context)!.checkYourAccount, action: () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          Navigator.pushNamed(context, '/profile');
+        }, color: Colors.green[400]);
         setState(() {
           loading = false;
         });

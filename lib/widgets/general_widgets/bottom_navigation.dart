@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
+import 'package:provider/provider.dart';
 
 class BottomNavigation extends StatelessWidget {
   const BottomNavigation({super.key});
@@ -8,6 +10,7 @@ class BottomNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String currentPath = ModalRoute.of(context)?.settings.name ?? '/';
+    Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     List navigationRoutes = [
       {
         "text": AppLocalizations.of(context)!.navigationHome,
@@ -41,14 +44,23 @@ class BottomNavigation extends StatelessWidget {
         },
         "selected": currentPath == '/shop'
       },
-      {
-        "text": AppLocalizations.of(context)!.navigationBestOffers,
-        "icon": Icons.discount,
-        "action": () {
-          Navigator.pushNamed(context, '/best-offers');
-        },
-        "selected": currentPath == '/best-offers'
-      },
+      user.isNotEmpty
+          ? {
+              "text": AppLocalizations.of(context)!.profile,
+              "icon": Icons.person,
+              "action": () {
+                Navigator.pushNamed(context, '/profile');
+              },
+              "selected": currentPath == '/profile'
+            }
+          : {
+              "text": AppLocalizations.of(context)!.navigationBestOffers,
+              "icon": Icons.discount,
+              "action": () {
+                Navigator.pushNamed(context, '/best-offers');
+              },
+              "selected": currentPath == '/best-offers'
+            },
     ];
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12.0),

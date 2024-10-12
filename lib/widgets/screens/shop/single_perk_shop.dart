@@ -59,8 +59,10 @@ class _SinglePerkShopState extends State<SinglePerkShop> {
             .setUser(res['user']);
         SnackbarMessage().snackbar(
             context, AppLocalizations.of(context)!.congratsText,
-            label: AppLocalizations.of(context)!.about,
-            color: Colors.green[400]);
+            label: AppLocalizations.of(context)!.checkYourAccount, action: () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          Navigator.pushNamed(context, '/profile');
+        }, color: Colors.green[400]);
         setState(() {
           loading = false;
         });
