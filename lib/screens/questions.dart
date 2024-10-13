@@ -261,10 +261,10 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void rightAnswerPoints() {
-    if (answeredConsecutively != 0 &&
-        (answeredConsecutively / 5).ceil() != pointValue) {
-      pointValue = (answeredConsecutively / 5).floor();
-    }
+    // if (answeredConsecutively != 0 &&
+    //     (answeredConsecutively / 5).ceil() != pointValue) {
+    //   pointValue = (answeredConsecutively / 5).floor();
+    // }
     if (showImage() && questions[currentQuestion]['difficulty'] == 'easy') {
       pointDefaultValue = 20;
     } else if (showImage() &&
@@ -548,8 +548,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void adClicked(id, link) {
-    ExternalUrl().launchNewUrl(link);
     PutApi('ad-clicked/$id', {}, (res) {}).put(context);
+    ExternalUrl().launchNewUrl(link);
   }
 
   void initialFetch() async {

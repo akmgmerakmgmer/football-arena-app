@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/utilities/external_url.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
 import 'package:in_zone_app/widgets/buttons/regular_button.dart';
 import 'package:in_zone_app/widgets/containers/image_background_container.dart';
@@ -11,6 +12,7 @@ class MainMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
     return ImageBackgroundContainer(
         body: Column(
       children: [
@@ -34,9 +36,11 @@ class MainMenu extends StatelessWidget {
           height: 15,
         ),
         RegularButton(
-          buttonText: AppLocalizations.of(context)!.challengesWord,
+          buttonText: AppLocalizations.of(context)!.playOnSite,
           action: () {
-            Navigator.pushNamed(context, '/challenges');
+            ExternalUrl().launchNewUrl(locale == 'en'
+                ? 'https://www.inzonegaming.com/en'
+                : 'https://www.inzonegaming.com/ar');
           },
           uppercase: true,
         ),

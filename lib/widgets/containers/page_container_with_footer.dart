@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/auth.dart';
+import 'package:in_zone_app/utilities/external_url.dart';
 import 'package:in_zone_app/widgets/drawer/drawer_widget.dart';
 import 'package:in_zone_app/widgets/footer/footer.dart';
 import 'package:in_zone_app/widgets/general_widgets/bottom_navigation.dart';
@@ -98,8 +99,9 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
     });
   }
 
-  void adClicked(id) {
+  void adClicked(id, link) {
     PutApi('ad-clicked/$id', {}, (res) {}).put(context);
+    ExternalUrl().launchNewUrl(link);
   }
 
   skipAdMethod() {
@@ -180,8 +182,8 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
         // floatingActionButton: const FloatingButton(),
         body: loading
             ? LogoLoading(
-              isVisible: loading,
-            )
+                isVisible: loading,
+              )
             : Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -202,8 +204,9 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
                                           (BuildContext context) {
                                         return Advertisment(
                                             adClicked: () => adClicked(
+                                                advertisments[currentAd]['_id'],
                                                 advertisments[currentAd]
-                                                    ['_id']),
+                                                    ['directionLink']),
                                             seconds: currentAdCountDown,
                                             skipAdMethod: skipAdMethod,
                                             image: advertisments[currentAd]
