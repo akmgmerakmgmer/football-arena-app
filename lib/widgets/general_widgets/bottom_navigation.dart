@@ -44,23 +44,24 @@ class BottomNavigation extends StatelessWidget {
         },
         "selected": currentPath == '/shop'
       },
-      user.isNotEmpty
-          ? {
-              "text": AppLocalizations.of(context)!.profile,
-              "icon": Icons.person,
-              "action": () {
-                Navigator.pushNamed(context, '/profile');
-              },
-              "selected": currentPath == '/profile'
-            }
-          : {
-              "text": AppLocalizations.of(context)!.navigationBestOffers,
-              "icon": Icons.discount,
-              "action": () {
-                Navigator.pushNamed(context, '/best-offers');
-              },
-              "selected": currentPath == '/best-offers'
-            },
+      // user.isNotEmpty
+      //     ? {
+      //         "text": AppLocalizations.of(context)!.profile,
+      //         "icon": Icons.person,
+      //         "action": () {
+      //           Navigator.pushNamed(context, '/profile');
+      //         },
+      //         "selected": currentPath == '/profile'
+      //       }
+      //     :
+      {
+        "text": AppLocalizations.of(context)!.navigationBestOffers,
+        "icon": Icons.discount,
+        "action": () {
+          Navigator.pushNamed(context, '/best-offers');
+        },
+        "selected": currentPath == '/best-offers'
+      },
     ];
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
