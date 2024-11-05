@@ -44,16 +44,16 @@ class BottomNavigation extends StatelessWidget {
         },
         "selected": currentPath == '/shop'
       },
-      // user.isNotEmpty
-      //     ? {
-      //         "text": AppLocalizations.of(context)!.profile,
-      //         "icon": Icons.person,
-      //         "action": () {
-      //           Navigator.pushNamed(context, '/profile');
-      //         },
-      //         "selected": currentPath == '/profile'
-      //       }
-      //     :
+      user.isNotEmpty
+          ? {
+              "text": AppLocalizations.of(context)!.profile,
+              "icon": Icons.person,
+              "action": () {
+                Navigator.pushNamed(context, '/profile');
+              },
+              "selected": currentPath == '/profile'
+            }
+          :
       {
         "text": AppLocalizations.of(context)!.navigationBestOffers,
         "icon": Icons.discount,

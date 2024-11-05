@@ -103,5 +103,8 @@
     "navigationHome": "Home",
     "navigationRankings": "Rankings",
     "navigationBestOffers": "Offers",
-    "edit": "Edit"
+    "edit": "Edit",
+    "wordsLimit": "At least type 3 words",
+    "addHint": "Add Hint",
+    "deleteWord": "Delete Word"
 }

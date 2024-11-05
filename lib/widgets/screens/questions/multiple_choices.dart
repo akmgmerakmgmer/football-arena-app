@@ -18,11 +18,11 @@ class MultipleChoices extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      width: 300,
-      child: isMultipleChoices
-          ? Column(
+    return isMultipleChoices
+        ? Container(
+            alignment: Alignment.center,
+            width: 300,
+            child: Column(
               children: choices
                   .asMap()
                   .entries
@@ -30,7 +30,7 @@ class MultipleChoices extends StatelessWidget {
                         children: [
                           choice.value.containsKey('wrongAnswer')
                               ? BlurBackgroundContainer(
-                                body: RegularButton(
+                                  body: RegularButton(
                                     buttonText: locale == 'ar'
                                         ? choice.value['ar']
                                         : choice.value['en'],
@@ -40,7 +40,7 @@ class MultipleChoices extends StatelessWidget {
                                     uppercase: true,
                                     fontSize: 15,
                                   ),
-                              )
+                                )
                               : MainButton(
                                   buttonText: locale == 'ar'
                                       ? choice.value['ar']
@@ -57,8 +57,7 @@ class MultipleChoices extends StatelessWidget {
                         ],
                       ))
                   .toList(),
-            )
-          : Container(),
-    );
+            ))
+        : Container();
   }
 }

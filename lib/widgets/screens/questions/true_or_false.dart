@@ -16,11 +16,11 @@ class TrueOrFalse extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      width: 300,
-      child: isTrueOrFalse
-          ? StaggeredGrid.count(
+    return isTrueOrFalse
+        ? Container(
+            alignment: Alignment.center,
+            width: 300,
+            child: StaggeredGrid.count(
               crossAxisCount: 2,
               mainAxisSpacing: 15,
               crossAxisSpacing: 15,
@@ -40,8 +40,7 @@ class TrueOrFalse extends StatelessWidget {
                     ),
                   )
                   .toList(),
-            )
-          : Container(),
-    );
+            ))
+        : Container();
   }
 }

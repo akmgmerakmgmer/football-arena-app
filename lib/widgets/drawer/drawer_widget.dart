@@ -99,14 +99,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           //   icon: Icons.attach_money,
           //   action: () {},
           // ),
-          DrawerItem(
-            text: AppLocalizations.of(context)!.bestOffers,
-            icon: Icons.discount,
-            action: () {
-              Navigator.pushNamed(context, '/best-offers');
-            },
-            selected: currentPath == '/best-offers',
-          ),
+          // DrawerItem(
+          //   text: AppLocalizations.of(context)!.bestOffers,
+          //   icon: Icons.discount,
+          //   action: () {
+          //     Navigator.pushNamed(context, '/best-offers');
+          //   },
+          //   selected: currentPath == '/best-offers',
+          // ),
           DrawerItem(
             text: AppLocalizations.of(context)!.shop,
             icon: Icons.shopping_bag,

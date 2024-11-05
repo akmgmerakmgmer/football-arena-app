@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/screens/reversed_words.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/external_url.dart';
 import 'package:in_zone_app/widgets/buttons/save_exit_button.dart';
@@ -16,6 +17,7 @@ import 'package:in_zone_app/widgets/screens/questions/advertisment.dart';
 import 'package:in_zone_app/widgets/screens/questions/game_over.dart';
 import 'package:in_zone_app/widgets/screens/questions/multiple_choices.dart';
 import 'package:in_zone_app/widgets/screens/questions/perks_illustrations.dart';
+import 'package:in_zone_app/widgets/screens/questions/player_search.dart';
 import 'package:in_zone_app/widgets/screens/questions/stats.dart';
 import 'package:in_zone_app/widgets/screens/questions/true_or_false.dart';
 import 'package:provider/provider.dart';
@@ -123,9 +125,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
           });
         } else {
           answeredConsecutively = 0;
-          setState(() {
-            currentQuestion = currentQuestion + 1;
-          });
+          getToNextQuestion();
           if (lives > 0) {
             playWrongSound();
             setState(() {
@@ -171,11 +171,20 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   bool isMultipleChoices() {
-    return getQuestionMode() == 'multipleChoices' ? true : false;
+    return getQuestionMode() == 'multipleChoices';
   }
 
   bool isTrueOrFalse() {
-    return getQuestionMode() == 'trueOrFalse' ? true : false;
+    return getQuestionMode() == 'trueOrFalse';
+  }
+
+  bool isPlayerSearch() {
+    return getQuestionMode() == 'passwordChallenge' ||
+        getQuestionMode() == 'guessThePlayer';
+  }
+
+  bool isReversedWords() {
+    return getQuestionMode() == 'reversedWords';
   }
 
   void getNextPatchOfQuestions() {
@@ -204,13 +213,12 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   int setCount() {
-    String questionMode = getQuestionMode();
     if (showHints()) {
-      defaultCountDown = 120;
-    } else if (questionMode == 'guessTheTeam') {
-      defaultCountDown = 180;
+      defaultCountDown = 45;
     } else if (stoppageTimeActive) {
       defaultCountDown = 10;
+    } else if (isReversedWords()) {
+      defaultCountDown = 30;
     } else {
       defaultCountDown = 20;
     }
@@ -265,14 +273,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     //     (answeredConsecutively / 5).ceil() != pointValue) {
     //   pointValue = (answeredConsecutively / 5).floor();
     // }
-    if (showImage() && questions[currentQuestion]['difficulty'] == 'easy') {
-      pointDefaultValue = 20;
-    } else if (showImage() &&
-        questions[currentQuestion]['difficulty'] == 'medium') {
-      pointDefaultValue = 30;
-    } else if (showImage() &&
-        questions[currentQuestion]['difficulty'] == 'hard') {
-      pointDefaultValue = 40;
+    if (isReversedWords()) {
+      pointDefaultValue = 10;
     } else if (showHints()) {
       pointDefaultValue =
           (questions[currentQuestion]['hints'].length - hints.length + 1) * 5;
@@ -302,38 +304,54 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     playCorrectSound();
     rightAnswerPoints();
     getToNextQuestion();
+    getNextPatchOfQuestions();
     answeredConsecutively += 1;
   }
 
   void wrongAnswer(index) {
+    if (isReversedWords()) {
+      return wrongAnswerActions();
+    }
+    if (isPlayerSearch()) {
+      return wrongAnswerActions();
+    }
+    if (isTrueOrFalse()) {
+      return wrongAnswerActions();
+    }
     if (!questions[currentQuestion]['choices'][index]
-        .containsKey('wrongAnswer')) {
-      playWrongSound();
-      if (lives > 1) {
-        getToNextQuestion();
-      } else {
-        setState(() {
-          pageLoading = true;
-        });
-        saveGame(false);
-      }
-      answeredConsecutively = 0;
-      if (points != 0 && !activateVar) {
-        setState(() {
-          points = points - 1;
-        });
-      }
-      if (lives != 0 && !activateVar) {
-        setState(() {
-          lives = lives - 1;
-        });
-      }
+            .containsKey('wrongAnswer') &&
+        isMultipleChoices()) {
+      return wrongAnswerActions();
+    }
+  }
+
+  void wrongAnswerActions() {
+    playWrongSound();
+    if (lives > 1 && !isPlayerSearch() && !isReversedWords()) {
+      getToNextQuestion();
+    }
+    answeredConsecutively = 0;
+    if (points != 0 && !activateVar) {
       setState(() {
-        questions = questions;
+        points = points - 1;
       });
-      if (activateVar) {
-        activateVar = false;
-      }
+    }
+    if (lives != 0 && !activateVar) {
+      setState(() {
+        lives = lives - 1;
+      });
+    }
+    if (lives == 0) {
+      setState(() {
+        pageLoading = true;
+      });
+      return saveGame(false);
+    }
+    setState(() {
+      questions = questions;
+    });
+    if (activateVar) {
+      activateVar = false;
     }
   }
 
@@ -345,16 +363,20 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     Digest sha256Result = sha256.convert(bytes);
 
     // Return the hash as a hexadecimal string
+    return input;
     return sha256Result.toString();
   }
 
   void choiceAction(answer, index) {
-    getNextPatchOfQuestions();
-    if (generateSHA256Hash(answer) == questions[currentQuestion]['answer']) {
-      rightAnswer();
-    } else {
-      wrongAnswer(index);
+    String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
+    if (isReversedWords() &&
+        generateSHA256Hash(answer) == questions[currentQuestion]['answer'][locale]) {
+      return rightAnswer();
     }
+    if (generateSHA256Hash(answer) == questions[currentQuestion]['answer']) {
+      return rightAnswer();
+    }
+    wrongAnswer(index);
     if ((points / numberOfPointsToCoin).floor() != coins) {
       setState(() {
         coins = (points / numberOfPointsToCoin).floor();
@@ -363,14 +385,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   int showPointsValue() {
-    if (showImage() && questions[currentQuestion]['difficulty'] == 'easy') {
-      return 20;
-    } else if (showImage() &&
-        questions[currentQuestion]['difficulty'] == 'medium') {
-      return 30;
-    } else if (showImage() &&
-        questions[currentQuestion]['difficulty'] == 'hard') {
-      return 40;
+    if (isReversedWords()) {
+      return 10;
     } else if (showHints()) {
       return (questions[currentQuestion]['hints'].length - hints.length + 1) *
           5;
@@ -607,6 +623,29 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     }
   }
 
+  void addHintAction() {
+    List questionHints = questions[currentQuestion]['hints'];
+    if (hints.length < questionHints.length) {
+      List updatedHints = [...hints, questionHints[hints.length]];
+      setState(() {
+        hints = updatedHints;
+      });
+    }
+  }
+
+  void skipAction() {
+    wrongAnswer(0);
+    getToNextQuestion();
+    getNextPatchOfQuestions();
+  }
+
+  void deleteWord() {
+    String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
+    for (var element in questions[currentQuestion]['reversedAnswer'][locale]) {
+      element['isChosen'] = false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
@@ -667,49 +706,78 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                         locale: locale,
                       ),
                       FadeTransitionContainer(
-                        body: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              TextWidget(
-                                title: countDown.toString(),
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              BlurBackgroundContainer(
-                                padding: 12,
-                                margin: 10,
-                                body: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    TextWidget(
-                                      title: locale == 'ar'
-                                          ? '${questions[currentQuestion]['question']['ar']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})'
-                                          : '${questions[currentQuestion]['question']['en']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})',
-                                      fontSize: 18,
-                                    ),
-                                  ],
+                        body: Container(
+                          margin:
+                              EdgeInsets.only(top: hints.length > 3 ? 32 : 0),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                TextWidget(
+                                  title: countDown.toString(),
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 16,
-                              ),
-                              MultipleChoices(
-                                locale: locale,
-                                choices: questions[currentQuestion]['choices'],
-                                isMultipleChoices: isMultipleChoices(),
-                                action: choiceAction,
-                              ),
-                              TrueOrFalse(
-                                locale: locale,
-                                choices: questions[currentQuestion]['choices'],
-                                isTrueOrFalse: isTrueOrFalse(),
-                                action: choiceAction,
-                              )
-                            ],
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                BlurBackgroundContainer(
+                                  padding: 12,
+                                  margin: 10,
+                                  body: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      TextWidget(
+                                        title: locale == 'ar'
+                                            ? '${questions[currentQuestion]['question']['ar']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})'
+                                            : '${questions[currentQuestion]['question']['en']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})',
+                                        fontSize: 18,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                PlayerSearch(
+                                  locale: locale,
+                                  isPlayerSearch: isPlayerSearch(),
+                                  questionHintsLength:
+                                      questions[currentQuestion]['hints']
+                                          .length,
+                                  hints: hints,
+                                  addHintAction: addHintAction,
+                                  skipAction: skipAction,
+                                  playerAction: choiceAction,
+                                ),
+                                MultipleChoices(
+                                  locale: locale,
+                                  choices: questions[currentQuestion]
+                                      ['choices'],
+                                  isMultipleChoices: isMultipleChoices(),
+                                  action: choiceAction,
+                                ),
+                                TrueOrFalse(
+                                  locale: locale,
+                                  choices: questions[currentQuestion]
+                                      ['choices'],
+                                  isTrueOrFalse: isTrueOrFalse(),
+                                  action: choiceAction,
+                                ),
+                                ReversedWords(
+                                    isReversedWords: isReversedWords(),
+                                    initiateAnswer: (answer) =>
+                                        choiceAction(answer, 0),
+                                    skipAction: skipAction,
+                                    reversedWord: questions[currentQuestion]
+                                                ['reversedAnswer'] !=
+                                            null
+                                        ? questions[currentQuestion]
+                                            ['reversedAnswer'][locale]
+                                        : [],
+                                    deleteWord: deleteWord)
+                              ],
+                            ),
                           ),
                         ),
                       ),

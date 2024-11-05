@@ -97,14 +97,14 @@ class SingleUser extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: fontSize,
                 ),
-                const SizedBox(
-                  width: 5,
-                ),
-                TextWidget(
-                  title: prizeText(),
-                  fontWeight: FontWeight.bold,
-                  fontSize: fontSize,
-                ),
+                // const SizedBox(
+                //   width: 5,
+                // ),
+                // TextWidget(
+                //   title: prizeText(),
+                //   fontWeight: FontWeight.bold,
+                //   fontSize: fontSize,
+                // ),
               ],
             ),
             const SizedBox(
