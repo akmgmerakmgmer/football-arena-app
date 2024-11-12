@@ -106,5 +106,16 @@
     "edit": "Edit",
     "wordsLimit": "At least type 3 words",
     "addHint": "Add Hint",
-    "deleteWord": "Delete Word"
+    "deleteWord": "Delete Word",
+    "modes": "Modes",
+    "chooseYourTeam": "Choose Your Team",
+    "choose": "Choose",
+    "team": "Team",
+    "endsAt": "Ends At",
+    "yourTeam": "Your Team",
+    "playEventNow": "Playe Event Now",
+    "inzoneCoins": "InZone Coins",
+    "winningTeam": "Given to the winning team only",
+    "exclusiveAvatar": "Exclusive Avatar for the team players' who will win this event",
+    "congratulations": "Congratulations you have earned these prizes"
 }

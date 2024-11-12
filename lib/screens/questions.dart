@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/screens/event_details.dart';
 import 'package:in_zone_app/screens/reversed_words.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/external_url.dart';
@@ -27,15 +28,19 @@ import 'package:crypto/crypto.dart'; // For SHA-256
 
 class Questions extends StatefulWidget {
   final String mode;
+  final String questionMode;
   final String userId;
   final String name;
   final bool practice;
+  final String eventId;
   const Questions(
       {super.key,
       this.mode = '',
+      this.questionMode = '',
       this.userId = '',
       this.name = '',
-      this.practice = false});
+      this.practice = false,
+      this.eventId = ''});
 
   @override
   State<Questions> createState() => _QuestionsState();
@@ -86,7 +91,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       });
     }
     FetchApi(
-        'questions?page=$currentPage&search=${widget.mode}&userId=${widget.userId}&name=${widget.name}',
+        'questions?page=$currentPage&search=${widget.mode}&userId=${widget.userId}&name=${widget.name}&questionMode=${widget.questionMode}',
         (res) {
       setState(() {
         questions = [...questions, ...res['questions']];
@@ -274,10 +279,11 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     //   pointValue = (answeredConsecutively / 5).floor();
     // }
     if (isReversedWords()) {
-      pointDefaultValue = 10;
+      pointDefaultValue = 5;
     } else if (showHints()) {
-      pointDefaultValue =
-          (questions[currentQuestion]['hints'].length - hints.length + 1) * 5;
+      int hintsSubtract =
+          questions[currentQuestion]['hints'].length - hints.length + 1;
+      pointDefaultValue = hintsSubtract > 3 ? 15 : hintsSubtract * 5;
     } else if (questions[currentQuestion]['difficulty'] == 'hard') {
       pointDefaultValue = 3;
     } else if (questions[currentQuestion]['difficulty'] == 'medium') {
@@ -370,7 +376,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   void choiceAction(answer, index) {
     String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
     if (isReversedWords() &&
-        generateSHA256Hash(answer) == questions[currentQuestion]['answer'][locale]) {
+        generateSHA256Hash(answer) ==
+            questions[currentQuestion]['answer'][locale]) {
       return rightAnswer();
     }
     if (generateSHA256Hash(answer) == questions[currentQuestion]['answer']) {
@@ -386,10 +393,11 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
 
   int showPointsValue() {
     if (isReversedWords()) {
-      return 10;
+      return 5;
     } else if (showHints()) {
-      return (questions[currentQuestion]['hints'].length - hints.length + 1) *
-          5;
+      int hintsSubtract =
+          questions[currentQuestion]['hints'].length - hints.length + 1;
+      return hintsSubtract > 3 ? 15 : hintsSubtract * 5;
     } else if (questions[currentQuestion]['difficulty'] == 'hard') {
       return 3;
     } else if (questions[currentQuestion]['difficulty'] == 'medium') {
@@ -403,7 +411,12 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     if (points == 0 && navigate) {
       Navigator.pushReplacementNamed(context, '/rankings');
     } else {
-      Map payload = {'points': points, 'coins': coins, 'usedPerks': usedPerks};
+      Map payload = {
+        'points': points,
+        'coins': coins,
+        'usedPerks': usedPerks,
+        'eventId': widget.eventId
+      };
       String userId =
           Provider.of<LocaleProvider>(context, listen: false).user['_id'];
       setState(() {
@@ -413,7 +426,18 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
         Provider.of<LocaleProvider>(context, listen: false)
             .setUser(res['user']);
         if (navigate) {
-          Navigator.pushReplacementNamed(context, '/rankings');
+          if (widget.eventId != '') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EventDetails(
+                  eventId: widget.eventId,
+                ),
+              ),
+            );
+          } else {
+            Navigator.pushReplacementNamed(context, '/rankings');
+          }
         } else {
           setState(() {
             saveLoading = false;

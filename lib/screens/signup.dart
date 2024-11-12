@@ -18,7 +18,7 @@ class Signup extends StatelessWidget {
               children: [
                 TextWidget(
                   title: AppLocalizations.of(context)!.createAccount,
-                  fontSize: 28,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
                 const SignupForm()

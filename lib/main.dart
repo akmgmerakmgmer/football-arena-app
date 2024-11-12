@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/screens/account_profile.dart';
 import 'package:in_zone_app/screens/best_offers.dart';
 import 'package:in_zone_app/screens/challenges.dart';
+import 'package:in_zone_app/screens/event_details.dart';
 import 'package:in_zone_app/screens/home.dart';
 import 'package:in_zone_app/screens/login.dart';
 import 'package:in_zone_app/screens/questions.dart';
@@ -63,6 +64,7 @@ class _MyAppState extends State<MyApp> {
                   '/rankings': (context) => const Rankings(),
                   '/challenges': (context) => const Challenges(),
                   '/profile': (context) => AccountProfile(),
+                  '/events': (context) => const EventDetails(),
                   '/best-offers': (context) => const BestOffers(),
                   '/shop': (context) =>  const Shop(),
                 },

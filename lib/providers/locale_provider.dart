@@ -61,6 +61,16 @@ class LocaleProvider with ChangeNotifier {
     _avatars = value;
     notifyListeners();
   }
+  
+  List _events = [];
+  List get events {
+    return _events;
+  }
+
+  void setEvents(value) {
+    _events = value;
+    notifyListeners();
+  }
 
   Map _shopItems = {};
   Map get shopItems {

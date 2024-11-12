@@ -36,7 +36,7 @@ class Footer extends StatelessWidget {
               ),
               SingleIcon(
                 icon: 'assets/images/icons8-tiktok.svg',
-                action: () =>  ExternalUrl().launchNewUrl('https://www.tiktok.com/@inzone2024'),
+                action: () =>  ExternalUrl().launchNewUrl('https://www.tiktok.com/@inzonegaming'),
               ),
               const SizedBox(
                 width: 12,

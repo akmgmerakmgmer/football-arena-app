@@ -50,6 +50,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
 
   getInitialData() async {
     await fetchAdvertisments();
+    await fetchEvents();
     adTimer();
     decreaseAdCount();
     await fetchUsers();
@@ -82,6 +83,18 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
       await FetchApi('advertisments?page=1', (advertisments) {
         Provider.of<LocaleProvider>(context, listen: false)
             .setAdvertisments(advertisments);
+        // ignore: use_build_context_synchronously
+      }).fetch(context);
+    }
+  }
+
+  Future<void> fetchEvents() async {
+    if (Provider.of<LocaleProvider>(context, listen: false).events.isEmpty) {
+      setState(() {
+        loading = true;
+      });
+      await FetchApi('events?page=1', (events) {
+        Provider.of<LocaleProvider>(context, listen: false).setEvents(events);
         // ignore: use_build_context_synchronously
       }).fetch(context);
     }
@@ -181,9 +194,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
         ),
         // floatingActionButton: const FloatingButton(),
         body: loading
-            ? LogoLoading(
-                isVisible: loading,
-              )
+            ? const LogoLoading()
             : Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -246,7 +257,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
                       ],
                     )),
                   ),
-                  const BottomNavigation()
+                  const BottomNavigation(),
                 ],
               ),
       ),

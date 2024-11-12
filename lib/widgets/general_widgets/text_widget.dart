@@ -12,6 +12,8 @@ class TextWidget extends StatelessWidget {
   final bool number;
   final dynamic textAlign;
   final TextDecoration textDecoration;
+  final bool uppercase;
+  final bool alwaysEnglish;
   const TextWidget(
       {super.key,
       required this.title,
@@ -22,12 +24,14 @@ class TextWidget extends StatelessWidget {
       this.letterSpacing = 0.2,
       this.number = false,
       this.textAlign,
-      this.textDecoration = TextDecoration.none});
+      this.textDecoration = TextDecoration.none,
+      this.uppercase = false,
+      this.alwaysEnglish = false});
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      title,
+      uppercase ? title.toUpperCase() : title,
       textDirection: number ? TextDirection.ltr : null,
       textAlign: textAlign,
       style: TextStyle(
@@ -38,8 +42,10 @@ class TextWidget extends StatelessWidget {
                   ? fontSize - 1
                   : fontSize,
           fontWeight: fontWeight,
-          fontFamily:
-              Provider.of<LocaleProvider>(context, listen: false).locale == 'ar'
+          fontFamily: alwaysEnglish
+              ? 'Oswald'
+              : Provider.of<LocaleProvider>(context, listen: false).locale ==
+                      'ar'
                   ? 'NotoKufiArabic'
                   : 'Oswald',
           color: color,

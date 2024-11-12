@@ -196,26 +196,26 @@ class _RankingsState extends State<Rankings> {
             const SizedBox(
               height: 10,
             ),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration:
-                  BoxDecoration(color: Theme.of(context).primaryColorDark),
-              child: Column(
-                children: [
-                  TextWidget(
-                    title: AppLocalizations.of(context)!.note,
-                    fontSize: 12.5,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextWidget(
-                    title: AppLocalizations.of(context)!.additionalNote,
-                    fontSize: 12.5,
-                  )
-                ],
-              ),
-            ),
+            // Container(
+            //   padding: const EdgeInsets.all(8),
+            //   decoration:
+            //       BoxDecoration(color: Theme.of(context).primaryColorDark),
+            //   child: Column(
+            //     children: [
+            //       TextWidget(
+            //         title: AppLocalizations.of(context)!.note,
+            //         fontSize: 12.5,
+            //       ),
+            //       const SizedBox(
+            //         height: 10,
+            //       ),
+            //       TextWidget(
+            //         title: AppLocalizations.of(context)!.additionalNote,
+            //         fontSize: 12.5,
+            //       )
+            //     ],
+            //   ),
+            // ),
             const SizedBox(
               height: 5,
             ),

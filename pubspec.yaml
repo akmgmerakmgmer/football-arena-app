@@ -61,22 +61,33 @@ dev_dependencies:
   flutter_lints: ^3.0.0
 
 flutter_launcher_icons:
-  android: "launcher_icon"
+  android: true
   ios: true
   image_path: "assets/images/logo.png"
+  background_color: "#191919"
+  theme_color: "#191919"
   min_sdk_android: 21 # android min sdk min:16, default 21
+
   web:
     generate: true
     image_path: "assets/images/logo.png"
     background_color: "#191919"
     theme_color: "#191919"
+
   windows:
     generate: true
     image_path: "assets/images/logo.png"
-    icon_size: 48 # min:48, max:256, default: 48
+    icon_size: 60 # min:48, max:256, default: 48
+
   macos:
     generate: true
     image_path: "assets/images/logo.png"
+
+  android_adaptive_icon:
+    background: "#191919" # Sets background color for Android home screen icon
+    foreground: "assets/images/logo.png"
+
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -102,6 +113,12 @@ flutter:
     - assets/images/gameOver.png
     - assets/images/background_new.jpg
     - assets/images/coin.png
+    - assets/images/multiple_choices.jpg
+    - assets/images/true_or_false.jpg
+    - assets/images/password_challenge.jpg
+    - assets/images/reversed_words.jpg
+    - assets/images/guess_the_player.jpg
+    - assets/images/all_in_one.jpg
     - assets/audio/correct.mp3
     - assets/audio/buzzer.mp3
     

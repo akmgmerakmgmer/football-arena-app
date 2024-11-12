@@ -115,5 +115,16 @@
     "edit": "تعديل",
     "wordsLimit": "اكتب ثلاثة حروف علي الاقل",
     "addHint": "أضف تلميح",
-    "deleteWord": "امسح الكلمة"
+    "deleteWord": "امسح الكلمة",
+    "modes": "تحديات الاسئلة",
+    "chooseYourTeam": "اختر فريقك",
+    "choose": "فعل اختيارك",
+    "team": "فريق",
+    "endsAt": "ينتهي في",
+    "yourTeam": "فريقك",
+    "playEventNow": "العب الحدث الان",
+    "inzoneCoins": "InZone Coins",
+    "winningTeam": "تمنح لأصحاب الفريق الفائز فقط",
+    "exclusiveAvatar": "افاتار حصري للاعبي الفريق الفائز",
+    "congratulations": "مبروك لقد حصلت علي هذه الجوائز"
 }

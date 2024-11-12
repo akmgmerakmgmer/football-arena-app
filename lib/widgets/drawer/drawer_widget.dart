@@ -18,7 +18,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
 
   void logoutMethod() async {
     String currentPath = ModalRoute.of(context)?.settings.name ?? '/';
-    if (currentPath == '/profile') {
+    if (currentPath == '/profile' || currentPath == '/events') {
       Navigator.pushNamed(context, '/');
     }
     SharedPreferences localStorage = await SharedPreferences.getInstance();
