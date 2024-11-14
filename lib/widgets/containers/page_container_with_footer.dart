@@ -49,13 +49,30 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
   }
 
   getInitialData() async {
-    await fetchAdvertisments();
-    await fetchEvents();
+    await initialFetch();
     adTimer();
     decreaseAdCount();
     await fetchUsers();
   }
 
+  Future<void> initialFetch() async {
+    if (Provider.of<LocaleProvider>(context, listen: false)
+        .advertisments
+        .isEmpty) {
+      setState(() {
+        loading = true;
+      });
+      await FetchApi('initial-fetch', (data) {
+        Provider.of<LocaleProvider>(context, listen: false)
+            .setAdvertisments(data['advertisments']);
+            Provider.of<LocaleProvider>(context, listen: false)
+            .setEvents(data['events']);
+            Provider.of<LocaleProvider>(context, listen: false)
+            .setChallenges(data['challenges']);
+        // ignore: use_build_context_synchronously
+      }).fetch(context);
+    }
+  }
   Future<void> fetchUsers() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     String? token = localStorage.getString(('token'));
@@ -71,33 +88,6 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
     setState(() {
       loading = false;
     });
-  }
-
-  Future<void> fetchAdvertisments() async {
-    if (Provider.of<LocaleProvider>(context, listen: false)
-        .advertisments
-        .isEmpty) {
-      setState(() {
-        loading = true;
-      });
-      await FetchApi('advertisments?page=1', (advertisments) {
-        Provider.of<LocaleProvider>(context, listen: false)
-            .setAdvertisments(advertisments);
-        // ignore: use_build_context_synchronously
-      }).fetch(context);
-    }
-  }
-
-  Future<void> fetchEvents() async {
-    if (Provider.of<LocaleProvider>(context, listen: false).events.isEmpty) {
-      setState(() {
-        loading = true;
-      });
-      await FetchApi('events?page=1', (events) {
-        Provider.of<LocaleProvider>(context, listen: false).setEvents(events);
-        // ignore: use_build_context_synchronously
-      }).fetch(context);
-    }
   }
 
   void adTimer() {
