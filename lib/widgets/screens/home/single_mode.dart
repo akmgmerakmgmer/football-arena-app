@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/screens/questions.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
+import 'package:in_zone_app/widgets/buttons/purchase_button.dart';
+import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class SingleMode extends StatelessWidget {
@@ -12,6 +15,72 @@ class SingleMode extends StatelessWidget {
     super.key,
     required this.singleMode,
   });
+
+  bool isPlayedToday(context) {
+    Map user = Provider.of<LocaleProvider>(context, listen: false).user;
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('yyyy-MM-dd').format(now);
+    if (user.isNotEmpty && user.containsKey('username')) {
+      List currentMode = user['questionModes']
+          .where((userMode) => userMode['modeName'] == singleMode['mode'])
+          .toList();
+      if (currentMode.isNotEmpty &&
+          currentMode[0]['modeName'] == singleMode['mode'] &&
+          currentMode[0]['lastPlayedDate'] == formattedDate) {
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+
+  playWithCoins(context) {
+    Map user = Provider.of<LocaleProvider>(context, listen: false).user;
+    if (user.containsKey('username')) {
+      if (user['coins'] < 100) {
+        return SnackbarMessage().snackbar(
+            context, AppLocalizations.of(context)!.not_enough_coins,
+            label: AppLocalizations.of(context)!.buy_coins,
+            error: true, action: () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          Navigator.pushNamed(context, '/shop');
+        });
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Questions(
+              questionMode: singleMode['mode'],
+              price: 100,
+              userId: Provider.of<LocaleProvider>(context, listen: false)
+                  .user['_id'],
+            ),
+          ),
+        );
+      }
+    } else {
+      Navigator.pushNamed(context, '/login');
+    }
+  }
+
+  playMode(context) {
+    if (Provider.of<LocaleProvider>(context, listen: false)
+        .user
+        .containsKey('username')) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Questions(
+            questionMode: singleMode['mode'],
+            userId:
+                Provider.of<LocaleProvider>(context, listen: false).user['_id'],
+          ),
+        ),
+      );
+    } else {
+      Navigator.pushNamed(context, '/login');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,37 +133,24 @@ class SingleMode extends StatelessWidget {
                     const SizedBox(
                       height: 12.0,
                     ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      constraints: const BoxConstraints(maxWidth: 200),
-                      child: MainButton(
-                          buttonText: AppLocalizations.of(context)!.playNow,
-                          fontSize: 12.5,
-                          uppercase: true,
-                          letterSpacing: 1.1,
-                          isChallengesPage: true,
-                          radius: 10,
-                          action: () {
-                            if (Provider.of<LocaleProvider>(context,
-                                    listen: false)
-                                .user
-                                .containsKey('username')) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Questions(
-                                    questionMode: singleMode['mode'],
-                                    userId: Provider.of<LocaleProvider>(context,
-                                            listen: false)
-                                        .user['_id'],
-                                  ),
-                                ),
-                              );
-                            } else {
-                              Navigator.pushNamed(context, '/login');
-                            }
-                          }),
-                    )
+                    isPlayedToday(context)
+                        ? PurchaseButton(
+                            buttonText: AppLocalizations.of(context)!.playNow,
+                            action: () => playWithCoins(context),
+                            price: '100')
+                        : Container(
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            constraints: const BoxConstraints(maxWidth: 200),
+                            child: MainButton(
+                                buttonText:
+                                    AppLocalizations.of(context)!.playNow,
+                                fontSize: 12.5,
+                                uppercase: true,
+                                letterSpacing: 1.1,
+                                isChallengesPage: true,
+                                radius: 10,
+                                action: () => playMode(context)),
+                          )
                   ],
                 ),
               )),

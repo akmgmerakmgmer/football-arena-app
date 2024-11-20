@@ -62,7 +62,7 @@ class _SinglePerkShopState extends State<SinglePerkShop> {
             label: AppLocalizations.of(context)!.checkYourAccount, action: () {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
           Navigator.pushNamed(context, '/profile');
-        }, color: Colors.green[400]);
+        });
         setState(() {
           loading = false;
         });
@@ -71,7 +71,7 @@ class _SinglePerkShopState extends State<SinglePerkShop> {
             Provider.of<LocaleProvider>(context, listen: false).locale == 'ar'
                 ? err['message']['ar']
                 : err['message']['en'];
-        SnackbarMessage().snackbar(context, message, color: Colors.red);
+        SnackbarMessage().snackbar(context, message, error: true);
         setState(() {
           loading = false;
         });

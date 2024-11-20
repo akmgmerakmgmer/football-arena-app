@@ -11,6 +11,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageContainerWithFooter(
+        showHeader: false,
         body: ImageBackgroundContainer(
             width: 350,
             body: Column(

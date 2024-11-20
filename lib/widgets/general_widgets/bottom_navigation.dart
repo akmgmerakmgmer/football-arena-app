@@ -53,15 +53,14 @@ class BottomNavigation extends StatelessWidget {
               },
               "selected": currentPath == '/profile'
             }
-          :
-      {
-        "text": AppLocalizations.of(context)!.navigationBestOffers,
-        "icon": Icons.discount,
-        "action": () {
-          Navigator.pushNamed(context, '/best-offers');
-        },
-        "selected": currentPath == '/best-offers'
-      },
+          : {
+              "text": AppLocalizations.of(context)!.navigationBestOffers,
+              "icon": Icons.discount,
+              "action": () {
+                Navigator.pushNamed(context, '/best-offers');
+              },
+              "selected": currentPath == '/best-offers'
+            },
     ];
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
@@ -77,11 +76,26 @@ class BottomNavigation extends StatelessWidget {
                     width: MediaQuery.of(context).size.width * 0.20,
                     child: Column(
                       children: [
-                        Icon(
-                          route['icon'],
-                          color: route['selected']
-                              ? Colors.red.shade500
-                              : Colors.grey.shade300,
+                        Container(
+                          decoration: BoxDecoration(
+                            boxShadow: route['selected']
+                                ? [
+                                    BoxShadow(
+                                      color: Colors.red
+                                          .withOpacity(0.1), // White glow color
+                                      spreadRadius: 0, // Adjust for glow size
+                                      blurRadius:
+                                          50, // Adjust for softness of the glow
+                                    ),
+                                  ]
+                                : null,
+                          ),
+                          child: Icon(
+                            route['icon'],
+                            color: route['selected']
+                                ? Colors.red.shade500
+                                : Colors.grey.shade300,
+                          ),
                         ),
                         TextWidget(
                           title: route['text'],

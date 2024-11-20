@@ -11,4 +11,14 @@ class GeneralMethods {
     SharedPreferences locale = await SharedPreferences.getInstance();
     locale.setString('locale', lang);
   }
+
+  bool isUserExists(context) {
+    Map user = Provider.of<LocaleProvider>(context, listen: false).user;
+    if (user.isNotEmpty && user.containsKey('username')) return true;
+    return false;
+  }
+
+  String getLocale(context) {
+    return Provider.of<LocaleProvider>(context, listen: false).locale;
+  }
 }

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
-import 'package:in_zone_app/widgets/buttons/main_button.dart';
+import 'package:in_zone_app/widgets/buttons/purchase_button.dart';
+import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/screens/event_details/event_image.dart';
 import 'package:in_zone_app/widgets/screens/event_details/event_prizes.dart';
@@ -12,11 +13,11 @@ import 'package:provider/provider.dart';
 class ChooseTeam extends StatefulWidget {
   final Map event;
   final String locale;
-  const ChooseTeam(
-      {super.key,
-      required this.event,
-      required this.locale,
-      });
+  const ChooseTeam({
+    super.key,
+    required this.event,
+    required this.locale,
+  });
 
   @override
   State<ChooseTeam> createState() => _ChooseTeamState();
@@ -29,21 +30,32 @@ class _ChooseTeamState extends State<ChooseTeam> {
   chooseValue() {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     if (user.containsKey('username')) {
-      if (selectedValue != '') {
-        setState(() {
-          buttonLoading = true;
+      if (user['coins'] < widget.event['price']) {
+        return SnackbarMessage().snackbar(
+            context, AppLocalizations.of(context)!.not_enough_coins,
+            label: AppLocalizations.of(context)!.buy_coins,
+            error: true, action: () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          Navigator.pushNamed(context, '/shop');
         });
-        Map eventPayload = {
-          'eventId': widget.event['_id'],
-          'sideId': selectedValue,
-          'endDate': widget.event['endDate']
-        };
-        PutApi('add-event/${user['_id']}', eventPayload, (res) {
-          Provider.of<LocaleProvider>(context, listen: false).setUser(res);
+      } else {
+        if (selectedValue != '') {
           setState(() {
-            buttonLoading = false;
+            buttonLoading = true;
           });
-        }).put(context);
+          Map eventPayload = {
+            'eventId': widget.event['_id'],
+            'sideId': selectedValue,
+            'endDate': widget.event['endDate'],
+            'price': widget.event['price']
+          };
+          PutApi('add-event/${user['_id']}', eventPayload, (res) {
+            Provider.of<LocaleProvider>(context, listen: false).setUser(res);
+            setState(() {
+              buttonLoading = false;
+            });
+          }).put(context);
+        }
       }
     } else {
       Navigator.pushNamed(context, '/login');
@@ -93,13 +105,11 @@ class _ChooseTeamState extends State<ChooseTeam> {
           const SizedBox(
             height: 8,
           ),
-          MainButton(
+          PurchaseButton(
               buttonText: AppLocalizations.of(context)!.choose,
-              fontSize: 15,
-              radius: 10,
-              uppercase: true,
+              action: chooseValue,
               loading: buttonLoading,
-              action: chooseValue)
+              price: '${widget.event['price']}')
         ],
       ),
     );

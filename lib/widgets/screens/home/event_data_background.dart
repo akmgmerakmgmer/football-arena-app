@@ -16,26 +16,26 @@ class EventDataBackground extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
-          boxShadow: const [
-                  BoxShadow(
-                    color: Color(0xFFDC2626),
-                    spreadRadius: 0,
-                    blurRadius: 5,
-                    offset: Offset(0, 0),
-                  ),
-                  BoxShadow(
-                    color: Color(0xFFDC2626),
-                    spreadRadius: 0,
-                    blurRadius: 5,
-                    offset: Offset(0, 0),
-                  ),
-                  BoxShadow(
-                    color: Color(0xFFDC2626),
-                    spreadRadius: 0,
-                    blurRadius: 5,
-                    offset: Offset(0, 0),
-                  ),
-                ],
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).primaryColor,
+              spreadRadius: 0,
+              blurRadius: 5,
+              offset: const Offset(0, 0),
+            ),
+            BoxShadow(
+              color: Theme.of(context).primaryColor,
+              spreadRadius: 0,
+              blurRadius: 5,
+              offset: const Offset(0, 0),
+            ),
+            BoxShadow(
+              color: Theme.of(context).primaryColor,
+              spreadRadius: 0,
+              blurRadius: 5,
+              offset: const Offset(0, 0),
+            ),
+          ],
           borderRadius: bottom
               ? const BorderRadius.only(topLeft: Radius.circular(10))
               : locale == 'ar'

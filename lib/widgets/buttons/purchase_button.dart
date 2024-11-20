@@ -27,24 +27,24 @@ class PurchaseButton extends StatelessWidget {
           decoration: BoxDecoration(
             color: Theme.of(context).primaryColor,
             borderRadius: const BorderRadius.all(Radius.circular(10)),
-            boxShadow: const [
+            boxShadow:  [
               BoxShadow(
-                color: Color(0xFFDC2626),
+                color: Colors.red.shade600,
                 spreadRadius: 0,
                 blurRadius: 5,
-                offset: Offset(0, 0),
+                offset: const Offset(0, 0),
               ),
               BoxShadow(
-                color: Color(0xFFDC2626),
+                color: Colors.red.shade600,
                 spreadRadius: 0,
                 blurRadius: 5,
-                offset: Offset(0, 0),
+                offset: const Offset(0, 0),
               ),
               BoxShadow(
-                color: Color(0xFFDC2626),
+                color: Colors.red.shade600,
                 spreadRadius: 0,
                 blurRadius: 5,
-                offset: Offset(0, 0),
+                offset: const Offset(0, 0),
               ),
             ],
           ),
@@ -67,7 +67,9 @@ class PurchaseButton extends StatelessWidget {
                 child: Column(
                   children: [
                     TextWidget(
-                      title: AppLocalizations.of(context)!.buyNow,
+                      title: buttonText.isNotEmpty
+                          ? buttonText
+                          : AppLocalizations.of(context)!.buyNow,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
@@ -93,7 +95,7 @@ class PurchaseButton extends StatelessWidget {
                               )
                             : Image.asset(
                                 'assets/images/coin.png',
-                                width: 23,
+                                width: 22,
                               ),
                       ],
                     )

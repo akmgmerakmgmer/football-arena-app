@@ -15,24 +15,24 @@ class SingleSide extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
               boxShadow: selected
-                  ? const [
+                  ?  [
                       BoxShadow(
-                        color: Color(0xFFDC2626),
+                        color: Theme.of(context).primaryColor,
                         spreadRadius: 0,
                         blurRadius: 5,
-                        offset: Offset(0, 0),
+                        offset: const Offset(0, 0),
                       ),
                       BoxShadow(
-                        color: Color(0xFFDC2626),
+                        color: Theme.of(context).primaryColor,
                         spreadRadius: 0,
                         blurRadius: 5,
-                        offset: Offset(0, 0),
+                        offset: const Offset(0, 0),
                       ),
                       BoxShadow(
-                        color: Color(0xFFDC2626),
+                        color: Theme.of(context).primaryColor,
                         spreadRadius: 0,
                         blurRadius: 5,
-                        offset: Offset(0, 0),
+                        offset: const Offset(0, 0),
                       ),
                     ]
                   : null,

@@ -8,16 +8,10 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Challenge extends StatelessWidget {
-  final String image;
-  final String title;
-  final String description;
-  final String mode;
+  final Map challenge;
   const Challenge({
     super.key,
-    required this.image,
-    required this.title,
-    required this.description,
-    required this.mode,
+    required this.challenge,
   });
 
   bool isPlayedToday(context) {
@@ -26,10 +20,10 @@ class Challenge extends StatelessWidget {
     String formattedDate = DateFormat('yyyy-MM-dd').format(now);
     if (user.isNotEmpty && user.containsKey('username')) {
       List currentChallenge = user['challenges']
-          .where((challenge) => challenge['id'] == mode)
+          .where((userChallenge) => userChallenge['id'] == challenge['_id'])
           .toList();
       if (currentChallenge.isNotEmpty &&
-          currentChallenge[0]['id'] == mode &&
+          currentChallenge[0]['id'] == challenge['_id'] &&
           currentChallenge[0]['lastPlayedDate'] == formattedDate) {
         return true;
       }
@@ -48,7 +42,8 @@ class Challenge extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: NetworkImage(image), fit: BoxFit.cover)),
+                      image: NetworkImage(challenge['image']),
+                      fit: BoxFit.cover)),
               width: 225,
               height: 420,
               child: Container(
@@ -66,7 +61,11 @@ class Challenge extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextWidget(
-                      title: title.toUpperCase(),
+                      title: Provider.of<LocaleProvider>(context, listen: false)
+                                  .locale ==
+                              'en'
+                          ? challenge['nameEn'].toUpperCase()
+                          : challenge['nameAr'],
                       fontSize: 15,
                       textAlign: TextAlign.center,
                       color: Colors.grey.shade300,
@@ -75,7 +74,8 @@ class Challenge extends StatelessWidget {
                       height: 4.0,
                     ),
                     TextWidget(
-                      title: description,
+                      title:
+                          '${AppLocalizations.of(context)!.questionsAbout} ${Provider.of<LocaleProvider>(context, listen: false).locale == 'en' ? challenge['nameEn'] : challenge['nameAr']}',
                       fontSize: 16,
                       textAlign: TextAlign.center,
                     ),
@@ -107,8 +107,8 @@ class Challenge extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => Questions(
-                                    mode: mode,
-                                    name: title,
+                                    mode: challenge['_id'],
+                                    name: challenge['nameEn'],
                                     userId: Provider.of<LocaleProvider>(context,
                                             listen: false)
                                         .user['_id'],

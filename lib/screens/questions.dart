@@ -33,6 +33,7 @@ class Questions extends StatefulWidget {
   final String name;
   final bool practice;
   final String eventId;
+  final int price;
   const Questions(
       {super.key,
       this.mode = '',
@@ -40,7 +41,8 @@ class Questions extends StatefulWidget {
       this.userId = '',
       this.name = '',
       this.practice = false,
-      this.eventId = ''});
+      this.eventId = '',
+      this.price = 0});
 
   @override
   State<Questions> createState() => _QuestionsState();
@@ -91,8 +93,12 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       });
     }
     FetchApi(
-        'questions?page=$currentPage&search=${widget.mode}&userId=${widget.userId}&name=${widget.name}&questionMode=${widget.questionMode}',
+        'questions?page=$currentPage&search=${widget.mode}&userId=${widget.userId}&name=${widget.name}&questionMode=${widget.questionMode}&price=${widget.price}',
         (res) {
+      if (res['user']!=null) {
+        Provider.of<LocaleProvider>(context, listen: false)
+            .setUser(res['user']);
+      }
       setState(() {
         questions = [...questions, ...res['questions']];
         pageLoading = false;
@@ -377,7 +383,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
     if (isReversedWords() &&
         generateSHA256Hash(answer) ==
-            questions[currentQuestion]['answer'][locale]) {
+            questions[currentQuestion]['answer'][locale].toLowerCase()) {
       return rightAnswer();
     }
     if (generateSHA256Hash(answer) == questions[currentQuestion]['answer']) {

@@ -14,6 +14,7 @@ class TextWidget extends StatelessWidget {
   final TextDecoration textDecoration;
   final bool uppercase;
   final bool alwaysEnglish;
+  final bool alwaysArabic;
   const TextWidget(
       {super.key,
       required this.title,
@@ -26,10 +27,12 @@ class TextWidget extends StatelessWidget {
       this.textAlign,
       this.textDecoration = TextDecoration.none,
       this.uppercase = false,
-      this.alwaysEnglish = false});
+      this.alwaysEnglish = false,
+      this.alwaysArabic = false});
 
   @override
   Widget build(BuildContext context) {
+    String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
     return Text(
       uppercase ? title.toUpperCase() : title,
       textDirection: number ? TextDirection.ltr : null,
@@ -37,22 +40,17 @@ class TextWidget extends StatelessWidget {
       style: TextStyle(
           overflow: TextOverflow.clip,
           height: height,
-          fontSize:
-              Provider.of<LocaleProvider>(context, listen: false).locale == 'ar'
-                  ? fontSize - 1
-                  : fontSize,
+          fontSize: locale == 'ar' ? fontSize - 1 : fontSize,
           fontWeight: fontWeight,
           fontFamily: alwaysEnglish
               ? 'Oswald'
-              : Provider.of<LocaleProvider>(context, listen: false).locale ==
-                      'ar'
+              : alwaysArabic
                   ? 'NotoKufiArabic'
-                  : 'Oswald',
+                  : locale == 'ar'
+                      ? 'NotoKufiArabic'
+                      : 'Oswald',
           color: color,
-          letterSpacing:
-              Provider.of<LocaleProvider>(context, listen: false).locale == 'ar'
-                  ? 0
-                  : letterSpacing,
+          letterSpacing: locale == 'ar' ? 0 : letterSpacing,
           decoration: textDecoration),
     );
   }

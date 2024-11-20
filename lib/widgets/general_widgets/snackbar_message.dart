@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 
 class SnackbarMessage {
-  void snackbar(context, title, {color = Colors.green, label = '', action}) {
+  void snackbar(context, title, {error = false, label = '', action}) {
     dynamic snackdemo = SnackBar(
       padding: const EdgeInsets.all(16),
       content: Column(
@@ -18,7 +18,8 @@ class SnackbarMessage {
                   onTap: action,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.green.shade400,
+                      color:
+                          error ? Colors.red.shade400 : Colors.green.shade400,
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.2), // Shadow color
@@ -43,7 +44,7 @@ class SnackbarMessage {
               : Container()
         ],
       ),
-      backgroundColor: color,
+      backgroundColor: error ? Colors.red : Colors.green,
       elevation: 10,
       behavior: SnackBarBehavior.floating,
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 70),

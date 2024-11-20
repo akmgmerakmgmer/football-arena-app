@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:in_zone_app/utilities/url.dart';
 import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
 import 'package:http/http.dart' as http;
@@ -38,7 +37,7 @@ class PostApi {
                 if (successMessage.isNotEmpty)
                   {
                     SnackbarMessage()
-                        .snackbar(context, successMessage, color: Colors.green)
+                        .snackbar(context, successMessage)
                   }
               }
             else if (response.statusCode == 422)

@@ -35,7 +35,7 @@ class _SingleAvatarState extends State<SingleAvatar> {
             label: AppLocalizations.of(context)!.checkYourAccount, action: () {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
           Navigator.pushNamed(context, '/profile');
-        }, color: Colors.green[400]);
+        });
         setState(() {
           loading = false;
         });
@@ -44,7 +44,7 @@ class _SingleAvatarState extends State<SingleAvatar> {
             Provider.of<LocaleProvider>(context, listen: false).locale == 'ar'
                 ? err['message']['ar']
                 : err['message']['en'];
-        SnackbarMessage().snackbar(context, message, color: Colors.red);
+        SnackbarMessage().snackbar(context, message, error: true);
         setState(() {
           loading = false;
         });

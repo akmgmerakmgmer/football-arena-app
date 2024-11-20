@@ -20,11 +20,33 @@ class TabsButton extends StatelessWidget {
         alignment: Alignment.center,
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 16.0),
-        margin: const EdgeInsets.symmetric(vertical: 8 ,horizontal: 24),
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
         decoration: BoxDecoration(
             color: selected
                 ? Theme.of(context).primaryColor
                 : Theme.of(context).primaryColorDark,
+            boxShadow: selected
+                ? [
+                    BoxShadow(
+                      color: Theme.of(context).primaryColor,
+                      spreadRadius: 0,
+                      blurRadius: 5,
+                      offset: const Offset(0, 0),
+                    ),
+                    BoxShadow(
+                      color: Theme.of(context).primaryColor,
+                      spreadRadius: 0,
+                      blurRadius: 5,
+                      offset: const Offset(0, 0),
+                    ),
+                    BoxShadow(
+                      color: Theme.of(context).primaryColor,
+                      spreadRadius: 0,
+                      blurRadius: 5,
+                      offset: const Offset(0, 0),
+                    ),
+                  ]
+                : null,
             borderRadius: const BorderRadius.all(Radius.circular(10))),
         child:
             TextWidget(title: title, fontWeight: FontWeight.w600, fontSize: 15),

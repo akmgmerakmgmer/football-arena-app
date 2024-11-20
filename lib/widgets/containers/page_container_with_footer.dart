@@ -5,25 +5,31 @@ import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/auth.dart';
 import 'package:in_zone_app/utilities/external_url.dart';
-import 'package:in_zone_app/widgets/drawer/drawer_widget.dart';
+import 'package:in_zone_app/utilities/get_app_version.dart';
+import 'package:in_zone_app/widgets/containers/modal_container.dart';
 import 'package:in_zone_app/widgets/footer/footer.dart';
 import 'package:in_zone_app/widgets/general_widgets/bottom_navigation.dart';
+import 'package:in_zone_app/widgets/general_widgets/need_update.dart';
+import 'package:in_zone_app/widgets/header/header.dart';
 import 'package:in_zone_app/widgets/loadings/logo_loading.dart';
 import 'package:in_zone_app/widgets/screens/questions/advertisment.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PageContainerWithFooter extends StatefulWidget {
   final Widget body;
   final Color background;
   final Color footerBackground;
   final dynamic scroll;
+  final bool showHeader;
   const PageContainerWithFooter(
       {super.key,
       required this.body,
       this.background = Colors.transparent,
       this.footerBackground = const Color(0xFF111111),
-      this.scroll});
+      this.scroll,
+      this.showHeader = true});
 
   @override
   State<PageContainerWithFooter> createState() =>
@@ -33,10 +39,12 @@ class PageContainerWithFooter extends StatefulWidget {
 class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
   Timer? _adTimer;
   Timer? _skipAdTimer;
-  bool loading = false;
+  bool loading = true;
   int currentAd = 0;
   int currentAdCountDown = 6;
   var overlayController = OverlayPortalController();
+  String buildNumber = '';
+  String lowestBuildNumber = '';
 
   void getLocale() async {
     if (Provider.of<LocaleProvider>(context, listen: false).locale == '') {
@@ -49,6 +57,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
   }
 
   getInitialData() async {
+    buildNumber = await getAppVersion();
     await initialFetch();
     adTimer();
     decreaseAdCount();
@@ -65,14 +74,21 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
       await FetchApi('initial-fetch', (data) {
         Provider.of<LocaleProvider>(context, listen: false)
             .setAdvertisments(data['advertisments']);
-            Provider.of<LocaleProvider>(context, listen: false)
+        Provider.of<LocaleProvider>(context, listen: false)
             .setEvents(data['events']);
-            Provider.of<LocaleProvider>(context, listen: false)
+        Provider.of<LocaleProvider>(context, listen: false)
             .setChallenges(data['challenges']);
+        int intBuildNumber = int.parse(buildNumber);
+        int intLowestBuildNumber = int.parse(data['lowestBuildNumber']);
+        if (intBuildNumber < 1) {
+          ModalContainer.updateModal(context, const NeedUpdate(),
+              AppLocalizations.of(context)!.update_app_text);
+        }
         // ignore: use_build_context_synchronously
       }).fetch(context);
     }
   }
+
   Future<void> fetchUsers() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     String? token = localStorage.getString(('token'));
@@ -88,6 +104,10 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
     setState(() {
       loading = false;
     });
+  }
+
+  bool isBuildNumberAcceptable() {
+    return false;
   }
 
   void adTimer() {
@@ -163,25 +183,25 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
         : [];
     return SafeArea(
       child: Scaffold(
-        endDrawer: const DrawerWidget(),
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: AppBar(
-            foregroundColor: Theme.of(context).splashColor,
-            iconTheme: IconThemeData(color: Colors.grey.shade400),
-            automaticallyImplyLeading: false,
-            title: GestureDetector(
-              onTap: () => {Navigator.pushNamed(context, '/')},
-              child: Image.asset(
-                'assets/images/logo.png',
-                fit: BoxFit.cover,
-                width: 55,
-              ),
-            ),
-            elevation: 0, // Remove AppBar shadow
-            backgroundColor: Theme.of(context).splashColor,
-          ),
-        ),
+        // endDrawer: const DrawerWidget(),
+        // appBar: PreferredSize(
+        //   preferredSize: const Size.fromHeight(kToolbarHeight),
+        //   child: AppBar(
+        //     foregroundColor: Theme.of(context).splashColor,
+        //     iconTheme: IconThemeData(color: Colors.grey.shade400),
+        //     automaticallyImplyLeading: false,
+        //     title: GestureDetector(
+        //       onTap: () => {Navigator.pushNamed(context, '/')},
+        //       child: Image.asset(
+        //         'assets/images/logo.png',
+        //         fit: BoxFit.cover,
+        //         width: 55,
+        //       ),
+        //     ),
+        //     elevation: 0, // Remove AppBar shadow
+        //     backgroundColor: Theme.of(context).splashColor,
+        //   ),
+        // ),
         // floatingActionButton: const FloatingButton(),
         body: loading
             ? const LogoLoading()
@@ -199,6 +219,9 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: advertisments.isNotEmpty
                                 ? [
+                                    widget.showHeader
+                                        ? const Header()
+                                        : Container(),
                                     OverlayPortal(
                                       controller: overlayController,
                                       overlayChildBuilder:
@@ -228,6 +251,9 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
                                 : [
                                     Column(
                                       children: [
+                                        widget.showHeader
+                                            ? const Header()
+                                            : Container(),
                                         ConstrainedBox(
                                             constraints: BoxConstraints(
                                                 minHeight:

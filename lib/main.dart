@@ -15,8 +15,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'providers/locale_provider.dart';
 import './my_I18n.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   runApp(const MyApp());
 }
 
@@ -66,7 +69,7 @@ class _MyAppState extends State<MyApp> {
                   '/profile': (context) => AccountProfile(),
                   '/events': (context) => const EventDetails(),
                   '/best-offers': (context) => const BestOffers(),
-                  '/shop': (context) =>  const Shop(),
+                  '/shop': (context) => const Shop(),
                 },
                 title: 'InZone',
                 localizationsDelegates: const [
@@ -83,8 +86,8 @@ class _MyAppState extends State<MyApp> {
                 theme: ThemeData(
                   fontFamily: _locale == 'en' ? 'Oswald' : 'NotoKufiArabic',
                   primaryColor: const Color(0xFFF61A1A),
-                  splashColor: const Color(0xFF111111),
-                  primaryColorDark: const Color(0xFF191919),
+                  splashColor: const Color.fromARGB(255, 22, 22, 22),
+                  primaryColorDark: const Color.fromARGB(255, 30, 30, 30),
                 ),
                 home: const Home()),
           )),

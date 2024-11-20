@@ -4,9 +4,10 @@ class PulseAnimation extends StatefulWidget {
   final Widget child;
   final Duration duration;
 
-  const PulseAnimation({Key? key, required this.child, this.duration = const Duration(seconds: 1)}) : super(key: key);
+  const PulseAnimation({super.key, required this.child, this.duration = const Duration(seconds: 1)});
 
   @override
+  // ignore: library_private_types_in_public_api
   _PulseAnimationState createState() => _PulseAnimationState();
 }
 

@@ -11,6 +11,10 @@ class SinglePlayer extends StatelessWidget {
       required this.player,
       required this.locale,
       required this.action});
+  String capitalize(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +34,8 @@ class SinglePlayer extends StatelessWidget {
                 width: 8,
               ),
               TextWidget(
-                title: locale == 'en' ? player['nameEn'] : player['nameAr'],
+                title: capitalize(
+                    locale == 'en' ? player['nameEn'] : player['nameAr']),
                 fontSize: 15,
               ),
             ],

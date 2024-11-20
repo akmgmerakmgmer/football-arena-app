@@ -126,5 +126,10 @@
     "inzoneCoins": "InZone Coins",
     "winningTeam": "تمنح لأصحاب الفريق الفائز فقط",
     "exclusiveAvatar": "افاتار حصري للاعبي الفريق الفائز",
-    "congratulations": "مبروك لقد حصلت علي هذه الجوائز"
+    "congratulations": "مبروك لقد حصلت علي هذه الجوائز",
+    "update_app":"التطبيق يحتاج الي تحديث",
+    "update_app_text": "تحديث التطبيق",
+    "not_enough_coins": "ليس لديك عملات كافية للاشتراك في هذا الحدث",
+    "buy_coins": "اشتري المزيد من العملات",
+    "login_word": "سجل"
 }

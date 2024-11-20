@@ -36,4 +36,21 @@ class ModalContainer {
               ],
             ));
   }
+
+  static updateModal(BuildContext context, Widget widget, String title) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => PopScope(
+              onPopInvoked: (bool didPop) {},
+              child: AlertDialog(
+                backgroundColor: Colors.black,
+                title: TextWidget(
+                  title: title,
+                  fontSize: 18,
+                ),
+                content: SingleChildScrollView(child: widget),
+              ),
+            ));
+  }
 }

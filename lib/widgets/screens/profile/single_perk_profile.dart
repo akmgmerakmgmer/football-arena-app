@@ -34,7 +34,7 @@ class _SinglePerkShopState extends State<SinglePerkProfile> {
     if (selectedPerks.length == 4) {
       SnackbarMessage().snackbar(
           context, AppLocalizations.of(context)!.perksError,
-          color: Colors.red);
+          error: true);
     } else {
       setState(() {
         loading = true;

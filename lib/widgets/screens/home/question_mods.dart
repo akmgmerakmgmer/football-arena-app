@@ -7,9 +7,20 @@ class QuestionMods extends StatelessWidget {
     super.key,
   });
 
+
   @override
   Widget build(BuildContext context) {
     List modes = [
+      {
+        "en": "All in One",
+        "ar": "الكل في واحد",
+        "image": "assets/images/all_in_one.jpg",
+        "descriptionEn":
+            "A mix of all game modes—multiple choice, true or false, guess the player, password challenge, and reversed words.",
+        "descriptionAr":
+            "مزيج من جميع الاسئلة: الاختيارات المتعددة صح أو غلط خمن اللاعب، كلمة السر والكلمات المعكوسة.",
+        "mode": ""
+      },
       {
         "en": "Multiple Choices",
         "ar": "الاختيارات المتعددة",
@@ -56,17 +67,7 @@ class QuestionMods extends StatelessWidget {
         "descriptionAr":
             "يخمن اسم اللاعب او المدرب من الحروف الموجودة لكسب النقاط.",
         "mode": "reversedWords"
-      },
-      {
-        "en": "All in One",
-        "ar": "الكل في واحد",
-        "image": "assets/images/all_in_one.jpg",
-        "descriptionEn":
-            "A mix of all game modes—multiple choice, true or false, guess the player, password challenge, and reversed words.",
-        "descriptionAr":
-            "مزيج من جميع الاسئلة: الاختيارات المتعددة صح أو غلط خمن اللاعب، كلمة السر والكلمات المعكوسة.",
-        "mode": ""
-      },
+      }
     ];
 
     return Container(
