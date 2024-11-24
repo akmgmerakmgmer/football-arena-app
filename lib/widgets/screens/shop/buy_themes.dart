@@ -3,19 +3,19 @@ import 'package:flutter/widgets.dart';
 import 'package:in_zone_app/widgets/containers/fade_transition.dart';
 import 'package:in_zone_app/widgets/containers/grid_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/user_coins.dart';
-import 'package:in_zone_app/widgets/screens/shop/shop_loading_cards.dart';
-import 'package:in_zone_app/widgets/screens/shop/single_coin_shop.dart';
+import 'package:in_zone_app/widgets/screens/shop/single_avatar_loading_card.dart';
+import 'package:in_zone_app/widgets/screens/shop/single_theme.dart';
 
-class BuyCoins extends StatelessWidget {
-  final List coins;
+class BuyThemes extends StatelessWidget {
+  final List themes;
   final bool loading;
-  const BuyCoins({super.key, required this.coins, required this.loading});
+  const BuyThemes({super.key, required this.themes, required this.loading});
 
   @override
   Widget build(BuildContext context) {
     return FadeTransitionContainer(
       body: Container(
-        padding: const EdgeInsets.only( right: 16.0, left: 16.0),
+        padding: const EdgeInsets.only(right: 16.0, left: 16.0),
         child: Column(
           children: [
             const UserCoins(),
@@ -23,11 +23,14 @@ class BuyCoins extends StatelessWidget {
               height: 16,
             ),
             loading
-                ? const ShopLoadingCards()
+                ? const SingleAvatarLoadingCard()
                 : GridContainer(
-                    widget: coins
-                        .map((coin) => SingleCoinShop(
-                              coin: coin,
+                    widget: themes
+                        .map((theme) => SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: SingleTheme(
+                                theme: theme,
+                              ),
                             ))
                         .toList())
           ],

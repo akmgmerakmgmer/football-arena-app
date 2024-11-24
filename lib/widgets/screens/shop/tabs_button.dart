@@ -16,11 +16,11 @@ class TabsButton extends StatelessWidget {
     return GestureDetector(
       onTap: () => action(),
       child: AnimatedContainer(
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.of(context).size.width * 0.4,
         alignment: Alignment.center,
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 16.0),
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
         decoration: BoxDecoration(
             color: selected
                 ? Theme.of(context).primaryColor

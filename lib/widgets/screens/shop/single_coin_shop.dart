@@ -5,6 +5,7 @@ import 'package:in_zone_app/utilities/external_url.dart';
 import 'package:in_zone_app/widgets/buttons/purchase_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
+import 'package:in_zone_app/widgets/general_widgets/coin.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -86,11 +87,7 @@ class _SingleCoinShopState extends State<SingleCoinShop> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset(
-                    'assets/images/coin.png',
-                    fit: BoxFit.cover,
-                    width: 30,
-                  ),
+                  const Coin(),
                   const SizedBox(
                     width: 3,
                   ),
@@ -98,12 +95,22 @@ class _SingleCoinShopState extends State<SingleCoinShop> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextWidget(
-                        title: locale == 'en'
-                            ? widget.coin['title']['en']
-                            : widget.coin['title']['ar'],
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                      Row(
+                        children: [
+                          TextWidget(
+                            title: locale == 'en'
+                                ? widget.coin['title']['en']
+                                : widget.coin['title']['ar'],
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          const SizedBox(width: 4,),
+                          TextWidget(
+                            title: widget.coin['numberOfCoins'].toString(),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 3,

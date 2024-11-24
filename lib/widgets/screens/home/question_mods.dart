@@ -7,7 +7,6 @@ class QuestionMods extends StatelessWidget {
     super.key,
   });
 
-
   @override
   Widget build(BuildContext context) {
     List modes = [
@@ -71,9 +70,13 @@ class QuestionMods extends StatelessWidget {
     ];
 
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(8.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(
+            height: 4,
+          ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(

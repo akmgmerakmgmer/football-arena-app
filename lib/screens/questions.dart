@@ -13,6 +13,7 @@ import 'package:in_zone_app/widgets/containers/fade_transition.dart';
 import 'package:in_zone_app/widgets/containers/image_background_plain.dart';
 import 'package:in_zone_app/widgets/containers/page_plain_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
+import 'package:in_zone_app/widgets/general_widgets/video_reward_ad.dart';
 import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
 import 'package:in_zone_app/widgets/screens/questions/advertisment.dart';
 import 'package:in_zone_app/widgets/screens/questions/game_over.dart';
@@ -34,6 +35,7 @@ class Questions extends StatefulWidget {
   final bool practice;
   final String eventId;
   final int price;
+  final String themePreview;
   const Questions(
       {super.key,
       this.mode = '',
@@ -42,7 +44,8 @@ class Questions extends StatefulWidget {
       this.name = '',
       this.practice = false,
       this.eventId = '',
-      this.price = 0});
+      this.price = 0,
+      this.themePreview = ''});
 
   @override
   State<Questions> createState() => _QuestionsState();
@@ -95,7 +98,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     FetchApi(
         'questions?page=$currentPage&search=${widget.mode}&userId=${widget.userId}&name=${widget.name}&questionMode=${widget.questionMode}&price=${widget.price}',
         (res) {
-      if (res['user']!=null) {
+      if (res['user'] != null) {
         Provider.of<LocaleProvider>(context, listen: false)
             .setUser(res['user']);
       }
@@ -507,7 +510,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       usedPerks.add(id);
     });
     multiplyPoints = multiplicationNumber;
-    Timer.periodic(Duration(milliseconds: time), (Timer timer) {
+    Timer.periodic(Duration(seconds: time), (Timer timer) {
       multiplyPoints = 1;
     });
   }
@@ -561,6 +564,16 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     });
   }
 
+  void livesAction() {
+    setState(() {
+      lives += 1;
+      stopCount = false;
+    });
+    Future.delayed(const Duration(seconds: 5), () {
+      stopCount = false;
+    });
+  }
+
   void exitGame() {
     Navigator.pushReplacementNamed(context, '/rankings');
   }
@@ -599,9 +612,11 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void initialFetch() async {
-    gameSaved = true;
-    await getAdvertisments();
-    getQuestions();
+    if (widget.themePreview == '') {
+      gameSaved = true;
+      await getAdvertisments();
+      getQuestions();
+    }
   }
 
   skipAdMethod() {
@@ -696,140 +711,172 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       },
       child: PagePlainContainer(
           body: ImageBackgroundPlain(
-        body: pageLoading ||
-                (questions.isNotEmpty && questions[currentQuestion] == null)
-            ? const PrimaryLoading()
-            : lives == 0
-                ? GameOver(playAgain: playAgain, exitGame: exitGame)
-                : Stack(
-                    children: [
-                      Positioned(
-                        bottom: 10,
-                        right: 10,
-                        child: SaveExitButton(
-                          buttonText: (widget.practice)
-                              ? AppLocalizations.of(context)!.exitGame
-                              : AppLocalizations.of(context)!.saveAndClose,
-                          radius: 100,
-                          action: (widget.practice)
-                              ? () =>
-                                  {Navigator.pushReplacementNamed(context, '/')}
-                              : () => saveGame(true),
-                          letterSpacing: 0,
-                          fontSize: 15,
-                          icon: Icons.save_alt,
-                          loading: saveLoading,
-                        ),
-                      ),
-                      Stats(
-                        usedPerks: usedPerks,
-                        user: user,
-                        points: points,
-                        coins: coins,
-                        lives: lives,
-                        stopTime: stopTimeMethod,
-                        penalty: penaltyMethod,
-                        varMethod: varMethod,
-                        stoppageTime: stoppageTimeMethod,
-                        pointsMultiplicationMethod: multiplyPointsMethod,
-                        skipQuestion: skipQuestionMethod,
-                        locale: locale,
-                      ),
-                      FadeTransitionContainer(
-                        body: Container(
-                          margin:
-                              EdgeInsets.only(top: hints.length > 3 ? 32 : 0),
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                TextWidget(
-                                  title: countDown.toString(),
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                BlurBackgroundContainer(
-                                  padding: 12,
-                                  margin: 10,
-                                  body: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      TextWidget(
-                                        title: locale == 'ar'
-                                            ? '${questions[currentQuestion]['question']['ar']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})'
-                                            : '${questions[currentQuestion]['question']['en']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})',
-                                        fontSize: 18,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                PlayerSearch(
-                                  locale: locale,
-                                  isPlayerSearch: isPlayerSearch(),
-                                  questionHintsLength:
-                                      questions[currentQuestion]['hints']
-                                          .length,
-                                  hints: hints,
-                                  addHintAction: addHintAction,
-                                  skipAction: skipAction,
-                                  playerAction: choiceAction,
-                                ),
-                                MultipleChoices(
-                                  locale: locale,
-                                  choices: questions[currentQuestion]
-                                      ['choices'],
-                                  isMultipleChoices: isMultipleChoices(),
-                                  action: choiceAction,
-                                ),
-                                TrueOrFalse(
-                                  locale: locale,
-                                  choices: questions[currentQuestion]
-                                      ['choices'],
-                                  isTrueOrFalse: isTrueOrFalse(),
-                                  action: choiceAction,
-                                ),
-                                ReversedWords(
-                                    isReversedWords: isReversedWords(),
-                                    initiateAnswer: (answer) =>
-                                        choiceAction(answer, 0),
-                                    skipAction: skipAction,
-                                    reversedWord: questions[currentQuestion]
-                                                ['reversedAnswer'] !=
-                                            null
-                                        ? questions[currentQuestion]
-                                            ['reversedAnswer'][locale]
-                                        : [],
-                                    deleteWord: deleteWord)
-                              ],
+        image: widget.themePreview == ''
+            ? user['selectedTheme']
+            : widget.themePreview,
+        body: widget.themePreview != ''
+            ? Stack(
+                children: [
+                  Positioned(
+                      right: 0,
+                      top: 0,
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(context, '/shop');
+                          },
+                          icon: const Icon(
+                            Icons.close,
+                            color: Colors.white,
+                            size: 24,
+                          )))
+                ],
+              )
+            : pageLoading ||
+                    (questions.isNotEmpty && questions[currentQuestion] == null)
+                ? const PrimaryLoading()
+                : lives == 0
+                    ? GameOver(playAgain: playAgain, exitGame: exitGame)
+                    : Stack(
+                        children: [
+                          Positioned(
+                            bottom: 10,
+                            right: 10,
+                            child: SaveExitButton(
+                              buttonText: (widget.practice)
+                                  ? AppLocalizations.of(context)!.exitGame
+                                  : AppLocalizations.of(context)!.saveAndClose,
+                              radius: 100,
+                              action: (widget.practice)
+                                  ? () => {
+                                        Navigator.pushReplacementNamed(
+                                            context, '/')
+                                      }
+                                  : () => saveGame(true),
+                              letterSpacing: 0,
+                              fontSize: 13,
+                              icon: Icons.save_alt,
+                              loading: saveLoading,
                             ),
                           ),
-                        ),
+                          // Positioned(
+                          //     bottom: 10,
+                          //     left: 10,
+                          //     child: VideoRewardAd(
+                          //       lives: true,
+                          //       livesAction: livesAction,
+                          //       questionAction: stopGame,
+                          //     )),
+                          Stats(
+                            usedPerks: usedPerks,
+                            user: user,
+                            points: points,
+                            coins: coins,
+                            lives: lives,
+                            stopTime: stopTimeMethod,
+                            penalty: penaltyMethod,
+                            varMethod: varMethod,
+                            stoppageTime: stoppageTimeMethod,
+                            pointsMultiplicationMethod: multiplyPointsMethod,
+                            skipQuestion: skipQuestionMethod,
+                            locale: locale,
+                          ),
+                          FadeTransitionContainer(
+                            body: Container(
+                              margin: EdgeInsets.only(
+                                  top: hints.length > 3 ? 32 : 0),
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    TextWidget(
+                                      title: countDown.toString(),
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    const SizedBox(
+                                      height: 4,
+                                    ),
+                                    BlurBackgroundContainer(
+                                      padding: 12,
+                                      margin: 10,
+                                      body: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          TextWidget(
+                                            title: locale == 'ar'
+                                                ? '${questions[currentQuestion]['question']['ar']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})'
+                                                : '${questions[currentQuestion]['question']['en']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})',
+                                            fontSize: 16.5,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
+                                    PlayerSearch(
+                                      locale: locale,
+                                      isPlayerSearch: isPlayerSearch(),
+                                      questionHintsLength:
+                                          questions[currentQuestion]['hints']
+                                              .length,
+                                      hints: hints,
+                                      addHintAction: addHintAction,
+                                      skipAction: skipAction,
+                                      playerAction: choiceAction,
+                                    ),
+                                    MultipleChoices(
+                                      locale: locale,
+                                      choices: questions[currentQuestion]
+                                          ['choices'],
+                                      isMultipleChoices: isMultipleChoices(),
+                                      action: choiceAction,
+                                    ),
+                                    TrueOrFalse(
+                                      locale: locale,
+                                      choices: questions[currentQuestion]
+                                          ['choices'],
+                                      isTrueOrFalse: isTrueOrFalse(),
+                                      action: choiceAction,
+                                    ),
+                                    ReversedWords(
+                                        isReversedWords: isReversedWords(),
+                                        initiateAnswer: (answer) =>
+                                            choiceAction(answer, 0),
+                                        skipAction: skipAction,
+                                        reversedWord: questions[currentQuestion]
+                                                    ['reversedAnswer'] !=
+                                                null
+                                            ? questions[currentQuestion]
+                                                ['reversedAnswer'][locale]
+                                            : [],
+                                        deleteWord: deleteWord)
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          showTut
+                              ? PerksIllustrations(
+                                  action: finishTutorialAction,
+                                  user: Provider.of<LocaleProvider>(context,
+                                          listen: false)
+                                      .user,
+                                )
+                              : Container(),
+                          showAd && advertisments.isNotEmpty
+                              ? Advertisment(
+                                  adClicked: () => adClicked(
+                                      advertisments[currentAd]['_id'],
+                                      advertisments[currentAd]
+                                          ['directionLink']),
+                                  seconds: currentAdCountDown,
+                                  skipAdMethod: skipAdMethod,
+                                  image: advertisments[currentAd]['image'])
+                              : Container()
+                        ],
                       ),
-                      showTut
-                          ? PerksIllustrations(
-                              action: finishTutorialAction,
-                              user: Provider.of<LocaleProvider>(context,
-                                      listen: false)
-                                  .user,
-                            )
-                          : Container(),
-                      showAd && advertisments.isNotEmpty
-                          ? Advertisment(
-                              adClicked: () => adClicked(
-                                  advertisments[currentAd]['_id'],
-                                  advertisments[currentAd]['directionLink']),
-                              seconds: currentAdCountDown,
-                              skipAdMethod: skipAdMethod,
-                              image: advertisments[currentAd]['image'])
-                          : Container()
-                    ],
-                  ),
       )),
     );
   }

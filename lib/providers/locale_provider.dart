@@ -61,7 +61,17 @@ class LocaleProvider with ChangeNotifier {
     _avatars = value;
     notifyListeners();
   }
-  
+
+  List _themes = [];
+  List get themes {
+    return _themes;
+  }
+
+  void setThemes(value) {
+    _themes = value;
+    notifyListeners();
+  }
+
   List _events = [];
   List get events {
     return _events;

@@ -17,7 +17,12 @@ class Auth {
         Provider.of<LocaleProvider>(context, listen: false)
             .setUser(value['user']);
         if (value['prizes'].isNotEmpty) {
-          ModalContainer.modal(context, PrizesContent(prizes: value['prizes'],showExclusiveText: false,),
+          ModalContainer.modal(
+              context,
+              PrizesContent(
+                prizes: value['prizes'],
+                showExclusiveText: false,
+              ),
               AppLocalizations.of(context)!.congratulations);
         }
       },

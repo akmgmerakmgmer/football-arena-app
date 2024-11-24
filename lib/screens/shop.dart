@@ -5,6 +5,7 @@ import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
 import 'package:in_zone_app/widgets/screens/shop/buy_coins.dart';
 import 'package:in_zone_app/widgets/screens/shop/buy_perks.dart';
+import 'package:in_zone_app/widgets/screens/shop/buy_themes.dart';
 import 'package:in_zone_app/widgets/screens/shop/tabs_button.dart';
 import 'package:provider/provider.dart';
 
@@ -17,16 +18,19 @@ class Shop extends StatefulWidget {
 
 class _ShopState extends State<Shop> {
   bool loading = false;
-  bool avatarLoading = false;
   int pageNumber = 1;
   int numberOfPages = 1;
   List avatarsList = [];
+  List themesList = [];
+  int themePageNumber = 1;
+  int themeNumberOfPages = 1;
   final ScrollController _scrollController = ScrollController();
   int activeTabIndex = 1;
   List activeTabs = [
     {"nameEn": "Avatars", "nameAr": "الرموز (افاتارز)", "index": 1},
-    {"nameEn": "Perks", "nameAr": "وسائل المساعدة", "index": 2},
-    {"nameEn": "Coins", "nameAr": "العملات", "index": 3},
+    {"nameEn": "Themes", "nameAr": "الخلفيات", "index": 2},
+    {"nameEn": "Perks", "nameAr": "وسائل المساعدة", "index": 3},
+    {"nameEn": "Coins", "nameAr": "العملات", "index": 4},
   ];
 
   void tabAction(index) {
@@ -51,6 +55,22 @@ class _ShopState extends State<Shop> {
     }
   }
 
+  Future<void> fetchThemes() async {
+    if (Provider.of<LocaleProvider>(context, listen: false).themes.isEmpty ||
+        themePageNumber > 1) {
+      await FetchApi('themes?page=$themePageNumber', (themes) {
+        themesList.addAll(themes['themes']);
+        Provider.of<LocaleProvider>(context, listen: false)
+            .setThemes(themesList);
+        setState(() {
+          themeNumberOfPages =
+              (themes['total_themes'] / themes['per_page']).ceil();
+        });
+        // ignore: use_build_context_synchronously
+      }).fetch(context);
+    }
+  }
+
   Future<void> fetchShopItems() async {
     if (Provider.of<LocaleProvider>(context, listen: false).shopItems.isEmpty) {
       await FetchApi('shopItems', (shopItems) {
@@ -67,6 +87,7 @@ class _ShopState extends State<Shop> {
     });
     await fetchShopItems();
     await fetchAvatars();
+    await fetchThemes();
     setState(() {
       loading = false;
     });
@@ -77,9 +98,16 @@ class _ShopState extends State<Shop> {
     _scrollController.addListener(() async {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        if (pageNumber != numberOfPages) {
+        if (pageNumber != numberOfPages && activeTabIndex == 2) {
           pageNumber += 1;
           fetchAvatars();
+        }
+      }
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        if (themePageNumber != themeNumberOfPages && activeTabIndex == 2) {
+          themePageNumber += 1;
+          fetchThemes();
         }
       }
     });
@@ -90,18 +118,17 @@ class _ShopState extends State<Shop> {
   @override
   Widget build(BuildContext context) {
     List avatars = Provider.of<LocaleProvider>(context, listen: false).avatars;
+    List themes = Provider.of<LocaleProvider>(context, listen: false).themes;
     Map shopItems =
         Provider.of<LocaleProvider>(context, listen: false).shopItems;
     return PageContainerWithFooter(
         background: Theme.of(context).splashColor,
         scroll: _scrollController,
         body: Container(
-          margin: const EdgeInsets.symmetric(vertical: 32),
+          margin: const EdgeInsets.symmetric(vertical: 16),
           child: Column(
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+              Wrap(
                 children: activeTabs
                     .map((tab) => TabsButton(
                         selected: activeTabIndex == tab['index'],
@@ -114,21 +141,24 @@ class _ShopState extends State<Shop> {
                                 : tab['nameAr']))
                     .toList(),
               ),
-             
-              activeTabIndex == 3
+              activeTabIndex == 4
                   ? BuyCoins(
                       coins: shopItems.isEmpty ? [] : shopItems['coins'],
                       loading: loading,
                     )
-                  : activeTabIndex == 2
+                  : activeTabIndex == 3
                       ? BuyPerks(
                           perks: shopItems.isEmpty ? [] : shopItems['perks'],
                           loading: loading,
                         )
-                      : BuyAvatars(
-                          avatars: avatars.isEmpty ? [] : avatars,
-                          loading: loading,
-                        )
+                      : activeTabIndex == 2
+                          ? BuyThemes(
+                              themes: themes.isEmpty ? [] : themes,
+                              loading: loading)
+                          : BuyAvatars(
+                              avatars: avatars.isEmpty ? [] : avatars,
+                              loading: loading,
+                            )
             ],
           ),
         ));

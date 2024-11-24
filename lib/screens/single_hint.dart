@@ -15,7 +15,7 @@ class SingleHint extends StatelessWidget {
           PrimaryColorBackground(
               widget: TextWidget(
                 title: hint,
-                fontSize: 14,
+                fontSize: 13,
               ),
               padding: 8),
           const SizedBox(

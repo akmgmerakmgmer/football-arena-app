@@ -16,7 +16,7 @@ class SaveExitButton extends StatelessWidget {
     required this.buttonText,
     required this.action,
     this.uppercase = false,
-    this.fontSize = 14,
+    this.fontSize = 13,
     this.letterSpacing = 1.0,
     this.radius = 0,
     this.loading = false, required this.icon,
@@ -64,7 +64,7 @@ class SaveExitButton extends StatelessWidget {
                     letterSpacing: letterSpacing,
                   ),
                   const SizedBox(width: 5,),
-                  Icon(icon,color: Colors.white, size: 20,)
+                  Icon(icon,color: Colors.white, size: 18,)
               ],
             ),
       ),

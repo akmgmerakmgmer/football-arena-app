@@ -15,7 +15,7 @@ class BuyAvatars extends StatelessWidget {
   Widget build(BuildContext context) {
     return FadeTransitionContainer(
       body: Container(
-        padding: const EdgeInsets.only(top: 4.0, right: 16.0, left: 16.0),
+        padding: const EdgeInsets.only(right: 16.0, left: 16.0),
         child: Column(
           children: [
             const UserCoins(),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/containers/glass_background_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
+import 'package:in_zone_app/widgets/general_widgets/coin.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/screens/questions/single_perk.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -49,9 +50,9 @@ class Stats extends StatelessWidget {
         case 'Stop Time':
           stopTime(perk['id']['_id']);
         case 'Double Points':
-          pointsMultiplicationMethod(perk['id']['_id'], 2, 20000);
+          pointsMultiplicationMethod(perk['id']['_id'], 2, 60);
         case 'Hero Personality':
-          pointsMultiplicationMethod(perk['id']['_id'], 3, 15000);
+          pointsMultiplicationMethod(perk['id']['_id'], 3, 40);
         case 'Skip Question':
           skipQuestion(perk['id']['_id']);
         default:
@@ -102,6 +103,7 @@ class Stats extends StatelessWidget {
                           fontSize: 13,
                           color: Colors.black,
                           fontWeight: FontWeight.w600,
+                          alwaysEnglish: true,
                         )
                       ],
                     ),
@@ -123,6 +125,7 @@ class Stats extends StatelessWidget {
                           fontSize: 13,
                           color: Colors.black,
                           fontWeight: FontWeight.w600,
+                          alwaysEnglish: true,
                         )
                       ],
                     ),
@@ -132,10 +135,7 @@ class Stats extends StatelessWidget {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(
-                          'assets/images/coin.png',
-                          width: 25,
-                        ),
+                        const Coin(),
                         const SizedBox(
                           height: 5,
                         ),
@@ -144,9 +144,10 @@ class Stats extends StatelessWidget {
                           fontSize: 13,
                           color: Colors.black,
                           fontWeight: FontWeight.w600,
+                          alwaysEnglish: true,
                         )
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),

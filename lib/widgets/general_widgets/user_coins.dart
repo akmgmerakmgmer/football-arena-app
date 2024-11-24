@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/widgets/buttons/main_button_no_width.dart';
+import 'package:in_zone_app/widgets/general_widgets/coin.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -31,17 +32,24 @@ class UserCoins extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextWidget(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        title:
-                            '${AppLocalizations.of(context)!.youHave} ${Provider.of<LocaleProvider>(context, listen: false).user['coins']}'),
+                        title: AppLocalizations.of(context)!.youHave),
                     const SizedBox(
                       width: 3,
                     ),
-                    Image.asset(
-                      'assets/images/coin.png',
-                      width: 25,
+                    TextWidget(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        alwaysEnglish: true,
+                        title:
+                            '${Provider.of<LocaleProvider>(context, listen: false).user['coins']}'),
+                    const SizedBox(
+                      width: 3,
                     ),
+                    const Coin(
+                      width: 22,
+                    )
                   ],
                 ),
               ),

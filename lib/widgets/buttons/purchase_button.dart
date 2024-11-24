@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:in_zone_app/widgets/general_widgets/coin.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
@@ -27,7 +28,7 @@ class PurchaseButton extends StatelessWidget {
           decoration: BoxDecoration(
             color: Theme.of(context).primaryColor,
             borderRadius: const BorderRadius.all(Radius.circular(10)),
-            boxShadow:  [
+            boxShadow: [
               BoxShadow(
                 color: Colors.red.shade600,
                 spreadRadius: 0,
@@ -83,6 +84,7 @@ class PurchaseButton extends StatelessWidget {
                           title: price,
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
+                          alwaysEnglish: true,
                         ),
                         const SizedBox(
                           width: 3,
@@ -93,10 +95,9 @@ class PurchaseButton extends StatelessWidget {
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                               )
-                            : Image.asset(
-                                'assets/images/coin.png',
-                                width: 22,
-                              ),
+                            : const Coin(
+                                width: 20,
+                              )
                       ],
                     )
                   ],

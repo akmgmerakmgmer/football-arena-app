@@ -52,7 +52,7 @@ class AccountProfile extends StatelessWidget with ChangeNotifier {
                       textAlign: TextAlign.start,
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 8,
                     ),
                     user.isNotEmpty && user['avatars'].isNotEmpty
                         ? SingleChildScrollView(
@@ -85,7 +85,46 @@ class AccountProfile extends StatelessWidget with ChangeNotifier {
                           )
                         : Container(),
                     const SizedBox(
-                      height: 30,
+                      height: 24,
+                    ),
+                    TextWidget(
+                      title: AppLocalizations.of(context)!.yourThemes,
+                      fontSize: 17,
+                      textAlign: TextAlign.start,
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    user.isNotEmpty && user['themes'].isNotEmpty
+                        ? SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: user['themes']
+                                  .map<Widget>((theme) => SingleUsersAvatars(
+                                        isSelected:
+                                            user['selectedTheme'] == theme,
+                                        image: theme,
+                                        buttonText:
+                                            user['selectedTheme'] == theme
+                                                ? AppLocalizations.of(context)!
+                                                    .selectedTheme
+                                                : AppLocalizations.of(context)!
+                                                    .selectTheme,
+                                        api: 'users/${user['_id']}',
+                                        body: {"selectedTheme": theme},
+                                        callback: (res) {
+                                          Provider.of<LocaleProvider>(context,
+                                                  listen: false)
+                                              .setUser(res);
+                                        },
+                                        errorCallback: () {},
+                                      ))
+                                  .toList(),
+                            ),
+                          )
+                        : Container(),
+                    const SizedBox(
+                      height: 24,
                     ),
                     TextWidget(
                       title: AppLocalizations.of(context)!.yourPerks,
@@ -93,7 +132,7 @@ class AccountProfile extends StatelessWidget with ChangeNotifier {
                       textAlign: TextAlign.start,
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 8,
                     ),
                     user.isNotEmpty && user['perks'].isNotEmpty
                         ? SingleChildScrollView(

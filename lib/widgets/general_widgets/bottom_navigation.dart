@@ -93,7 +93,7 @@ class BottomNavigation extends StatelessWidget {
                           child: Icon(
                             route['icon'],
                             color: route['selected']
-                                ? Colors.red.shade500
+                                ? Colors.red
                                 : Colors.grey.shade300,
                           ),
                         ),
@@ -101,7 +101,7 @@ class BottomNavigation extends StatelessWidget {
                           title: route['text'],
                           fontSize: 12,
                           color: route['selected']
-                              ? Colors.red.shade500
+                              ? Colors.red
                               : Colors.grey.shade300,
                         )
                       ],

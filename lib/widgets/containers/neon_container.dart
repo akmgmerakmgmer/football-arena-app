@@ -4,8 +4,13 @@ class NeonContainer extends StatelessWidget {
   final Widget widget;
   final EdgeInsetsGeometry padding;
   final double? width;
+  final double radius;
   const NeonContainer(
-      {super.key, required this.widget, required this.padding, this.width});
+      {super.key,
+      required this.widget,
+      required this.padding,
+      this.width,
+      this.radius = 10});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +21,8 @@ class NeonContainer extends StatelessWidget {
         padding: padding,
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
-          boxShadow:  [
+          borderRadius: BorderRadius.all(Radius.circular(radius)),
+          boxShadow: [
             BoxShadow(
               color: Theme.of(context).primaryColor,
               spreadRadius: 0,

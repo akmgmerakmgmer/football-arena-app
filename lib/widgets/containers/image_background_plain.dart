@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class ImageBackgroundPlain extends StatelessWidget {
   final Widget body;
-  const ImageBackgroundPlain({super.key, required this.body});
+  final String image;
+  const ImageBackgroundPlain(
+      {super.key, required this.body, required this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -12,10 +14,10 @@ class ImageBackgroundPlain extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           alignment: Alignment.center,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
+              color: Theme.of(context).splashColor,
               image: DecorationImage(
-                  image: AssetImage('assets/images/background_new.jpg'),
-                  fit: BoxFit.cover)),
+                  image: NetworkImage(image), fit: BoxFit.cover)),
           child: body),
     );
   }

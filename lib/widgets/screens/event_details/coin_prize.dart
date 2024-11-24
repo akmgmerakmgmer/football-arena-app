@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:in_zone_app/widgets/general_widgets/coin.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -16,11 +17,7 @@ class CoinPrize extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(8))),
       child: Row(
         children: [
-          Image.asset(
-            'assets/images/coin.png',
-            fit: BoxFit.cover,
-            width: 25,
-          ),
+          const Coin(),
           const SizedBox(
             width: 4,
           ),

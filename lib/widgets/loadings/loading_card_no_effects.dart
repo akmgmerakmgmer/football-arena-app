@@ -11,7 +11,7 @@ class LoadingCardNoEffects extends StatelessWidget {
       required this.height,
       required this.width,
       this.radius = 16.0,
-      this.bgColor = const Color(0xFF191919)});
+      this.bgColor = const Color.fromARGB(255, 22, 22, 22)});
 
   @override
   Widget build(BuildContext context) {
