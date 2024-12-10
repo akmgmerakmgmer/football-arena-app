@@ -17,7 +17,7 @@ class PolygonPainter extends CustomPainter {
 
     // Polygon Paint
     final polygonPaint = Paint()
-      ..color = Colors.red.shade700 // Main polygon color
+      ..color = const Color(0xFFF61A1A)// Main polygon color
       ..style = PaintingStyle.fill;
 
     final path = Path();

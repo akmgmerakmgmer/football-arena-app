@@ -21,7 +21,7 @@ class EventImage extends StatelessWidget {
       child: Container(
           height: 200,
           width: showIcon
-              ? MediaQuery.of(context).size.width - 60
+              ? MediaQuery.of(context).size.width - 30
               : MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
               image: DecorationImage(

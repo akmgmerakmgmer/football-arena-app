@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:in_zone_app/widgets/buttons/google_button.dart';
 import 'package:in_zone_app/widgets/containers/image_background_container.dart';
 import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
@@ -22,7 +23,11 @@ class Login extends StatelessWidget {
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
-                const LoginForm()
+                const LoginForm(),
+                const SizedBox(
+                  height: 16,
+                ),
+                GoogleButton()
               ],
             )));
   }

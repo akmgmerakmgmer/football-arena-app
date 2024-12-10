@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
@@ -33,12 +35,13 @@ class _VideoRewardAdState extends State<VideoRewardAd> {
 
   void rewardMethod() {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
-    user['coins'] += 50;
+    int coins = getRandomCoin();
+    user['coins'] += coins;
     Provider.of<LocaleProvider>(context, listen: false).setUser(user);
     PutApi('users/${user['_id']}', {'coins': user['coins']}, (value) {})
         .put(context);
     List<Map> prizes = [
-      {"prizeType": "coins", "coins": 50}
+      {"prizeType": "coins", "coins": coins}
     ];
     ModalContainer.modal(
         context,
@@ -46,10 +49,17 @@ class _VideoRewardAdState extends State<VideoRewardAd> {
         AppLocalizations.of(context)!.congratulations);
   }
 
+  int getRandomCoin() {
+    List coinsList = [50, 100, 50, 25, 50, 200, 50, 100, 50, 25, 50];
+    final random = Random(); // Create a Random instance
+    int randomIndex = random.nextInt(coinsList.length); // Get a random index
+    return coinsList[randomIndex]; // Return the coin at the random index
+  }
+
   Future<void> _loadRewardedAd() async {
     await RewardedAd.load(
       adUnitId:
-          'ca-app-pub-3940256099942544/5224354917', // Replace with your Ad Unit ID
+          'ca-app-pub-6065065349715677/8836064686', // Replace with your Ad Unit ID
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (RewardedAd ad) {
@@ -59,7 +69,6 @@ class _VideoRewardAdState extends State<VideoRewardAd> {
           });
         },
         onAdFailedToLoad: (LoadAdError error) {
-          print('Rewarded Ad Failed to Load: $error');
         },
       ),
     );
@@ -122,7 +131,6 @@ class _VideoRewardAdState extends State<VideoRewardAd> {
               child: widget.lives
                   ? const Row(
                       children: [
-                        
                         Icon(
                           Icons.heart_broken,
                           color: Colors.red,
@@ -131,8 +139,10 @@ class _VideoRewardAdState extends State<VideoRewardAd> {
                         SizedBox(
                           width: 2,
                         ),
-                        TextWidget(title: '+3',color: Colors.black,),
-                        
+                        TextWidget(
+                          title: '+3',
+                          color: Colors.black,
+                        ),
                       ],
                     )
                   : const Coin(

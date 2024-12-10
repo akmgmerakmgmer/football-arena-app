@@ -91,4 +91,14 @@ class LocaleProvider with ChangeNotifier {
     _shopItems = value;
     notifyListeners();
   }
+
+  Map _room = {};
+  Map get room {
+    return _room;
+  }
+
+  void setRoom(value) {
+    _room = value;
+    notifyListeners();
+  }
 }

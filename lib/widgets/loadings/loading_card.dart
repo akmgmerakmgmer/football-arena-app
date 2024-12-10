@@ -11,7 +11,7 @@ class LoadingCard extends StatefulWidget {
       required this.height,
       required this.width,
       this.radius = 16.0,
-      this.bgColor = const Color.fromARGB(255, 22, 22, 22),
+      this.bgColor = const Color.fromARGB(255, 41, 41, 41),
       this.scaleEnd = 1.05});
 
   @override

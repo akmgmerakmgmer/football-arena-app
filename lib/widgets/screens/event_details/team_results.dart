@@ -46,6 +46,7 @@ class TeamResults extends StatelessWidget {
           ),
           MainButton(
             buttonText: AppLocalizations.of(context)!.playEventNow,
+            uppercase: true,
             action: () {
               Navigator.pushReplacement(
                 context,

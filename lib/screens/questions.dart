@@ -7,13 +7,13 @@ import 'package:in_zone_app/screens/event_details.dart';
 import 'package:in_zone_app/screens/reversed_words.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/external_url.dart';
+import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/buttons/save_exit_button.dart';
 import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
 import 'package:in_zone_app/widgets/containers/fade_transition.dart';
 import 'package:in_zone_app/widgets/containers/image_background_plain.dart';
 import 'package:in_zone_app/widgets/containers/page_plain_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
-import 'package:in_zone_app/widgets/general_widgets/video_reward_ad.dart';
 import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
 import 'package:in_zone_app/widgets/screens/questions/advertisment.dart';
 import 'package:in_zone_app/widgets/screens/questions/game_over.dart';
@@ -21,7 +21,9 @@ import 'package:in_zone_app/widgets/screens/questions/multiple_choices.dart';
 import 'package:in_zone_app/widgets/screens/questions/perks_illustrations.dart';
 import 'package:in_zone_app/widgets/screens/questions/player_search.dart';
 import 'package:in_zone_app/widgets/screens/questions/stats.dart';
+import 'package:in_zone_app/widgets/screens/questions/theme_preview.dart';
 import 'package:in_zone_app/widgets/screens/questions/true_or_false.dart';
+import 'package:in_zone_app/widgets/screens/questions/two_players_stats.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:convert'; // For utf8 encoding
@@ -36,6 +38,7 @@ class Questions extends StatefulWidget {
   final String eventId;
   final int price;
   final String themePreview;
+  final bool isMulti;
   const Questions(
       {super.key,
       this.mode = '',
@@ -45,7 +48,8 @@ class Questions extends StatefulWidget {
       this.practice = false,
       this.eventId = '',
       this.price = 0,
-      this.themePreview = ''});
+      this.themePreview = '',
+      this.isMulti = false});
 
   @override
   State<Questions> createState() => _QuestionsState();
@@ -61,7 +65,6 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   int points = 0;
   int lives = 10;
   int coins = 0;
-  int answeredConsecutively = 0;
   List chosenPlayers = [];
   List displayChosenPlayers = [];
   List hints = [];
@@ -88,8 +91,18 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   bool anyTimePerkActive = false;
   bool stoppageTimeActive = false;
   final AudioPlayer _audioPlayer = AudioPlayer();
+  final SocketMethods _socketMethods = SocketMethods();
   // Methods
   Future<void> getQuestions() async {
+    Map room = Provider.of<LocaleProvider>(context, listen: false).room;
+    if (widget.isMulti && questions.isEmpty) {
+      setState(() {
+        questions = [...room['questions']];
+      });
+      initializeCount();
+      initializeHints();
+      return;
+    }
     if (questions.isEmpty) {
       setState(() {
         pageLoading = true;
@@ -110,19 +123,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       if (res['questions'].length == 0) {
         currentPage = 1;
       }
-      if (!countStarted) {
-        setState(() {
-          countDown = setCount();
-        });
-        decreaseCount();
-        decreaseAdCount();
-        countStarted = true;
-      }
-      if (currentQuestion == 0 && hints.isEmpty && showHints()) {
-        setState(() {
-          hints = [questions[currentQuestion]['hints'][0]];
-        });
-      }
+      initializeCount();
+      initializeHints();
     }, errorCallback: () {
       setState(() {
         Navigator.pushReplacementNamed(context, '/');
@@ -130,15 +132,33 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     }).fetch(context);
   }
 
+  void initializeCount() {
+    if (!countStarted) {
+      setState(() {
+        countDown = setCount();
+      });
+      decreaseCount();
+      decreaseAdCount();
+      countStarted = true;
+    }
+  }
+
+  void initializeHints() {
+    if (currentQuestion == 0 && hints.isEmpty && showHints()) {
+      setState(() {
+        hints = [questions[currentQuestion]['hints'][0]];
+      });
+    }
+  }
+
   void decreaseCount() {
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      if (!stopCount && lives != 0) {
+      if ((!stopCount && lives != 0) || widget.isMulti) {
         if (countDown > 0) {
           setState(() {
             countDown = countDown - 1;
           });
         } else {
-          answeredConsecutively = 0;
           getToNextQuestion();
           if (lives > 0) {
             playWrongSound();
@@ -227,7 +247,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   int setCount() {
-    if (showHints()) {
+    if (widget.isMulti) {
+      defaultCountDown = 300;
+    } else if (showHints()) {
       defaultCountDown = 45;
     } else if (stoppageTimeActive) {
       defaultCountDown = 10;
@@ -264,7 +286,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     }
     setState(() {
       currentQuestion = currentQuestion + 1;
-      countDown = setCount();
+      if (!widget.isMulti) {
+        countDown = setCount();
+      }
     });
     if (questions[currentQuestion]['hints'] != null &&
         questions[currentQuestion]['hints'].length > 0) {
@@ -272,21 +296,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
         hints = [questions[currentQuestion]['hints'][0]];
       });
     }
-    // setState(() {
-    //   show = false;
-    // });
-    // Timer.periodic(const Duration(milliseconds: 1), (Timer timer) {
-    //   setState(() {
-    //     show = true;
-    //   });
-    // });
   }
 
   void rightAnswerPoints() {
-    // if (answeredConsecutively != 0 &&
-    //     (answeredConsecutively / 5).ceil() != pointValue) {
-    //   pointValue = (answeredConsecutively / 5).floor();
-    // }
     if (isReversedWords()) {
       pointDefaultValue = 5;
     } else if (showHints()) {
@@ -315,12 +327,28 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     _audioPlayer.play(AssetSource('audio/buzzer.mp3'));
   }
 
+  void calculateMultiPoints() {
+    Map room = Provider.of<LocaleProvider>(context, listen: false).room;
+    String userId =
+        Provider.of<LocaleProvider>(context, listen: false).user['_id'];
+    for (var player in room['players']) {
+      if (player['userId']['_id'].toString() == userId) {
+        player = player['points'] = points;
+      }
+    }
+    _socketMethods.sendPoints(context, room);
+  }
+
   void rightAnswer() {
     playCorrectSound();
     rightAnswerPoints();
     getToNextQuestion();
-    getNextPatchOfQuestions();
-    answeredConsecutively += 1;
+    if (!widget.isMulti) {
+      getNextPatchOfQuestions();
+    }
+    if (widget.isMulti) {
+      calculateMultiPoints();
+    }
   }
 
   void wrongAnswer(index) {
@@ -345,7 +373,6 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     if (lives > 1 && !isPlayerSearch() && !isReversedWords()) {
       getToNextQuestion();
     }
-    answeredConsecutively = 0;
     if (points != 0 && !activateVar) {
       setState(() {
         points = points - 1;
@@ -367,6 +394,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     });
     if (activateVar) {
       activateVar = false;
+    }
+    if (widget.isMulti) {
+      calculateMultiPoints();
     }
   }
 
@@ -393,10 +423,12 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       return rightAnswer();
     }
     wrongAnswer(index);
-    if ((points / numberOfPointsToCoin).floor() != coins) {
-      setState(() {
-        coins = (points / numberOfPointsToCoin).floor();
-      });
+    if (!widget.isMulti) {
+      if ((points / numberOfPointsToCoin).floor() != coins) {
+        setState(() {
+          coins = (points / numberOfPointsToCoin).floor();
+        });
+      }
     }
   }
 
@@ -695,7 +727,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
-    if (widget.practice) {
+    Map room = Provider.of<LocaleProvider>(context, listen: false).room;
+    if (widget.practice || widget.isMulti) {
       setState(() {
         lives = 10000000000;
       });
@@ -715,26 +748,11 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
             ? user['selectedTheme']
             : widget.themePreview,
         body: widget.themePreview != ''
-            ? Stack(
-                children: [
-                  Positioned(
-                      right: 0,
-                      top: 0,
-                      child: IconButton(
-                          onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/shop');
-                          },
-                          icon: const Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: 24,
-                          )))
-                ],
-              )
+            ? const ThemePreview()
             : pageLoading ||
                     (questions.isNotEmpty && questions[currentQuestion] == null)
                 ? const PrimaryLoading()
-                : lives == 0
+                : lives == 0 && !widget.isMulti
                     ? GameOver(playAgain: playAgain, exitGame: exitGame)
                     : Stack(
                         children: [
@@ -758,28 +776,23 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                               loading: saveLoading,
                             ),
                           ),
-                          // Positioned(
-                          //     bottom: 10,
-                          //     left: 10,
-                          //     child: VideoRewardAd(
-                          //       lives: true,
-                          //       livesAction: livesAction,
-                          //       questionAction: stopGame,
-                          //     )),
-                          Stats(
-                            usedPerks: usedPerks,
-                            user: user,
-                            points: points,
-                            coins: coins,
-                            lives: lives,
-                            stopTime: stopTimeMethod,
-                            penalty: penaltyMethod,
-                            varMethod: varMethod,
-                            stoppageTime: stoppageTimeMethod,
-                            pointsMultiplicationMethod: multiplyPointsMethod,
-                            skipQuestion: skipQuestionMethod,
-                            locale: locale,
-                          ),
+                          widget.isMulti
+                              ? const TwoPlayersStats()
+                              : Stats(
+                                  usedPerks: usedPerks,
+                                  user: user,
+                                  points: points,
+                                  coins: coins,
+                                  lives: lives,
+                                  stopTime: stopTimeMethod,
+                                  penalty: penaltyMethod,
+                                  varMethod: varMethod,
+                                  stoppageTime: stoppageTimeMethod,
+                                  pointsMultiplicationMethod:
+                                      multiplyPointsMethod,
+                                  skipQuestion: skipQuestionMethod,
+                                  locale: locale,
+                                ),
                           FadeTransitionContainer(
                             body: Container(
                               margin: EdgeInsets.only(
@@ -857,7 +870,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                               ),
                             ),
                           ),
-                          showTut
+                          showTut && !widget.isMulti
                               ? PerksIllustrations(
                                   action: finishTutorialAction,
                                   user: Provider.of<LocaleProvider>(context,

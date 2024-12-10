@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/screens/single_letter.dart';
 import 'package:in_zone_app/widgets/buttons/hint_action_button.dart';
+import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -76,11 +77,16 @@ class _ReversedWordsState extends State<ReversedWords> {
               const SizedBox(
                 height: 16,
               ),
-              TextWidget(
-                title: words.join(''),
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              words.isNotEmpty
+                  ? BlurBackgroundContainer(
+                      padding: 8,
+                      body: TextWidget(
+                        title: words.join(''),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  : Container(),
               const SizedBox(
                 height: 16,
               ),

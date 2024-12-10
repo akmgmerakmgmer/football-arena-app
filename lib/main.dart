@@ -5,6 +5,7 @@ import 'package:in_zone_app/screens/challenges.dart';
 import 'package:in_zone_app/screens/event_details.dart';
 import 'package:in_zone_app/screens/home.dart';
 import 'package:in_zone_app/screens/login.dart';
+import 'package:in_zone_app/screens/multi_screen.dart';
 import 'package:in_zone_app/screens/questions.dart';
 import 'package:in_zone_app/screens/rankings.dart';
 import 'package:in_zone_app/screens/shop.dart';
@@ -70,6 +71,7 @@ class _MyAppState extends State<MyApp> {
                   '/events': (context) => const EventDetails(),
                   '/best-offers': (context) => const BestOffers(),
                   '/shop': (context) => const Shop(),
+                  '/multi-screen': (context) => const MultiScreen()
                 },
                 title: 'InZone',
                 localizationsDelegates: const [

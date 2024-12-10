@@ -22,7 +22,7 @@ class HintActionButton extends StatelessWidget {
               children: [
                 TextWidget(
                   title: title,
-                  fontSize: 12,
+                  fontSize: 13,
                 ),
                 icon
               ],
@@ -34,7 +34,7 @@ class HintActionButton extends StatelessWidget {
               children: [
                 TextWidget(
                   title: title,
-                  fontSize: 12,
+                  fontSize: 13,
                 ),
                 icon
               ],

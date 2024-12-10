@@ -40,6 +40,8 @@ dependencies:
   crypto: ^3.0.0
   package_info_plus: ^8.0.2
   google_mobile_ads: ^3.0.0
+  google_sign_in: ^6.0.1
+  socket_io_client: ^3.0.2
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -113,6 +115,7 @@ flutter:
     - assets/images/icons8-youtube.svg
     - assets/images/icons8-tiktok.svg
     - assets/images/icons8-instagram.svg
+    - assets/images/icons8-google.svg
     - assets/images/prize.png
     - assets/images/gameOver.png
     - assets/images/background_new.jpg

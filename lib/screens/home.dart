@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
-import 'package:in_zone_app/widgets/general_widgets/video_reward_ad.dart';
 import 'package:in_zone_app/widgets/screens/home/about_us.dart';
+import 'package:in_zone_app/widgets/screens/home/create_room.dart';
 import 'package:in_zone_app/widgets/screens/home/events.dart';
 import 'package:in_zone_app/widgets/screens/home/home_challenges.dart';
 import 'package:in_zone_app/widgets/screens/home/question_mods.dart';
@@ -17,7 +17,8 @@ class Home extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          VideoRewardAd(),
+          // VideoRewardAd(),
+          CreateRoom(),
           Events(),
           QuestionMods(),
           HomeChallenges(),

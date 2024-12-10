@@ -116,7 +116,7 @@
     "team": "Team",
     "endsAt": "Ends At",
     "yourTeam": "Your Team",
-    "playEventNow": "Playe Event Now",
+    "playEventNow": "Play Event Now",
     "inzoneCoins": "InZone Coins",
     "winningTeam": "Given to the winning team only",
     "exclusiveAvatar": "Exclusive Avatar for the team players' who will win this event",
@@ -125,5 +125,7 @@
     "update_app_text": "Update App",
     "not_enough_coins": "You don't have enough coins to participate in this event",
     "buy_coins": "Buy More Coins",
-    "login_word": "Register"
+    "login_word": "Register",
+    "continue_with_google": "Continue with google",
+    "waiting_for_other_players": "Wating for other players"
 }
