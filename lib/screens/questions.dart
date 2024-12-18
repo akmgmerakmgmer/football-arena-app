@@ -7,7 +7,6 @@ import 'package:in_zone_app/screens/event_details.dart';
 import 'package:in_zone_app/screens/reversed_words.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/external_url.dart';
-import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/buttons/save_exit_button.dart';
 import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
 import 'package:in_zone_app/widgets/containers/fade_transition.dart';
@@ -23,7 +22,6 @@ import 'package:in_zone_app/widgets/screens/questions/player_search.dart';
 import 'package:in_zone_app/widgets/screens/questions/stats.dart';
 import 'package:in_zone_app/widgets/screens/questions/theme_preview.dart';
 import 'package:in_zone_app/widgets/screens/questions/true_or_false.dart';
-import 'package:in_zone_app/widgets/screens/questions/two_players_stats.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:convert'; // For utf8 encoding
@@ -34,22 +32,19 @@ class Questions extends StatefulWidget {
   final String questionMode;
   final String userId;
   final String name;
-  final bool practice;
   final String eventId;
   final int price;
   final String themePreview;
-  final bool isMulti;
-  const Questions(
-      {super.key,
-      this.mode = '',
-      this.questionMode = '',
-      this.userId = '',
-      this.name = '',
-      this.practice = false,
-      this.eventId = '',
-      this.price = 0,
-      this.themePreview = '',
-      this.isMulti = false});
+  const Questions({
+    super.key,
+    this.mode = '',
+    this.questionMode = '',
+    this.userId = '',
+    this.name = '',
+    this.eventId = '',
+    this.price = 0,
+    this.themePreview = '',
+  });
 
   @override
   State<Questions> createState() => _QuestionsState();
@@ -90,19 +85,10 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   bool nextPatchisLoaded = true;
   bool anyTimePerkActive = false;
   bool stoppageTimeActive = false;
+  bool playerTimeDoneCalled = false;
   final AudioPlayer _audioPlayer = AudioPlayer();
-  final SocketMethods _socketMethods = SocketMethods();
   // Methods
   Future<void> getQuestions() async {
-    Map room = Provider.of<LocaleProvider>(context, listen: false).room;
-    if (widget.isMulti && questions.isEmpty) {
-      setState(() {
-        questions = [...room['questions']];
-      });
-      initializeCount();
-      initializeHints();
-      return;
-    }
     if (questions.isEmpty) {
       setState(() {
         pageLoading = true;
@@ -153,7 +139,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
 
   void decreaseCount() {
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      if ((!stopCount && lives != 0) || widget.isMulti) {
+      if (!stopCount && lives != 0) {
         if (countDown > 0) {
           setState(() {
             countDown = countDown - 1;
@@ -247,9 +233,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   int setCount() {
-    if (widget.isMulti) {
-      defaultCountDown = 300;
-    } else if (showHints()) {
+    if (showHints()) {
       defaultCountDown = 45;
     } else if (stoppageTimeActive) {
       defaultCountDown = 10;
@@ -286,9 +270,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     }
     setState(() {
       currentQuestion = currentQuestion + 1;
-      if (!widget.isMulti) {
-        countDown = setCount();
-      }
+      countDown = setCount();
     });
     if (questions[currentQuestion]['hints'] != null &&
         questions[currentQuestion]['hints'].length > 0) {
@@ -327,28 +309,11 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     _audioPlayer.play(AssetSource('audio/buzzer.mp3'));
   }
 
-  void calculateMultiPoints() {
-    Map room = Provider.of<LocaleProvider>(context, listen: false).room;
-    String userId =
-        Provider.of<LocaleProvider>(context, listen: false).user['_id'];
-    for (var player in room['players']) {
-      if (player['userId']['_id'].toString() == userId) {
-        player = player['points'] = points;
-      }
-    }
-    _socketMethods.sendPoints(context, room);
-  }
-
   void rightAnswer() {
     playCorrectSound();
     rightAnswerPoints();
     getToNextQuestion();
-    if (!widget.isMulti) {
-      getNextPatchOfQuestions();
-    }
-    if (widget.isMulti) {
-      calculateMultiPoints();
-    }
+    getNextPatchOfQuestions();
   }
 
   void wrongAnswer(index) {
@@ -389,14 +354,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       });
       return saveGame(false);
     }
-    setState(() {
-      questions = questions;
-    });
     if (activateVar) {
       activateVar = false;
-    }
-    if (widget.isMulti) {
-      calculateMultiPoints();
     }
   }
 
@@ -423,12 +382,10 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       return rightAnswer();
     }
     wrongAnswer(index);
-    if (!widget.isMulti) {
-      if ((points / numberOfPointsToCoin).floor() != coins) {
-        setState(() {
-          coins = (points / numberOfPointsToCoin).floor();
-        });
-      }
+    if ((points / numberOfPointsToCoin).floor() != coins) {
+      setState(() {
+        coins = (points / numberOfPointsToCoin).floor();
+      });
     }
   }
 
@@ -471,6 +428,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
+                settings: const RouteSettings(name: '/events'),
                 builder: (context) => EventDetails(
                   eventId: widget.eventId,
                 ),
@@ -723,24 +681,15 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
-    Map room = Provider.of<LocaleProvider>(context, listen: false).room;
-    if (widget.practice || widget.isMulti) {
-      setState(() {
-        lives = 10000000000;
-      });
-    }
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
-        if (!widget.practice) {
-          saveGame(true);
-        } else {
-          Navigator.pushReplacementNamed(context, '/rankings');
-        }
+        saveGame(true);
       },
       child: PagePlainContainer(
           body: ImageBackgroundPlain(
@@ -752,7 +701,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
             : pageLoading ||
                     (questions.isNotEmpty && questions[currentQuestion] == null)
                 ? const PrimaryLoading()
-                : lives == 0 && !widget.isMulti
+                : lives == 0
                     ? GameOver(playAgain: playAgain, exitGame: exitGame)
                     : Stack(
                         children: [
@@ -760,39 +709,30 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                             bottom: 10,
                             right: 10,
                             child: SaveExitButton(
-                              buttonText: (widget.practice)
-                                  ? AppLocalizations.of(context)!.exitGame
-                                  : AppLocalizations.of(context)!.saveAndClose,
+                              buttonText:
+                                  AppLocalizations.of(context)!.saveAndClose,
                               radius: 100,
-                              action: (widget.practice)
-                                  ? () => {
-                                        Navigator.pushReplacementNamed(
-                                            context, '/')
-                                      }
-                                  : () => saveGame(true),
+                              action: () => saveGame(true),
                               letterSpacing: 0,
                               fontSize: 13,
                               icon: Icons.save_alt,
                               loading: saveLoading,
                             ),
                           ),
-                          widget.isMulti
-                              ? const TwoPlayersStats()
-                              : Stats(
-                                  usedPerks: usedPerks,
-                                  user: user,
-                                  points: points,
-                                  coins: coins,
-                                  lives: lives,
-                                  stopTime: stopTimeMethod,
-                                  penalty: penaltyMethod,
-                                  varMethod: varMethod,
-                                  stoppageTime: stoppageTimeMethod,
-                                  pointsMultiplicationMethod:
-                                      multiplyPointsMethod,
-                                  skipQuestion: skipQuestionMethod,
-                                  locale: locale,
-                                ),
+                          Stats(
+                            usedPerks: usedPerks,
+                            user: user,
+                            points: points,
+                            coins: coins,
+                            lives: lives,
+                            stopTime: stopTimeMethod,
+                            penalty: penaltyMethod,
+                            varMethod: varMethod,
+                            stoppageTime: stoppageTimeMethod,
+                            pointsMultiplicationMethod: multiplyPointsMethod,
+                            skipQuestion: skipQuestionMethod,
+                            locale: locale,
+                          ),
                           FadeTransitionContainer(
                             body: Container(
                               margin: EdgeInsets.only(
@@ -870,7 +810,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                               ),
                             ),
                           ),
-                          showTut && !widget.isMulti
+                          showTut
                               ? PerksIllustrations(
                                   action: finishTutorialAction,
                                   user: Provider.of<LocaleProvider>(context,

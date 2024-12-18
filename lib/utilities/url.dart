@@ -1,7 +1,8 @@
+import 'package:in_zone_app/utilities/base_url.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Url {
-  final String url = 'https://football-challenge-backend.onrender.com/api/';
+  final String url = '${BaseUrl().baseUrl}/api/';
 
   getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

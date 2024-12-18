@@ -19,6 +19,7 @@ class _SingleEventState extends State<SingleEvent> {
       Navigator.push(
         context,
         MaterialPageRoute(
+          settings: const RouteSettings(name: '/events'),
           builder: (context) => EventDetails(
             eventId: widget.event['_id'],
           ),

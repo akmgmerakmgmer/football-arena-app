@@ -106,6 +106,8 @@ class Challenge extends StatelessWidget {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
+                                  settings:
+                                      const RouteSettings(name: '/questions'),
                                   builder: (context) => Questions(
                                     mode: challenge['_id'],
                                     name: challenge['nameEn'],

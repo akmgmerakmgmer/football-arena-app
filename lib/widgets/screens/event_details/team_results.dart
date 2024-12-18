@@ -51,6 +51,7 @@ class TeamResults extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
+                  settings: const RouteSettings(name: '/questions'),
                   builder: (context) => Questions(
                     eventId: event['_id'],
                     userId: Provider.of<LocaleProvider>(context, listen: false)

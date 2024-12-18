@@ -77,6 +77,7 @@ class _SingleThemeState extends State<SingleTheme> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
+                        settings: const RouteSettings(name: '/questions'),
                         builder: (context) => Questions(
                           themePreview: widget.theme['image'],
                         ),

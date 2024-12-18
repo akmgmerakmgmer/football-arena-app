@@ -16,8 +16,8 @@ class _TwoPlayersStatsState extends State<TwoPlayersStats> {
 
   @override
   void initState() {
-    super.initState();
     _socketMethods.sendPointsListener(context);
+    super.initState();
   }
 
   @override

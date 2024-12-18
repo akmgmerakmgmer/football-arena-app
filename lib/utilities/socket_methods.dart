@@ -11,29 +11,64 @@ class SocketMethods {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     if (user.isNotEmpty) {
       _socketClient?.emit('joinRoom', {'userId': user['_id']});
+    } else {
+      Navigator.pushNamed(context, '/login');
     }
   }
 
-  void sendPoints(BuildContext context, room) {
-    _socketClient?.emit('sendPoints', room);
+  void leaveRoom(BuildContext context, room) {
+    _socketClient?.emit('leaveRoom', room);
+  }
+
+  void sendPoints(BuildContext context, data) {
+    _socketClient?.emit('sendPoints', data);
+  }
+
+  void playerTimeDone(BuildContext context, data) {
+    _socketClient?.emit('timeDone', data);
   }
 
   // Listeners
   void joinRoomSuccesListener(BuildContext context) {
-    _socketClient?.on(
-        'joinRoomSuccess',
-        (room) => {
-              Provider.of<LocaleProvider>(context, listen: false).setRoom(room),
-              Navigator.pushReplacementNamed(context, '/multi-screen')
-            });
+    _socketClient?.on('joinRoomSuccess', (room) {
+      Provider.of<LocaleProvider>(context, listen: false).setRoom(room);
+      Navigator.pushNamed(context, '/multi-screen');
+    });
   }
 
-  // Listeners
   void sendPointsListener(BuildContext context) {
-    _socketClient?.on(
-        'sendPointsListener',
-        (room) => {
-              Provider.of<LocaleProvider>(context, listen: false).setRoom(room),
-            });
+    _socketClient?.on('sendPointsListener', (data) {
+      Map room = Provider.of<LocaleProvider>(context, listen: false).room;
+      for (var player in room['players']) {
+        if (player['userId']['_id'] == data['userId']) {
+          player["points"] = data['points'];
+        }
+      }
+      Provider.of<LocaleProvider>(context, listen: false).setRoom(room);
+    });
+  }
+
+  void navigateToGameListener(BuildContext context, callback) {
+    _socketClient?.on('navigateToGameListener', (room) {
+      callback();
+    });
+  }
+
+  void timeDoneListener(BuildContext context) {
+    _socketClient?.on('timeDoneListener', (data) {
+      Map room = Provider.of<LocaleProvider>(context, listen: false).room;
+      for (var player in room['players']) {
+        if (player['userId']['_id'] == data['userId']) {
+          player["timeDone"] = true;
+        }
+      }
+      Provider.of<LocaleProvider>(context, listen: false).setRoom(room);
+    });
+  }
+
+  void leaveRoomListener(BuildContext context, callback) {
+    _socketClient?.once('leaveRoomListener', (roomPlayers) {
+      callback(roomPlayers);
+    });
   }
 }

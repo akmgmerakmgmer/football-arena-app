@@ -49,6 +49,7 @@ class SingleMode extends StatelessWidget {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
+            settings: const RouteSettings(name: '/questions'),
             builder: (context) => Questions(
               questionMode: singleMode['mode'],
               price: 100,
@@ -70,6 +71,7 @@ class SingleMode extends StatelessWidget {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
+          settings: const RouteSettings(name: '/questions'),
           builder: (context) => Questions(
             questionMode: singleMode['mode'],
             userId:
