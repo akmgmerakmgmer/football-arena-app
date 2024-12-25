@@ -28,6 +28,7 @@ class SingleAvatarLoadingCard extends StatelessWidget {
             width: width,
             radius: 15,
             scaleEnd: 1.02,
+            bgColor: Theme.of(context).primaryColorDark,
           ),
           Positioned(
               bottom: 15, child: LoadingCard(height: 50, width: buttonWidth,bgColor: contextColor,scaleEnd: 1.02,))

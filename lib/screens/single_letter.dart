@@ -21,6 +21,7 @@ class SingleLetter extends StatelessWidget {
           onTap: () => action(letter),
           child: isChosen
               ? BlurBackgroundContainer(
+                darkenBackground: true,
                   border: 6,
                   body: TextWidget(
                     title: letter['letter'],

@@ -743,8 +743,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                                   children: [
                                     TextWidget(
                                       title: countDown.toString(),
-                                      fontSize: 24,
+                                      fontSize: 26,
                                       fontWeight: FontWeight.bold,
+                                      alwaysEnglish: true,
                                     ),
                                     const SizedBox(
                                       height: 4,

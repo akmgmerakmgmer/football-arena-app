@@ -3,11 +3,17 @@ import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class AvatarPrize extends StatelessWidget {
+class ImagePrize extends StatelessWidget {
   final String image;
   final bool showExclusiveText;
-  const AvatarPrize(
-      {super.key, required this.image, required this.showExclusiveText});
+  final String prizeType;
+  final bool topMargin;
+  const ImagePrize(
+      {super.key,
+      required this.image,
+      required this.showExclusiveText,
+      required this.prizeType,
+      this.topMargin = false});
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +21,14 @@ class AvatarPrize extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(
+          height: topMargin ? 16 : 0,
+        ),
         showExclusiveText
             ? TextWidget(
-                title: AppLocalizations.of(context)!.exclusiveAvatar,
+                title: prizeType == 'avatar'
+                    ? AppLocalizations.of(context)!.exclusiveAvatar
+                    : AppLocalizations.of(context)!.exclusiveTheme,
                 color: Colors.white70,
                 fontSize: 13,
               )

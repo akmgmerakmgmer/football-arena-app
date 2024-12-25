@@ -1,42 +1,52 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
+import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
+import 'package:in_zone_app/widgets/containers/username_text.dart';
+import 'package:in_zone_app/widgets/screens/questions/player_points.dart';
 import 'package:in_zone_app/widgets/screens/questions/user_image.dart';
 
 class MultiStats extends StatelessWidget {
   final String image;
   final String points;
-  const MultiStats({super.key, required this.image, required this.points});
+  final bool isMainUser;
+  final String username;
+  const MultiStats(
+      {super.key,
+      required this.image,
+      required this.points,
+      required this.isMainUser,
+      required this.username});
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Transform.translate(
-          offset: const Offset(50, 0),
-          child: Container(
-            width: 75,
-            padding: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(100),
-                    bottomRight: Radius.circular(100))),
-            child: TextWidget(
-              title: points,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              alwaysEnglish: true,
-              number: true,
-              color: Colors.black,
-              textAlign: TextAlign.end,
-            ),
-          ),
-        ),
-        UserImage(image: image),
-      ],
+    return SizedBox(
+      width: MediaQuery.of(context).size.width - 20,
+      child: BlurBackgroundContainer(
+          symmetricPadding:
+              const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          border: 10,
+          isSymmetricPadding: true,
+          body: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  UserImage(
+                    image: image,
+                    borderColor: Colors.transparent,
+                    imageSize: 60,
+                  ),
+                  const SizedBox(
+                    width: 4,
+                  ),
+                  UsernameText(
+                    title: username,
+                    fontSize: 18,
+                  ),
+                ],
+              ),
+              PlayerPoints(points: points) 
+            ],
+          )),
     );
   }
 }

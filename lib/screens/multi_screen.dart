@@ -4,7 +4,6 @@ import 'package:in_zone_app/screens/multi-questions.dart';
 import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
 import 'package:in_zone_app/widgets/containers/image_background_plain.dart';
-import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/waiting_for_other_players.dart';
 import 'package:in_zone_app/widgets/screens/questions/player_bar.dart';
 import 'package:provider/provider.dart';
@@ -22,19 +21,22 @@ class _MultiScreenState extends State<MultiScreen> {
   @override
   void initState() {
     super.initState();
-    _socketMethods.navigateToGameListener(context, () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
+    _socketMethods.navigateToGameListener(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
             settings: const RouteSettings(name: '/multi-questions'),
-            builder: (context) => const MultiQuestions()),
-      );
+            builder: (context) => const MultiQuestions(),
+          ),
+        );
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    Map room = Provider.of<LocaleProvider>(context, listen: true).room;
+    Map room = Provider.of<LocaleProvider>(context, listen: false).room;
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
 
     return ImageBackgroundPlain(
@@ -69,7 +71,7 @@ class _MultiScreenState extends State<MultiScreen> {
                                       room['numberOfPlayers']
                               ? Image.asset(
                                   'assets/images/vs.png',
-                                  width: 20,
+                                  width: 50,
                                   fit: BoxFit.cover,
                                 )
                               : Container(),

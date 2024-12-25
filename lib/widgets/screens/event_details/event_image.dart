@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/utilities/media_query_height.dart';
 import 'package:in_zone_app/widgets/loadings/pulse_animation.dart';
 import 'package:in_zone_app/widgets/screens/home/event_data_background.dart';
 import 'package:in_zone_app/widgets/screens/home/shiny_icon.dart';
 
 class EventImage extends StatelessWidget {
+  final int numberOfImages;
   final Map event;
   final String locale;
   final bool showIcon;
@@ -12,17 +14,18 @@ class EventImage extends StatelessWidget {
       {super.key,
       required this.event,
       required this.locale,
-      this.showIcon = false});
+      this.showIcon = false,
+      this.numberOfImages = 1});
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(10)),
       child: Container(
-          height: 200,
-          width: showIcon
-              ? MediaQuery.of(context).size.width - 30
-              : MediaQuery.of(context).size.width,
+          height: MediaQueryHeight().largeImageHeight(context),
+          width: numberOfImages == 1
+              ? MediaQuery.of(context).size.width - 16
+              : MediaQuery.of(context).size.width - 30,
           decoration: BoxDecoration(
               image: DecorationImage(
                   image: NetworkImage(event['image']), fit: BoxFit.cover)),

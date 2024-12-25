@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/widgets/containers/username_text.dart';
 import 'package:provider/provider.dart';
 
 class Input extends StatefulWidget {
@@ -106,21 +107,9 @@ class _InputState extends State<Input> {
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(100)),
         ),
-        label: Text(
-          widget.label,
-          style: TextStyle(
-            fontSize: 14,
-            fontFamily:
-                Provider.of<LocaleProvider>(context, listen: false).locale ==
-                        'ar'
-                    ? 'NotoKufiArabic'
-                    : 'Oswald',
-            letterSpacing:
-                Provider.of<LocaleProvider>(context, listen: false).locale ==
-                        'ar'
-                    ? 0
-                    : 0.2,
-          ),
+        label: UsernameText(
+          title: widget.label,
+          fontSize: 14,
         ),
         labelStyle: const TextStyle(color: Colors.white),
         fillColor: Colors.white,

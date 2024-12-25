@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:in_zone_app/utilities/neon_box_shadow.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 
 class EventDataBackground extends StatelessWidget {
@@ -16,26 +17,7 @@ class EventDataBackground extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).primaryColor,
-              spreadRadius: 0,
-              blurRadius: 5,
-              offset: const Offset(0, 0),
-            ),
-            BoxShadow(
-              color: Theme.of(context).primaryColor,
-              spreadRadius: 0,
-              blurRadius: 5,
-              offset: const Offset(0, 0),
-            ),
-            BoxShadow(
-              color: Theme.of(context).primaryColor,
-              spreadRadius: 0,
-              blurRadius: 5,
-              offset: const Offset(0, 0),
-            ),
-          ],
+          boxShadow:NeonBoxShadow().boxShadowNeon(context),
           borderRadius: bottom
               ? const BorderRadius.only(topLeft: Radius.circular(10))
               : locale == 'ar'

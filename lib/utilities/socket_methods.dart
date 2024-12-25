@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/socket.dart';
-import 'package:provider/provider.dart';
 
 class SocketMethods {
   final _socketClient = SocketClient.instance?.socket;
 
   // Emitters
-  void joinRoom(BuildContext context) {
-    Map user = Provider.of<LocaleProvider>(context, listen: false).user;
+  void joinRoom(BuildContext context, LocaleProvider localeProvider) {
+    Map user = localeProvider.user;
     if (user.isNotEmpty) {
       _socketClient?.emit('joinRoom', {'userId': user['_id']});
     } else {
@@ -16,59 +15,70 @@ class SocketMethods {
     }
   }
 
-  void leaveRoom(BuildContext context, room) {
+  void leaveRoom(room) {
     _socketClient?.emit('leaveRoom', room);
   }
 
-  void sendPoints(BuildContext context, data) {
+  void sendPoints(data) {
     _socketClient?.emit('sendPoints', data);
   }
 
-  void playerTimeDone(BuildContext context, data) {
+  void playerTimeDone(data) {
     _socketClient?.emit('timeDone', data);
   }
 
   // Listeners
-  void joinRoomSuccesListener(BuildContext context) {
+  void joinRoomSuccesListener(
+      BuildContext context, LocaleProvider localeProvider) {
     _socketClient?.on('joinRoomSuccess', (room) {
-      Provider.of<LocaleProvider>(context, listen: false).setRoom(room);
+      // Access and modify the room data
+      String userId = localeProvider.user['_id'];
+
+      // Find and rearrange the current user's data
+      Map myUser = room['players']
+          .firstWhere((player) => player['userId']['_id'].toString() == userId);
+      room['players'].remove(myUser);
+      room['players'].insert(0, myUser);
+      localeProvider.setRoom(room);
       Navigator.pushNamed(context, '/multi-screen');
     });
   }
 
-  void sendPointsListener(BuildContext context) {
+  void sendPointsListener(LocaleProvider localeProvider) {
     _socketClient?.on('sendPointsListener', (data) {
-      Map room = Provider.of<LocaleProvider>(context, listen: false).room;
+      Map room = localeProvider.room;
       for (var player in room['players']) {
         if (player['userId']['_id'] == data['userId']) {
           player["points"] = data['points'];
         }
       }
-      Provider.of<LocaleProvider>(context, listen: false).setRoom(room);
+      localeProvider.setRoom(room);
     });
   }
 
-  void navigateToGameListener(BuildContext context, callback) {
-    _socketClient?.on('navigateToGameListener', (room) {
+  void navigateToGameListener(callback) {
+    _socketClient?.once('navigateToGameListener', (room) {
       callback();
     });
   }
 
-  void timeDoneListener(BuildContext context) {
+  void timeDoneListener(LocaleProvider localeProvider, callback) {
     _socketClient?.on('timeDoneListener', (data) {
-      Map room = Provider.of<LocaleProvider>(context, listen: false).room;
+      Map room = localeProvider.room;
       for (var player in room['players']) {
         if (player['userId']['_id'] == data['userId']) {
           player["timeDone"] = true;
         }
       }
-      Provider.of<LocaleProvider>(context, listen: false).setRoom(room);
+      localeProvider.setRoom(room);
+      callback(room);
     });
   }
 
-  void leaveRoomListener(BuildContext context, callback) {
-    _socketClient?.once('leaveRoomListener', (roomPlayers) {
-      callback(roomPlayers);
+  void leaveRoomListener(LocaleProvider localeProvider, callback) {
+    _socketClient?.once('leaveRoomListener', (data) {
+      localeProvider.setRoom(data['fullRoom']);
+      callback(data['roomPlayers'], data['fullRoom']);
     });
   }
 }

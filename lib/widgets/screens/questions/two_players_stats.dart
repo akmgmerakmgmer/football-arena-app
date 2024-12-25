@@ -5,7 +5,30 @@ import 'package:in_zone_app/widgets/screens/questions/multi_stats.dart';
 import 'package:provider/provider.dart';
 
 class TwoPlayersStats extends StatefulWidget {
-  const TwoPlayersStats({super.key});
+  final Map user;
+  final int points;
+  final Function stopTime;
+  final Function penalty;
+  final Function varMethod;
+  final Function stoppageTime;
+  final Function pointsMultiplicationMethod;
+  final Function skipQuestion;
+  final List usedPerks;
+  final String locale;
+  final LocaleProvider localeProvider;
+  const TwoPlayersStats(
+      {super.key,
+      required this.user,
+      required this.points,
+      required this.stopTime,
+      required this.penalty,
+      required this.varMethod,
+      required this.stoppageTime,
+      required this.pointsMultiplicationMethod,
+      required this.skipQuestion,
+      required this.usedPerks,
+      required this.locale,
+      required this.localeProvider});
 
   @override
   State<TwoPlayersStats> createState() => _TwoPlayersStatsState();
@@ -13,16 +36,47 @@ class TwoPlayersStats extends StatefulWidget {
 
 class _TwoPlayersStatsState extends State<TwoPlayersStats> {
   final SocketMethods _socketMethods = SocketMethods();
+  void action(perk) {
+    bool isPerkUsed = widget.usedPerks
+        .where((item) => item == perk['id']['_id'])
+        .toList()
+        .isNotEmpty;
+    if (perk['quantity'] > 0 && !isPerkUsed) {
+      switch (perk['id']['title']['en']) {
+        case '+90':
+          widget.stoppageTime(perk['id']['_id']);
+        case 'Penalty':
+          widget.penalty(perk['id']['_id']);
+        case 'VAR':
+          widget.varMethod(perk['id']['_id']);
+        case 'Stop Time':
+          widget.stopTime(perk['id']['_id']);
+        case 'Double Points':
+          widget.pointsMultiplicationMethod(perk['id']['_id'], 2, 60);
+        case 'Hero Personality':
+          widget.pointsMultiplicationMethod(perk['id']['_id'], 3, 40);
+        case 'Skip Question':
+          widget.skipQuestion(perk['id']['_id']);
+        default:
+          () => {};
+      }
+    }
+  }
 
   @override
   void initState() {
-    _socketMethods.sendPointsListener(context);
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _socketMethods.sendPointsListener(widget.localeProvider);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    Map room = Provider.of<LocaleProvider>(context, listen: true).room;
+    Map room = widget.localeProvider.room;
+    String userId = widget.localeProvider.user['_id'];
     Map player1 = room['players'][0];
     Map player2 = room['players'][1];
     return Stack(
@@ -31,15 +85,25 @@ class _TwoPlayersStatsState extends State<TwoPlayersStats> {
           left: 10,
           top: 10,
           child: MultiStats(
-              image: player1['userId']['selectedAvatar']['image'],
-              points: player1['points'].toString()),
+            image: player1['userId']['selectedAvatar']['image'],
+            points: player1['userId']['_id'] == userId
+                ? widget.points.toString()
+                : player1['points'].toString(),
+            isMainUser: player1['userId']['_id'] == userId,
+            username: player1['userId']['username'],
+          ),
         ),
         Positioned(
           left: 10,
           bottom: 10,
           child: MultiStats(
-              image: player2['userId']['selectedAvatar']['image'],
-              points: player2['points'].toString()),
+            image: player2['userId']['selectedAvatar']['image'],
+            points: player2['userId']['_id'] == userId
+                ? widget.points.toString()
+                : player2['points'].toString(),
+            isMainUser: player2['userId']['_id'] == userId,
+            username: player2['userId']['username'],
+          ),
         ),
       ],
     );

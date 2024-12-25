@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:in_zone_app/utilities/neon_box_shadow.dart';
 
 class PrimaryColorBackground extends StatelessWidget {
   final Widget widget;
@@ -13,26 +14,7 @@ class PrimaryColorBackground extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(6)),
           color: Theme.of(context).primaryColor,
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).primaryColor,
-              spreadRadius: 0,
-              blurRadius: 5,
-              offset: const Offset(0, 0),
-            ),
-            BoxShadow(
-              color: Theme.of(context).primaryColor,
-              spreadRadius: 0,
-              blurRadius: 5,
-              offset: const Offset(0, 0),
-            ),
-            BoxShadow(
-              color: Theme.of(context).primaryColor,
-              spreadRadius: 0,
-              blurRadius: 5,
-              offset: const Offset(0, 0),
-            ),
-          ],
+          boxShadow: NeonBoxShadow().boxShadowNeon(context)
         ),
         child: widget);
   }

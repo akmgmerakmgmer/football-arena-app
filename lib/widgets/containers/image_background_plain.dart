@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ImageBackgroundPlain extends StatelessWidget {
@@ -17,7 +18,7 @@ class ImageBackgroundPlain extends StatelessWidget {
           decoration: BoxDecoration(
               color: Theme.of(context).splashColor,
               image: DecorationImage(
-                  image: NetworkImage(image), fit: BoxFit.cover)),
+                  image: CachedNetworkImageProvider(image), fit: BoxFit.cover)),
           child: body),
     );
   }

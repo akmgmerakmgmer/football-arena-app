@@ -5,8 +5,9 @@ import 'package:in_zone_app/widgets/screens/event_details/event_image.dart';
 import 'package:provider/provider.dart';
 
 class SingleEvent extends StatefulWidget {
+  final int numberOfImages;
   final Map event;
-  const SingleEvent({super.key, required this.event});
+  const SingleEvent({super.key, required this.event, this.numberOfImages = 1});
 
   @override
   State<SingleEvent> createState() => _SingleEventState();
@@ -41,6 +42,7 @@ class _SingleEventState extends State<SingleEvent> {
         children: [
           EventImage(
             event: widget.event,
+            numberOfImages: widget.numberOfImages,
             locale: locale,
             showIcon: true,
           ),

@@ -178,7 +178,10 @@ class Stats extends StatelessWidget {
         Positioned(
           left: 10,
           top: 10,
-          child: UserImage(image: user['selectedAvatar']['image']),
+          child: UserImage(
+            image: user['selectedAvatar']['image'],
+            borderColor: Theme.of(context).primaryColor,
+          ),
         ),
       ],
     );

@@ -38,12 +38,13 @@ class _QuestionsState extends State<MultiQuestions>
   List questions = [];
   int currentPage = 1;
   int currentQuestion = 0;
+  String questionMode = 'multipleChoices';
   int points = 0;
   List chosenPlayers = [];
   List displayChosenPlayers = [];
   List hints = [];
-  int defaultCountDown = 300;
-  int countDown = 300;
+  int defaultCountDown = 180;
+  int countDown = 180;
   int pointValue = 1;
   int pointDefaultValue = 0;
   int multiplyPoints = 1;
@@ -62,29 +63,40 @@ class _QuestionsState extends State<MultiQuestions>
   final AudioPlayer _audioPlayer = AudioPlayer();
   List roomPlayers = [];
   final SocketMethods _socketMethods = SocketMethods();
+  bool questionsFinished = false;
+  bool youWonState = false;
+  bool youDrewState = false;
+  bool allPlayersTimeDone = false;
+  bool oneUserLeft = false;
+
   // Methods
   Future<void> getQuestions() async {
-    Map room = Provider.of<LocaleProvider>(context, listen: false).room;
-    setState(() {
-      questions = [...room['questions']];
-    });
-    initializeCount();
-    initializeHints();
+    if (mounted) {
+      Map room = Provider.of<LocaleProvider>(context, listen: false).room;
+      setState(() {
+        questions = [...room['questions']];
+      });
+      getQuestionMode();
+      initializeCount();
+      initializeHints();
+    }
   }
 
   void initializeCount() {
-    if (!countStarted) {
-      setState(() {
-        countDown = setCount();
-      });
-      decreaseCount();
-      decreaseAdCount();
-      countStarted = true;
+    if (mounted) {
+      if (!countStarted) {
+        setState(() {
+          countDown = setCount();
+        });
+        decreaseCount();
+        decreaseAdCount();
+        countStarted = true;
+      }
     }
   }
 
   void initializeHints() {
-    if (currentQuestion == 0 && hints.isEmpty && showHints()) {
+    if (currentQuestion == 0 && hints.isEmpty && showHints() && mounted) {
       setState(() {
         hints = [questions[currentQuestion]['hints'][0]];
       });
@@ -92,58 +104,50 @@ class _QuestionsState extends State<MultiQuestions>
   }
 
   void decreaseCount() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      if (!stopCount) {
-        if (countDown > 0) {
-          setState(() {
-            countDown = countDown - 1;
-          });
-        } else {
-          playerTimeDone();
+    if (mounted) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+        if (!stopCount) {
+          if (countDown > 0) {
+            setState(() {
+              countDown = countDown - 1;
+            });
+          } else {
+            playerTimeDone();
+          }
         }
-      }
-    });
-  }
-
-  void decreaseAdCount() {
-    Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      if (!stopAdCount) {
-        if (currentAdCountDown > 0) {
-          setState(() {
-            currentAdCountDown -= 1;
-          });
-        }
-      }
-    });
-  }
-
-  String getQuestionMode() {
-    if (questions[currentQuestion]['questionMode'] == null) {
-      return 'multipleChoices';
-    } else {
-      return questions[currentQuestion]['questionMode'];
+      });
     }
   }
 
-  bool isMultipleChoices() {
-    return getQuestionMode() == 'multipleChoices';
+  void decreaseAdCount() {
+    if (mounted) {
+      Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+        if (!stopAdCount) {
+          if (currentAdCountDown > 0) {
+            setState(() {
+              currentAdCountDown -= 1;
+            });
+          }
+        }
+      });
+    }
   }
 
-  bool isTrueOrFalse() {
-    return getQuestionMode() == 'trueOrFalse';
-  }
-
-  bool isPlayerSearch() {
-    return getQuestionMode() == 'passwordChallenge' ||
-        getQuestionMode() == 'guessThePlayer';
-  }
-
-  bool isReversedWords() {
-    return getQuestionMode() == 'reversedWords';
+  void getQuestionMode() {
+    if (mounted) {
+      if (questions[currentQuestion]['questionMode'] == null) {
+        setState(() {
+          questionMode = 'multipleChoices';
+        });
+      } else {
+        setState(() {
+          questionMode = questions[currentQuestion]['questionMode'];
+        });
+      }
+    }
   }
 
   bool showHints() {
-    String questionMode = getQuestionMode();
     if (questionMode == 'guessThePlayer' ||
         questionMode == 'passwordChallenge') {
       return true;
@@ -151,65 +155,69 @@ class _QuestionsState extends State<MultiQuestions>
     return false;
   }
 
-  bool showImage() {
-    String questionMode = getQuestionMode();
-    if (questionMode == 'guessTheTeam') {
-      return true;
-    }
-    return false;
-  }
-
   int setCount() {
-    defaultCountDown = 300;
+    defaultCountDown = 180;
     return defaultCountDown;
   }
 
   void getToNextQuestion() {
-    if ((currentQuestion - 1) % 15 == 0 &&
-        currentQuestion != 0 &&
-        currentQuestion != 1 &&
-        advertisments.isNotEmpty) {
-      currentAdMethod();
-    }
-    if (getQuestionMode() == 'guessTheTeam') {
-      setState(() {
-        chosenPlayers = [];
-        displayChosenPlayers = [];
-      });
-    }
-    if (hints.isNotEmpty || showHints()) {
-      setState(() {
-        hints = [];
-      });
-    }
-    setState(() {
-      currentQuestion = currentQuestion + 1;
-    });
-    if (questions[currentQuestion]['hints'] != null &&
-        questions[currentQuestion]['hints'].length > 0) {
-      setState(() {
-        hints = [questions[currentQuestion]['hints'][0]];
-      });
+    if (mounted) {
+      if (currentQuestion == questions.length - 1) {
+        setState(() {
+          questionsFinished = true;
+        });
+        playerTimeDone();
+      } else {
+        if ((currentQuestion - 1) % 15 == 0 &&
+            currentQuestion != 0 &&
+            currentQuestion != 1 &&
+            advertisments.isNotEmpty) {
+          currentAdMethod();
+        }
+        if (questionMode == 'guessTheTeam') {
+          setState(() {
+            chosenPlayers = [];
+            displayChosenPlayers = [];
+          });
+        }
+        if (hints.isNotEmpty || showHints()) {
+          setState(() {
+            hints = [];
+          });
+        }
+        setState(() {
+          currentQuestion = currentQuestion + 1;
+        });
+        getQuestionMode();
+        if (questions[currentQuestion]['hints'] != null &&
+            questions[currentQuestion]['hints'].length > 0) {
+          setState(() {
+            hints = [questions[currentQuestion]['hints'][0]];
+          });
+        }
+      }
     }
   }
 
   void rightAnswerPoints() {
-    if (isReversedWords()) {
-      pointDefaultValue = 5;
-    } else if (showHints()) {
-      int hintsSubtract =
-          questions[currentQuestion]['hints'].length - hints.length + 1;
-      pointDefaultValue = hintsSubtract > 3 ? 15 : hintsSubtract * 5;
-    } else if (questions[currentQuestion]['difficulty'] == 'hard') {
-      pointDefaultValue = 3;
-    } else if (questions[currentQuestion]['difficulty'] == 'medium') {
-      pointDefaultValue = 2;
-    } else {
-      pointDefaultValue = 1;
+    if (mounted) {
+      if (questionMode == 'reversedWords') {
+        pointDefaultValue = 5;
+      } else if (showHints()) {
+        int hintsSubtract =
+            questions[currentQuestion]['hints'].length - hints.length + 1;
+        pointDefaultValue = hintsSubtract > 3 ? 15 : hintsSubtract * 5;
+      } else if (questions[currentQuestion]['difficulty'] == 'hard') {
+        pointDefaultValue = 3;
+      } else if (questions[currentQuestion]['difficulty'] == 'medium') {
+        pointDefaultValue = 2;
+      } else {
+        pointDefaultValue = 1;
+      }
+      setState(() {
+        points = points + (pointDefaultValue * pointValue * multiplyPoints);
+      });
     }
-    setState(() {
-      points = points + (pointDefaultValue * pointValue * multiplyPoints);
-    });
   }
 
   void playCorrectSound() async {
@@ -229,7 +237,7 @@ class _QuestionsState extends State<MultiQuestions>
       'roomId': room['_id'],
       'points': points
     };
-    _socketMethods.sendPoints(context, emittedData);
+    _socketMethods.sendPoints(emittedData);
   }
 
   void rightAnswer() {
@@ -240,39 +248,44 @@ class _QuestionsState extends State<MultiQuestions>
   }
 
   void wrongAnswer(index) {
-    if (isReversedWords()) {
+    if (questionMode == 'reversedWords') {
       return wrongAnswerActions();
     }
-    if (isPlayerSearch()) {
+    if (questionMode == 'passwordChallenge' ||
+        questionMode == 'guessThePlayer') {
       return wrongAnswerActions();
     }
-    if (isTrueOrFalse()) {
+    if (questionMode == 'trueOrFalse') {
       return wrongAnswerActions();
     }
     if (!questions[currentQuestion]['choices'][index]
             .containsKey('wrongAnswer') &&
-        isMultipleChoices()) {
+        questionMode == 'multipleChoices') {
       return wrongAnswerActions();
     }
   }
 
   void wrongAnswerActions() {
-    playWrongSound();
-    if (!isPlayerSearch() && !isReversedWords()) {
-      getToNextQuestion();
-    }
-    if (points != 0 && !activateVar) {
+    if (mounted) {
+      playWrongSound();
+      if (questionMode != 'reversedWords' &&
+          questionMode != 'passwordChallenge' &&
+          questionMode != 'guessThePlayer') {
+        getToNextQuestion();
+      }
+      if (points != 0 && !activateVar) {
+        setState(() {
+          points = points - 1;
+        });
+      }
       setState(() {
-        points = points - 1;
+        questions = questions;
       });
+      if (activateVar) {
+        activateVar = false;
+      }
+      calculateMultiPoints();
     }
-    setState(() {
-      questions = questions;
-    });
-    if (activateVar) {
-      activateVar = false;
-    }
-    calculateMultiPoints();
   }
 
   String generateSHA256Hash(String input) {
@@ -289,7 +302,7 @@ class _QuestionsState extends State<MultiQuestions>
 
   void choiceAction(answer, index) {
     String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
-    if (isReversedWords() &&
+    if (questionMode == 'reversedWords' &&
         generateSHA256Hash(answer) ==
             questions[currentQuestion]['answer'][locale].toLowerCase()) {
       return rightAnswer();
@@ -301,7 +314,7 @@ class _QuestionsState extends State<MultiQuestions>
   }
 
   int showPointsValue() {
-    if (isReversedWords()) {
+    if (questionMode == 'reversedWords') {
       return 5;
     } else if (showHints()) {
       int hintsSubtract =
@@ -316,7 +329,6 @@ class _QuestionsState extends State<MultiQuestions>
   }
 
   showPlayerSearch() {
-    String questionMode = getQuestionMode();
     if (questionMode == 'guessThePlayer' ||
         questionMode == 'guessTheTeam' ||
         questionMode == 'passwordChallenge') {
@@ -326,108 +338,114 @@ class _QuestionsState extends State<MultiQuestions>
   }
 
   void penaltyMethod(id) {
-    if (!showPlayerSearch() &&
-        questions[currentQuestion]['questionMode'] != 'trueOrFalse') {
-      int numberOfChoicesRemoved = 0;
-      setState(() {
-        usedPerks.add(id);
-      });
-      while (numberOfChoicesRemoved != 2) {
-        List indeces = [];
-        int randomIndex = (Random().nextDouble() *
-                questions[currentQuestion]['choices'].length)
-            .floor();
-        if (questions[currentQuestion]['choices'][randomIndex]['value'] !=
-                questions[currentQuestion]['answer'] &&
-            !indeces.contains(
-                questions[currentQuestion]['choices'][randomIndex]['value']) &&
-            !questions[currentQuestion]['choices'][randomIndex]
-                .containsKey('wrongAnswer')) {
-          questions[currentQuestion]['choices'][randomIndex]['wrongAnswer'] =
-              true;
-          indeces
-              .add(questions[currentQuestion]['choices'][randomIndex]['value']);
-          numberOfChoicesRemoved += 1;
+    if (mounted) {
+      if (!showPlayerSearch() &&
+          questions[currentQuestion]['questionMode'] != 'trueOrFalse') {
+        int numberOfChoicesRemoved = 0;
+        setState(() {
+          usedPerks.add(id);
+        });
+        while (numberOfChoicesRemoved != 2) {
+          List indeces = [];
+          int randomIndex = (Random().nextDouble() *
+                  questions[currentQuestion]['choices'].length)
+              .floor();
+          if (questions[currentQuestion]['choices'][randomIndex]['value'] !=
+                  questions[currentQuestion]['answer'] &&
+              !indeces.contains(questions[currentQuestion]['choices']
+                  [randomIndex]['value']) &&
+              !questions[currentQuestion]['choices'][randomIndex]
+                  .containsKey('wrongAnswer')) {
+            questions[currentQuestion]['choices'][randomIndex]['wrongAnswer'] =
+                true;
+            indeces.add(
+                questions[currentQuestion]['choices'][randomIndex]['value']);
+            numberOfChoicesRemoved += 1;
+          }
         }
+        setState(() {
+          questions = questions;
+        });
       }
-      setState(() {
-        questions = questions;
-      });
     }
   }
 
   void skipQuestionMethod(id) {
-    setState(() {
-      usedPerks.add(id);
-    });
-    getToNextQuestion();
-  }
-
-  void multiplyPointsMethod(id, multiplicationNumber, int time) {
-    setState(() {
-      usedPerks.add(id);
-    });
-    multiplyPoints = multiplicationNumber;
-    Timer.periodic(Duration(seconds: time), (Timer timer) {
-      multiplyPoints = 1;
-    });
-  }
-
-  void varMethod(id) {
-    setState(() {
-      usedPerks.add(id);
-    });
-    activateVar = true;
-  }
-
-  void stoppageTimeMethod(id) {
-    setState(() {
-      usedPerks.add(id);
-    });
-    anyTimePerkActive = true;
-    stoppageTimeActive = true;
-    multiplyPoints = 2;
-    Timer.periodic(const Duration(seconds: 30), (Timer timer) {
-      multiplyPoints = 1;
-      defaultCountDown = 20;
-      anyTimePerkActive = false;
-      stoppageTimeActive = false;
-    });
-  }
-
-  void stopTimeMethod(id) {
-    if (!anyTimePerkActive) {
+    if (mounted) {
       setState(() {
         usedPerks.add(id);
       });
-      stopCount = true;
-      anyTimePerkActive = true;
-      Timer.periodic(const Duration(seconds: 30), (Timer timer) {
-        stopCount = false;
-        anyTimePerkActive = false;
+      getToNextQuestion();
+    }
+  }
+
+  void multiplyPointsMethod(id, multiplicationNumber, int time) {
+    if (mounted) {
+      setState(() {
+        usedPerks.add(id);
+      });
+      multiplyPoints = multiplicationNumber;
+      Timer.periodic(Duration(seconds: time), (Timer timer) {
+        multiplyPoints = 1;
       });
     }
   }
 
-  getAdvertisments() {
-    FetchApi('advertisments?page=1', (res) {
+  void varMethod(id) {
+    if (mounted) {
       setState(() {
-        advertisments = res['advertisments'];
+        usedPerks.add(id);
       });
-    }).fetch(context);
+      activateVar = true;
+    }
+  }
+
+  void stoppageTimeMethod(id) {
+    if (mounted) {
+      setState(() {
+        usedPerks.add(id);
+      });
+      anyTimePerkActive = true;
+      stoppageTimeActive = true;
+      multiplyPoints = 2;
+      Timer.periodic(const Duration(seconds: 30), (Timer timer) {
+        multiplyPoints = 1;
+        defaultCountDown = 20;
+        anyTimePerkActive = false;
+        stoppageTimeActive = false;
+      });
+    }
+  }
+
+  void stopTimeMethod(id) {
+    if (mounted) {
+      if (!anyTimePerkActive) {
+        setState(() {
+          usedPerks.add(id);
+        });
+        stopCount = true;
+        anyTimePerkActive = true;
+        Timer.periodic(const Duration(seconds: 30), (Timer timer) {
+          stopCount = false;
+          anyTimePerkActive = false;
+        });
+      }
+    }
   }
 
   currentAdMethod() {
-    currentAd = currentAd + 1;
-    if (currentAd > advertisments.length - 1) {
-      currentAd = 0;
+    if (mounted) {
+      currentAd = currentAd + 1;
+      if (currentAd > advertisments.length - 1) {
+        currentAd = 0;
+      }
+      setState(() {
+        currentAdCountDown = 6;
+        showAd = true;
+        stopCount = true;
+        stopAdCount = false;
+      });
     }
-    setState(() {
-      currentAdCountDown = 6;
-      showAd = true;
-      stopCount = true;
-      stopAdCount = false;
-    });
   }
 
   void adClicked(id, link) {
@@ -435,9 +453,32 @@ class _QuestionsState extends State<MultiQuestions>
     ExternalUrl().launchNewUrl(link);
   }
 
-  void leaveRoomListenerMethod(players) {
-    roomPlayers = players;
-    youWon();
+  void timeDoneListenerMethod(room) {
+    if (mounted) {
+      bool allTimeDone = true;
+      for (var player in room['players']) {
+        if (!player['timeDone']) allTimeDone = false;
+      }
+      if (allTimeDone) {
+        youWon(room);
+        setState(() {
+          allPlayersTimeDone = allTimeDone;
+        });
+        return;
+      }
+    }
+  }
+
+  void leaveRoomListenerMethod(players, room) {
+    if (mounted) {
+      roomPlayers = players;
+      if (roomPlayers.length == 1) {
+        setState(() {
+          oneUserLeft = true;
+        });
+        youWon(room);
+      }
+    }
   }
 
   void initialFetch() async {
@@ -446,50 +487,91 @@ class _QuestionsState extends State<MultiQuestions>
         .toString();
     roomPlayers =
         Provider.of<LocaleProvider>(context, listen: false).room['players'];
-    _socketMethods.timeDoneListener(context);
-    _socketMethods.leaveRoomListener(context, leaveRoomListenerMethod);
-    await getAdvertisments();
+    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+
+    _socketMethods.timeDoneListener(localeProvider, timeDoneListenerMethod);
+    _socketMethods.leaveRoomListener(localeProvider, leaveRoomListenerMethod);
     getQuestions();
   }
 
   void playerTimeDone() {
-    if (countDown == 0 && !playerTimeDoneCalled) {
-      setState(() {
-        playerTimeDoneCalled = true;
-      });
-      Map room = Provider.of<LocaleProvider>(context, listen: false).room;
-      Map emittedData = {'userId': userId, 'roomId': room['_id']};
-      _socketMethods.playerTimeDone(context, emittedData);
-    }
-  }
-
-  bool youWon() {
-    if (roomPlayers.length == 1 &&
-        roomPlayers[0]['userId']['_id'].toString() == userId) {
-      return true;
-    }
-    Map room = Provider.of<LocaleProvider>(context, listen: false).room;
-    int maxPoints = 0;
-    for (var player in room['players']) {
-      if (player['points'] > maxPoints && player['userId']['_id'] != userId) {
-        maxPoints = player['points'];
+    if (mounted) {
+      if ((countDown == 0 && !playerTimeDoneCalled) || questionsFinished) {
+        setState(() {
+          playerTimeDoneCalled = true;
+          stopCount = true;
+        });
+        Map room = Provider.of<LocaleProvider>(context, listen: false).room;
+        Map emittedData = {'userId': userId, 'roomId': room['_id']};
+        _socketMethods.playerTimeDone(emittedData);
       }
     }
-    if (points > maxPoints) return true;
-    return false;
   }
 
-  bool allPlayersTimeDone() {
-    bool allTimeDone = true;
+  Future<void> gameDoneMethod(api, winnerId) async {
     Map room = Provider.of<LocaleProvider>(context, listen: false).room;
-    for (var player in room['players']) {
-      if (!player['timeDone'] && roomPlayers.length > 1) allTimeDone = false;
+    Map payload = {
+      'userId': userId,
+      'winnerId': winnerId,
+      'players': room['players'],
+      'roomId': room['_id']
+    };
+    PutApi('$api/$userId', payload, (res) {
+      Provider.of<LocaleProvider>(context, listen: false).setUser(res['user']);
+    }).put(context);
+  }
+
+  Future<void> winnerUpdate() async {
+    await gameDoneMethod('/multi-game-winner', userId);
+  }
+
+  Future<void> loserUpdate() async {
+    await gameDoneMethod('/multi-game-loser', '');
+  }
+
+  Future<void> drawUpdate() async {
+    await gameDoneMethod('/multi-game-draw', '');
+  }
+
+  void youWon(room) {
+    if (mounted) {
+      if (roomPlayers.length == 1 &&
+          roomPlayers[0]['userId']['_id'].toString() == userId) {
+        winnerUpdate();
+        setState(() {
+          youWonState = true;
+        });
+        return;
+      }
+      if (roomPlayers.length > 1) {
+        int maxPoints = 0;
+        for (var player in room['players']) {
+          if (player['points'] > maxPoints &&
+              player['userId']['_id'] != userId) {
+            maxPoints = player['points'];
+          }
+        }
+        if (points > maxPoints) {
+          winnerUpdate();
+          setState(() {
+            youWonState = true;
+          });
+          return;
+        }
+        if (points == maxPoints) {
+          setState(() {
+            youDrewState = true;
+          });
+          drawUpdate();
+          return;
+        }
+        loserUpdate();
+      }
     }
-    return allTimeDone;
   }
 
   skipAdMethod() {
-    if (currentAdCountDown == 0) {
+    if (currentAdCountDown == 0 && mounted) {
       setState(() {
         stopAdCount = true;
         showAd = false;
@@ -501,8 +583,10 @@ class _QuestionsState extends State<MultiQuestions>
   @override
   void initState() {
     super.initState();
-    initialFetch();
-    WidgetsBinding.instance.addObserver(this);
+    if (mounted) {
+      initialFetch();
+      WidgetsBinding.instance.addObserver(this);
+    }
   }
 
   @override
@@ -514,12 +598,14 @@ class _QuestionsState extends State<MultiQuestions>
   }
 
   void stopGame() {
-    setState(() {
-      stopCount = true;
-    });
-    Future.delayed(const Duration(seconds: 5), () {
-      getToNextQuestion();
-    });
+    if (mounted) {
+      setState(() {
+        stopCount = true;
+      });
+      Future.delayed(const Duration(seconds: 5), () {
+        getToNextQuestion();
+      });
+    }
   }
 
   @override
@@ -533,12 +619,14 @@ class _QuestionsState extends State<MultiQuestions>
   }
 
   void addHintAction() {
-    List questionHints = questions[currentQuestion]['hints'];
-    if (hints.length < questionHints.length) {
-      List updatedHints = [...hints, questionHints[hints.length]];
-      setState(() {
-        hints = updatedHints;
-      });
+    if (mounted) {
+      List questionHints = questions[currentQuestion]['hints'];
+      if (hints.length < questionHints.length) {
+        List updatedHints = [...hints, questionHints[hints.length]];
+        setState(() {
+          hints = updatedHints;
+        });
+      }
     }
   }
 
@@ -554,29 +642,36 @@ class _QuestionsState extends State<MultiQuestions>
     }
   }
 
-  bool isPlayerDone() {
-    Map room = Provider.of<LocaleProvider>(context, listen: false).room;
-    if (currentQuestion == room['questions'].length) {
-      return true;
-    }
-    return false;
-  }
-
   void leaveRoom() {
-    Navigator.pushReplacementNamed(context, '/');
-    Map room = Provider.of<LocaleProvider>(context, listen: false).room;
-    roomPlayers = room['players'];
-    roomPlayers = roomPlayers
-        .where((player) => player['userId']['_id'] != userId)
-        .toList();
-    _socketMethods.leaveRoom(
-        context, {'roomPlayers': roomPlayers, 'roomId': room['_id']});
+    if (!playerTimeDoneCalled && !youWonState && !youDrewState) {
+      Navigator.pushReplacementNamed(context, '/');
+      Map room = Provider.of<LocaleProvider>(context, listen: false).room;
+      for (var player in room['players']) {
+        if (player['userId']['_id'] != userId) {
+          player['isLeft'] = true;
+        }
+      }
+      roomPlayers = room['players'];
+      roomPlayers = roomPlayers
+          .where((player) => player['userId']['_id'] != userId)
+          .toList();
+      _socketMethods.leaveRoom({
+        'roomPlayers': roomPlayers,
+        'roomId': room['_id'],
+        'fullRoom': room
+      });
+      loserUpdate();
+    } else {
+      Navigator.pushReplacementNamed(context, '/');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
-    Map user = Provider.of<LocaleProvider>(context, listen: false).user;
+    LocaleProvider localeProvider =
+        Provider.of<LocaleProvider>(context, listen: false);
+    String locale = localeProvider.locale;
+    Map user = localeProvider.user;
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
@@ -585,23 +680,41 @@ class _QuestionsState extends State<MultiQuestions>
       child: PagePlainContainer(
           body: ImageBackgroundPlain(
         image: user['selectedTheme'],
-        body: allPlayersTimeDone()
-            ? youWon()
+        body: allPlayersTimeDone || oneUserLeft
+            ? youDrewState
                 ? Center(
                     child: TextWidget(
-                    title: 'YOU WON',
+                    title: 'YOU Drew',
                     fontSize: 50,
                   ))
-                : Center(
-                    child: TextWidget(
-                    title: 'YOU Lost',
-                    fontSize: 50,
-                  ))
-            : playerTimeDoneCalled || isPlayerDone()
+                : youWonState
+                    ? Center(
+                        child: TextWidget(
+                        title: 'YOU WON',
+                        fontSize: 50,
+                      ))
+                    : Center(
+                        child: TextWidget(
+                        title: 'YOU Lost',
+                        fontSize: 50,
+                      ))
+            : playerTimeDoneCalled || questionsFinished
                 ? const WaitingForOtherPlayers()
                 : Stack(
                     children: [
-                      const TwoPlayersStats(),
+                      TwoPlayersStats(
+                        usedPerks: usedPerks,
+                        user: user,
+                        points: points,
+                        stopTime: stopTimeMethod,
+                        penalty: penaltyMethod,
+                        varMethod: varMethod,
+                        stoppageTime: stoppageTimeMethod,
+                        pointsMultiplicationMethod: multiplyPointsMethod,
+                        skipQuestion: skipQuestionMethod,
+                        locale: locale,
+                        localeProvider: localeProvider,
+                      ),
                       FadeTransitionContainer(
                         body: Container(
                           margin:
@@ -612,8 +725,9 @@ class _QuestionsState extends State<MultiQuestions>
                               children: [
                                 TextWidget(
                                   title: countDown.toString(),
-                                  fontSize: 24,
+                                  fontSize: 26,
                                   fontWeight: FontWeight.bold,
+                                  alwaysEnglish: true,
                                 ),
                                 const SizedBox(
                                   height: 4,
@@ -638,7 +752,9 @@ class _QuestionsState extends State<MultiQuestions>
                                 ),
                                 PlayerSearch(
                                   locale: locale,
-                                  isPlayerSearch: isPlayerSearch(),
+                                  isPlayerSearch:
+                                      questionMode == 'guessThePlayer' ||
+                                          questionMode == 'passwordChallenge',
                                   questionHintsLength:
                                       questions[currentQuestion]['hints']
                                           .length,
@@ -651,18 +767,20 @@ class _QuestionsState extends State<MultiQuestions>
                                   locale: locale,
                                   choices: questions[currentQuestion]
                                       ['choices'],
-                                  isMultipleChoices: isMultipleChoices(),
+                                  isMultipleChoices:
+                                      questionMode == 'multipleChoices',
                                   action: choiceAction,
                                 ),
                                 TrueOrFalse(
                                   locale: locale,
                                   choices: questions[currentQuestion]
                                       ['choices'],
-                                  isTrueOrFalse: isTrueOrFalse(),
+                                  isTrueOrFalse: questionMode == 'trueOrFalse',
                                   action: choiceAction,
                                 ),
                                 ReversedWords(
-                                    isReversedWords: isReversedWords(),
+                                    isReversedWords:
+                                        questionMode == 'reversedWords',
                                     initiateAnswer: (answer) =>
                                         choiceAction(answer, 0),
                                     skipAction: skipAction,

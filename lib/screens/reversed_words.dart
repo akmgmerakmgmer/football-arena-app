@@ -79,7 +79,9 @@ class _ReversedWordsState extends State<ReversedWords> {
               ),
               words.isNotEmpty
                   ? BlurBackgroundContainer(
+                      darkenBackground: true,
                       padding: 8,
+                      border: 4,
                       body: TextWidget(
                         title: words.join(''),
                         fontSize: 18,

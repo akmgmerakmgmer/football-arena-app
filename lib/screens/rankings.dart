@@ -234,19 +234,13 @@ class _RankingsState extends State<Rankings> {
                                     .asMap()
                                     .entries
                                     .map((item) => SingleUser(
-                                        locale: locale,
-                                        currentFilter: searchTime,
-                                        image: item.value['selectedAvatar']
-                                            ['image'],
-                                        gamesPlayed: item.value['games_played'],
-                                        points: item.value['points'],
-                                        coins: item.value['coins'],
-                                        name: item.value['_id'] == userId
-                                            ? '${item.value['username']} (${AppLocalizations.of(context)!.you})'
-                                            : item.value['username'],
-                                        isSameUser: item.value['_id'] == userId,
-                                        rank: '${item.key + 1}',
-                                        fontSize: locale == 'ar' ? 17 : 19))
+                                          locale: locale,
+                                          currentFilter: searchTime,
+                                          isSameUser:
+                                              item.value['_id'] == userId,
+                                          rank: '${item.key + 1}',
+                                          item: item.value,
+                                        ))
                                     .toList(),
                               ),
                               rankedUsers.isNotEmpty &&
@@ -255,16 +249,9 @@ class _RankingsState extends State<Rankings> {
                                   ? SingleUser(
                                       locale: locale,
                                       currentFilter: searchTime,
-                                      image: user['selectedAvatar']['image'],
-                                      gamesPlayed: user['games_played'],
-                                      points: user['points'],
-                                      coins: user['coins'],
-                                      name: user['_id'] == userId
-                                          ? '${user['username']} (${AppLocalizations.of(context)!.you})'
-                                          : user['username'],
                                       isSameUser: user['_id'] == userId,
                                       rank: '$rank',
-                                      fontSize: locale == 'ar' ? 17 : 19,
+                                      item: user,
                                     )
                                   : Container()
                             ],

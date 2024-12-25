@@ -15,7 +15,9 @@ class AccountProfile extends StatelessWidget with ChangeNotifier {
 
   @override
   Widget build(BuildContext context) {
-    Map user = Provider.of<LocaleProvider>(context, listen: false).user;
+    final LocaleProvider localeProvider =
+        Provider.of<LocaleProvider>(context, listen: false);
+    Map user = localeProvider.user;
 
     return PageContainerWithFooter(
         background: Theme.of(context).splashColor,
@@ -40,8 +42,7 @@ class AccountProfile extends StatelessWidget with ChangeNotifier {
                     ProfileForm(
                         user: user,
                         setUser: (value) {
-                          Provider.of<LocaleProvider>(context, listen: false)
-                              .setUser(value);
+                          localeProvider.setUser(value);
                         }),
                     const SizedBox(
                       height: 15,
@@ -60,25 +61,14 @@ class AccountProfile extends StatelessWidget with ChangeNotifier {
                             child: Row(
                               children: user['avatars']
                                   .map<Widget>((avatar) => SingleUsersAvatars(
+                                        isTheme: false,
+                                        userId: user['_id'],
                                         isSelected: user['selectedAvatar']
                                                 ['image'] ==
                                             avatar['image'],
-                                        image: avatar['image'],
-                                        buttonText: user['selectedAvatar']
-                                                    ['image'] ==
-                                                avatar['image']
-                                            ? AppLocalizations.of(context)!
-                                                .selected
-                                            : AppLocalizations.of(context)!
-                                                .select,
-                                        api: 'users/${user['_id']}',
                                         body: {"selectedAvatar": avatar},
-                                        callback: (res) {
-                                          Provider.of<LocaleProvider>(context,
-                                                  listen: false)
-                                              .setUser(res);
-                                        },
-                                        errorCallback: () {},
+                                        localeProvider: localeProvider,
+                                        image: avatar['image'],
                                       ))
                                   .toList(),
                             ),
@@ -101,23 +91,13 @@ class AccountProfile extends StatelessWidget with ChangeNotifier {
                             child: Row(
                               children: user['themes']
                                   .map<Widget>((theme) => SingleUsersAvatars(
+                                        isTheme: true,
+                                        userId: user['_id'],
                                         isSelected:
                                             user['selectedTheme'] == theme,
-                                        image: theme,
-                                        buttonText:
-                                            user['selectedTheme'] == theme
-                                                ? AppLocalizations.of(context)!
-                                                    .selectedTheme
-                                                : AppLocalizations.of(context)!
-                                                    .selectTheme,
-                                        api: 'users/${user['_id']}',
                                         body: {"selectedTheme": theme},
-                                        callback: (res) {
-                                          Provider.of<LocaleProvider>(context,
-                                                  listen: false)
-                                              .setUser(res);
-                                        },
-                                        errorCallback: () {},
+                                        localeProvider: localeProvider,
+                                        image: theme,
                                       ))
                                   .toList(),
                             ),

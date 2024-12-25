@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:in_zone_app/utilities/neon_box_shadow.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 
 class TabsButton extends StatelessWidget {
@@ -26,26 +27,7 @@ class TabsButton extends StatelessWidget {
                 ? Theme.of(context).primaryColor
                 : Theme.of(context).primaryColorDark,
             boxShadow: selected
-                ? [
-                    BoxShadow(
-                      color: Theme.of(context).primaryColor,
-                      spreadRadius: 0,
-                      blurRadius: 5,
-                      offset: const Offset(0, 0),
-                    ),
-                    BoxShadow(
-                      color: Theme.of(context).primaryColor,
-                      spreadRadius: 0,
-                      blurRadius: 5,
-                      offset: const Offset(0, 0),
-                    ),
-                    BoxShadow(
-                      color: Theme.of(context).primaryColor,
-                      spreadRadius: 0,
-                      blurRadius: 5,
-                      offset: const Offset(0, 0),
-                    ),
-                  ]
+                ? NeonBoxShadow().boxShadowNeon(context)
                 : null,
             borderRadius: const BorderRadius.all(Radius.circular(10))),
         child:

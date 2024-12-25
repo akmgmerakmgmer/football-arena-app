@@ -17,6 +17,7 @@ class Events extends StatelessWidget {
           children: events
               .map((event) => SingleEvent(
                     event: event,
+                    numberOfImages: events.length,
                   ))
               .toList(),
         ),

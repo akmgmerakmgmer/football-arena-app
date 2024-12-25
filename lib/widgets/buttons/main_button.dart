@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:in_zone_app/utilities/neon_box_shadow.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
 
@@ -37,37 +38,15 @@ class MainButton extends StatelessWidget {
       child: Container(
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
-          color: disabled
-              ? Colors.white.withOpacity(0.1)
-              : Theme.of(context).primaryColor,
-          borderRadius: offersPage
-              ? BorderRadius.only(
-                  bottomLeft: Radius.circular(radius),
-                  bottomRight: Radius.circular(radius))
-              : BorderRadius.all(Radius.circular(radius)),
-          boxShadow: disabled
-              ? null
-              : [
-                  BoxShadow(
-                    color: Colors.red.shade600,
-                    spreadRadius: 0,
-                    blurRadius: 5,
-                    offset: const Offset(0, 0),
-                  ),
-                  BoxShadow(
-                    color: Colors.red.shade600,
-                    spreadRadius: 0,
-                    blurRadius: 5,
-                    offset: const Offset(0, 0),
-                  ),
-                  BoxShadow(
-                    color: Colors.red.shade600,
-                    spreadRadius: 0,
-                    blurRadius: 5,
-                    offset: const Offset(0, 0),
-                  ),
-                ],
-        ),
+            color: disabled
+                ? Colors.white.withOpacity(0.1)
+                : Theme.of(context).primaryColor,
+            borderRadius: offersPage
+                ? BorderRadius.only(
+                    bottomLeft: Radius.circular(radius),
+                    bottomRight: Radius.circular(radius))
+                : BorderRadius.all(Radius.circular(radius)),
+            boxShadow: disabled ? null : NeonBoxShadow().boxShadowNeon(context)),
         padding: isChallengesPage
             ? const EdgeInsets.all(10.0)
             : isWidget && !loading

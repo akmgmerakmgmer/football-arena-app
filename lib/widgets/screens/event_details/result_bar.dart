@@ -21,9 +21,8 @@ class ResultBar extends StatelessWidget {
           decoration: BoxDecoration(
               color: Theme.of(context).primaryColor,
               borderRadius: const BorderRadius.all(Radius.circular(10))),
-          width: width, // Half the width of the screen
+          width: width,
           height: 10,
-          // Inner container color (can be any color)
         ),
       ),
     );

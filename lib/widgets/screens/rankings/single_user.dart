@@ -1,33 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/buttons/main_button_no_width.dart';
+import 'package:in_zone_app/widgets/containers/username_text.dart';
 import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/screens/rankings/user_data.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SingleUser extends StatelessWidget {
-  final String image;
-  final String name;
-  final int gamesPlayed;
-  final int points;
-  final int coins;
+  final dynamic item;
   final String rank;
   final bool isSameUser;
-  final double fontSize;
   final String currentFilter;
   final String locale;
   const SingleUser(
       {super.key,
-      required this.image,
-      required this.gamesPlayed,
-      required this.points,
-      required this.coins,
-      required this.name,
       required this.rank,
       required this.isSameUser,
-      required this.fontSize,
       required this.currentFilter,
-      required this.locale});
+      required this.locale,
+      required this.item});
 
   String prizeText() {
     if (currentFilter == 'weekly') {
@@ -76,7 +67,7 @@ class SingleUser extends StatelessWidget {
                 ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(100)),
                     child: CachedImage(
-                      image: image,
+                      image: item['selectedAvatar']['image'],
                       width: 60,
                       height: 60,
                     )),
@@ -92,19 +83,25 @@ class SingleUser extends StatelessWidget {
                 const SizedBox(
                   width: 5,
                 ),
-                TextWidget(
-                  title: name,
-                  fontWeight: FontWeight.bold,
-                  fontSize: fontSize,
-                ),
-                // const SizedBox(
-                //   width: 5,
-                // ),
-                // TextWidget(
-                //   title: prizeText(),
-                //   fontWeight: FontWeight.bold,
-                //   fontSize: fontSize,
-                // ),
+                Row(
+                  children: [
+                    UsernameText(
+                      title: item['username'],
+                      fontWeight: FontWeight.bold,
+                      fontSize: locale == 'ar' ? 17 : 19,
+                    ),
+                    const SizedBox(
+                      width: 4,
+                    ),
+                    isSameUser
+                        ? TextWidget(
+                            title: '(${AppLocalizations.of(context)!.you})',
+                            fontWeight: FontWeight.bold,
+                            fontSize: locale == 'ar' ? 17 : 19,
+                          )
+                        : Container()
+                  ],
+                )
               ],
             ),
             const SizedBox(
@@ -113,18 +110,20 @@ class SingleUser extends StatelessWidget {
             Row(
               children: [
                 UserData(
-                    title: AppLocalizations.of(context)!.points, stat: points),
+                    title: AppLocalizations.of(context)!.points,
+                    stat: item['points']),
                 const SizedBox(
                   width: 10,
                 ),
                 UserData(
-                    title: AppLocalizations.of(context)!.coins, stat: coins),
+                    title: AppLocalizations.of(context)!.coins,
+                    stat: item['coins']),
                 const SizedBox(
                   width: 10,
                 ),
                 UserData(
                     title: AppLocalizations.of(context)!.gamesPlayed,
-                    stat: gamesPlayed)
+                    stat: item['games_played'])
               ],
             )
           ],

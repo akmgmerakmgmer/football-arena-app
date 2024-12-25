@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:in_zone_app/utilities/neon_box_shadow.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 
 class SingleSide extends StatelessWidget {
@@ -14,28 +15,8 @@ class SingleSide extends StatelessWidget {
           duration: const Duration(milliseconds: 200),
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-              boxShadow: selected
-                  ?  [
-                      BoxShadow(
-                        color: Theme.of(context).primaryColor,
-                        spreadRadius: 0,
-                        blurRadius: 5,
-                        offset: const Offset(0, 0),
-                      ),
-                      BoxShadow(
-                        color: Theme.of(context).primaryColor,
-                        spreadRadius: 0,
-                        blurRadius: 5,
-                        offset: const Offset(0, 0),
-                      ),
-                      BoxShadow(
-                        color: Theme.of(context).primaryColor,
-                        spreadRadius: 0,
-                        blurRadius: 5,
-                        offset: const Offset(0, 0),
-                      ),
-                    ]
-                  : null,
+              boxShadow:
+                  selected ? NeonBoxShadow().boxShadowNeon(context) : null,
               color: selected
                   ? Theme.of(context).primaryColor
                   : Theme.of(context).primaryColorDark,
