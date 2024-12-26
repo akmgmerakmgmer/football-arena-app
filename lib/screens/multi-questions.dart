@@ -243,8 +243,8 @@ class _QuestionsState extends State<MultiQuestions>
   void rightAnswer() {
     playCorrectSound();
     rightAnswerPoints();
-    getToNextQuestion();
     calculateMultiPoints();
+    getToNextQuestion();
   }
 
   void wrongAnswer(index) {
@@ -268,23 +268,20 @@ class _QuestionsState extends State<MultiQuestions>
   void wrongAnswerActions() {
     if (mounted) {
       playWrongSound();
-      if (questionMode != 'reversedWords' &&
-          questionMode != 'passwordChallenge' &&
-          questionMode != 'guessThePlayer') {
-        getToNextQuestion();
-      }
       if (points != 0 && !activateVar) {
         setState(() {
           points = points - 1;
         });
       }
-      setState(() {
-        questions = questions;
-      });
+      calculateMultiPoints();
       if (activateVar) {
         activateVar = false;
       }
-      calculateMultiPoints();
+      if (questionMode != 'reversedWords' &&
+          questionMode != 'passwordChallenge' &&
+          questionMode != 'guessThePlayer') {
+        getToNextQuestion();
+      }
     }
   }
 
@@ -410,7 +407,6 @@ class _QuestionsState extends State<MultiQuestions>
       multiplyPoints = 2;
       Timer.periodic(const Duration(seconds: 30), (Timer timer) {
         multiplyPoints = 1;
-        defaultCountDown = 20;
         anyTimePerkActive = false;
         stoppageTimeActive = false;
       });

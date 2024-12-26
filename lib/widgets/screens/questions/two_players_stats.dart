@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/screens/questions/multi_stats.dart';
-import 'package:provider/provider.dart';
 
 class TwoPlayersStats extends StatefulWidget {
   final Map user;
@@ -63,6 +62,13 @@ class _TwoPlayersStatsState extends State<TwoPlayersStats> {
     }
   }
 
+  bool isPerkDisabled(perk) {
+    if (perk['quantity'] == 0 || widget.usedPerks.contains(perk['id']['_id'])) {
+      return true;
+    }
+    return false;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -76,7 +82,8 @@ class _TwoPlayersStatsState extends State<TwoPlayersStats> {
   @override
   Widget build(BuildContext context) {
     Map room = widget.localeProvider.room;
-    String userId = widget.localeProvider.user['_id'];
+    Map user = widget.localeProvider.user;
+    String userId = user['_id'];
     Map player1 = room['players'][0];
     Map player2 = room['players'][1];
     return Stack(
@@ -91,6 +98,9 @@ class _TwoPlayersStatsState extends State<TwoPlayersStats> {
                 : player1['points'].toString(),
             isMainUser: player1['userId']['_id'] == userId,
             username: player1['userId']['username'],
+            user: user,
+            action: (perk) => action(perk),
+            isPerkDisabled: (perk) => isPerkDisabled(perk),
           ),
         ),
         Positioned(
@@ -103,6 +113,9 @@ class _TwoPlayersStatsState extends State<TwoPlayersStats> {
                 : player2['points'].toString(),
             isMainUser: player2['userId']['_id'] == userId,
             username: player2['userId']['username'],
+            action: (perk) => action(perk),
+            isPerkDisabled: (perk) => isPerkDisabled(perk),
+            user: user,
           ),
         ),
       ],

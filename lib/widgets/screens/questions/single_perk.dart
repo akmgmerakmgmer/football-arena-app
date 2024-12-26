@@ -6,11 +6,13 @@ class SinglePerk extends StatelessWidget {
   final Function action;
   final String image;
   final bool disabled;
+  final double width;
   const SinglePerk(
       {super.key,
       required this.action,
       required this.image,
-      required this.disabled});
+      required this.disabled,
+      this.width = 40});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class SinglePerk extends StatelessWidget {
           duration: const Duration(milliseconds: 200),
           child: CachedImage(
             image: image,
-            width: 40,
+            width: width,
           ),
         ));
   }
