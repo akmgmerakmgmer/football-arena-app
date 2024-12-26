@@ -15,6 +15,10 @@ class SocketMethods {
     }
   }
 
+  void leaveRoomEarly(data) {
+    _socketClient?.emit('leaveRoomEarly', data);
+  }
+
   void leaveRoom(room) {
     _socketClient?.emit('leaveRoom', room);
   }
@@ -72,6 +76,12 @@ class SocketMethods {
       }
       localeProvider.setRoom(room);
       callback(room);
+    });
+  }
+
+  void leaveRoomEarlyListener(LocaleProvider localeProvider) {
+    _socketClient?.once('leaveRoomEarlyListener', (data) {
+      localeProvider.setRoom(data['room']);
     });
   }
 

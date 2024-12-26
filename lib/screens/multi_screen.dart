@@ -15,79 +15,122 @@ class MultiScreen extends StatefulWidget {
   State<MultiScreen> createState() => _MultiScreenState();
 }
 
-class _MultiScreenState extends State<MultiScreen> {
+class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
   final SocketMethods _socketMethods = SocketMethods();
 
   @override
   void initState() {
-    super.initState();
-    _socketMethods.navigateToGameListener(() {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            settings: const RouteSettings(name: '/multi-questions'),
-            builder: (context) => const MultiQuestions(),
-          ),
-        );
+    if (mounted) {
+      super.initState();
+      final LocaleProvider localeProvider =
+          Provider.of<LocaleProvider>(context, listen: false);
+      _socketMethods.leaveRoomEarlyListener(localeProvider);
+      _socketMethods.navigateToGameListener(() {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (localeProvider.room['players'].length ==
+              localeProvider.room['numberOfPlayers']) navigateToGame();
+        });
       });
-    });
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.inactive) {
+    } else if (state == AppLifecycleState.paused) {
+    } else if (state == AppLifecycleState.detached) {
+      leaveRoomEarly();
+    }
+  }
+
+  void navigateToGame() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        settings: const RouteSettings(name: '/multi-questions'),
+        builder: (context) => const MultiQuestions(),
+      ),
+    );
+  }
+
+  void leaveRoomEarly() {
+    final LocaleProvider localeProvider =
+        Provider.of<LocaleProvider>(context, listen: false);
+    Map data = {
+      'roomId': localeProvider.room['_id'],
+      'userId': localeProvider.user['_id']
+    };
+    _socketMethods.leaveRoomEarly(data);
+    Navigator.pushReplacementNamed(context, '/');
   }
 
   @override
   Widget build(BuildContext context) {
-    Map room = Provider.of<LocaleProvider>(context, listen: false).room;
+    Map room = Provider.of<LocaleProvider>(context, listen: true).room;
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
 
-    return ImageBackgroundPlain(
-      image: user['selectedTheme'],
-      body: Stack(
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: BlurBackgroundContainer(body: Container()),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: room['players']
-                    .asMap()
-                    .entries
-                    .map<Widget>(
-                      (player) => Column(
-                        children: [
-                          PlayerBar(
-                            index: player.key,
-                            image: player.value['userId']['selectedAvatar']
-                                ['image'],
-                            username: player.value['userId']['username'],
-                          ),
-                          // Show "VS." only if there are more players to be displayed
-                          player.key != room['players'].length - 1 ||
-                                  room['players'].length !=
-                                      room['numberOfPlayers']
-                              ? Image.asset(
-                                  'assets/images/vs.png',
-                                  width: 50,
-                                  fit: BoxFit.cover,
-                                )
-                              : Container(),
-                        ],
-                      ),
-                    )
-                    .toList(),
-              ),
-              const SizedBox(height: 24),
-              // Show waiting message if not all players have joined
-              room['players'].length != room['numberOfPlayers']
-                  ? const WaitingForOtherPlayers()
-                  : Container(),
-            ],
-          ),
-        ],
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) {
+        leaveRoomEarly();
+      },
+      child: ImageBackgroundPlain(
+        image: user['selectedTheme'],
+        body: Stack(
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: BlurBackgroundContainer(body: Container()),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: room['players']
+                      .asMap()
+                      .entries
+                      .map<Widget>(
+                        (player) => Column(
+                          children: [
+                            PlayerBar(
+                              index: player.key,
+                              image: player.value['userId']['selectedAvatar']
+                                  ['image'],
+                              username: player.value['userId']['username'],
+                            ),
+                            // Show "VS." only if there are more players to be displayed
+                            player.key != room['players'].length - 1 ||
+                                    room['players'].length !=
+                                        room['numberOfPlayers']
+                                ? Image.asset(
+                                    'assets/images/vs.png',
+                                    width: 50,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Container(),
+                          ],
+                        ),
+                      )
+                      .toList(),
+                ),
+                const SizedBox(height: 24),
+                // Show waiting message if not all players have joined
+                room['players'].length != room['numberOfPlayers']
+                    ? const WaitingForOtherPlayers()
+                    : Container(),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
