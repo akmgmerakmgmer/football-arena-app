@@ -44,7 +44,9 @@ class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.inactive) {
+      leaveRoomEarly();
     } else if (state == AppLifecycleState.paused) {
+      leaveRoomEarly();
     } else if (state == AppLifecycleState.detached) {
       leaveRoomEarly();
     }
@@ -103,9 +105,7 @@ class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
                           children: [
                             PlayerBar(
                               index: player.key,
-                              image: player.value['userId']['selectedAvatar']
-                                  ['image'],
-                              username: player.value['userId']['username'],
+                              player: player.value,
                             ),
                             // Show "VS." only if there are more players to be displayed
                             player.key != room['players'].length - 1 ||
@@ -113,7 +113,7 @@ class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
                                         room['numberOfPlayers']
                                 ? Image.asset(
                                     'assets/images/vs.png',
-                                    width: 50,
+                                    width: 60,
                                     fit: BoxFit.cover,
                                   )
                                 : Container(),

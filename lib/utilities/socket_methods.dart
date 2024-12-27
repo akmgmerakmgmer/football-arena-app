@@ -31,6 +31,10 @@ class SocketMethods {
     _socketClient?.emit('timeDone', data);
   }
 
+  void gameDone(data) {
+    _socketClient?.emit('gameDone', data);
+  }
+
   // Listeners
   void joinRoomSuccesListener(
       BuildContext context, LocaleProvider localeProvider) {

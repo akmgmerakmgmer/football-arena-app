@@ -531,6 +531,7 @@ class _QuestionsState extends State<MultiQuestions>
 
   void youWon(room) {
     if (mounted) {
+      _socketMethods.gameDone({'roomId': room['_id']});
       if (roomPlayers.length == 1 &&
           roomPlayers[0]['userId']['_id'].toString() == userId) {
         winnerUpdate();

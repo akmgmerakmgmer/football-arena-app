@@ -3,14 +3,9 @@ import 'package:in_zone_app/widgets/containers/username_text.dart';
 import 'package:in_zone_app/widgets/screens/questions/hexagonal_image.dart';
 
 class PlayerBar extends StatelessWidget {
-  final String image;
-  final String username;
+  final Map player;
   final int index;
-  const PlayerBar(
-      {super.key,
-      required this.image,
-      required this.username,
-      required this.index});
+  const PlayerBar({super.key, required this.index, required this.player});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +16,10 @@ class PlayerBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            index.isEven ? HexagonalImage(image: image) : Container(),
+            index.isEven
+                ? HexagonalImage(
+                    image: player['userId']['selectedAvatar']['image'])
+                : Container(),
             Expanded(
               child: Container(
                 height: 50,
@@ -37,7 +35,7 @@ class PlayerBar extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     UsernameText(
-                      title: username,
+                      title: player['userId']['username'],
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                     )
@@ -45,7 +43,7 @@ class PlayerBar extends StatelessWidget {
                 ),
               ),
             ),
-            index.isEven ? Container() : HexagonalImage(image: image),
+            index.isEven ? Container() : HexagonalImage(image: player['userId']['selectedAvatar']['image']),
           ],
         ),
       ),
