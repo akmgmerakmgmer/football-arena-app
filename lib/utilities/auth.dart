@@ -21,7 +21,6 @@ class Auth {
               context,
               PrizesContent(
                 prizes: value['prizes'],
-                showExclusiveText: false,
               ),
               AppLocalizations.of(context)!.congratulations);
         }

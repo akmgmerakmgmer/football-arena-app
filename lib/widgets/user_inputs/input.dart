@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
-import 'package:in_zone_app/widgets/containers/username_text.dart';
+import 'package:in_zone_app/widgets/general_widgets/username_text.dart';
 import 'package:provider/provider.dart';
 
 class Input extends StatefulWidget {

@@ -6,10 +6,12 @@ class SocketMethods {
   final _socketClient = SocketClient.instance?.socket;
 
   // Emitters
-  void joinRoom(BuildContext context, LocaleProvider localeProvider) {
+  void joinRoom(BuildContext context, LocaleProvider localeProvider,
+      {String questionMode = ''}) {
     Map user = localeProvider.user;
     if (user.isNotEmpty) {
-      _socketClient?.emit('joinRoom', {'userId': user['_id']});
+      _socketClient?.emit(
+          'joinRoom', {'userId': user['_id'], 'questionMode': questionMode});
     } else {
       Navigator.pushNamed(context, '/login');
     }

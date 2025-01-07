@@ -17,6 +17,7 @@ class MainMenu extends StatelessWidget {
         body: Column(
       children: [
         MainButton(
+          fontSize: 15,
           buttonText: AppLocalizations.of(context)!.start,
           action: () {
             if (Provider.of<LocaleProvider>(context, listen: false)
@@ -31,35 +32,45 @@ class MainMenu extends StatelessWidget {
             }
           },
           uppercase: true,
+          radius: 10,
         ),
         const SizedBox(
           height: 15,
         ),
         RegularButton(
-          buttonText: AppLocalizations.of(context)!.playOnSite,
-          action: () {
-            ExternalUrl().launchNewUrl(locale == 'en'
-                ? 'https://www.inzonegaming.com/en'
-                : 'https://www.inzonegaming.com/ar');
-          },
-          uppercase: true,
-        ),
-        const SizedBox(
-          height: 15,
-        ),
-        RegularButton(
-            buttonText: AppLocalizations.of(context)!.rankings,
+            fontSize: 15,
+            buttonText: AppLocalizations.of(context)!.play_online,
             action: () {
-              Navigator.pushNamed(context, '/rankings');
+              Navigator.pushNamed(context, '/main-online');
             },
             uppercase: true),
         const SizedBox(
           height: 15,
         ),
         RegularButton(
-            buttonText: AppLocalizations.of(context)!.shop,
+            fontSize: 15,
+            buttonText: AppLocalizations.of(context)!.play_alone,
             action: () {
-              Navigator.pushNamed(context, '/shop');
+              Navigator.pushNamed(context, '/main-online');
+            },
+            uppercase: true),
+        // RegularButton(
+        //   buttonText: AppLocalizations.of(context)!.playOnSite,
+        //   action: () {
+        //     ExternalUrl().launchNewUrl(locale == 'en'
+        //         ? 'https://www.inzonegaming.com/en'
+        //         : 'https://www.inzonegaming.com/ar');
+        //   },
+        //   uppercase: true,
+        // ),
+        const SizedBox(
+          height: 15,
+        ),
+        RegularButton(
+            fontSize: 15,
+            buttonText: AppLocalizations.of(context)!.rankings,
+            action: () {
+              Navigator.pushNamed(context, '/rankings');
             },
             uppercase: true),
       ],

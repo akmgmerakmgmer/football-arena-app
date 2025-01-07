@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
@@ -60,7 +61,7 @@ class _SingleAvatarState extends State<SingleAvatar> {
         margin: const EdgeInsets.symmetric(horizontal: 3),
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: NetworkImage(widget.avatar['image']), fit: BoxFit.cover),
+              image: CachedNetworkImageProvider(widget.avatar['image']), fit: BoxFit.cover),
           borderRadius: const BorderRadius.all(Radius.circular(15)),
         ),
         child: Column(

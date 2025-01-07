@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
@@ -63,7 +64,7 @@ class _SingleThemeState extends State<SingleTheme> {
         margin: const EdgeInsets.symmetric(horizontal: 3),
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: NetworkImage(widget.theme['image']), fit: BoxFit.cover),
+              image: CachedNetworkImageProvider(widget.theme['image']), fit: BoxFit.cover),
           borderRadius: const BorderRadius.all(Radius.circular(15)),
         ),
         child: Stack(

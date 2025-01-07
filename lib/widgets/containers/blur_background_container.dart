@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class BlurBackgroundContainer extends StatelessWidget {
-  final int blurRate;
   final Widget body;
   final double border;
   final double padding;
@@ -13,7 +12,6 @@ class BlurBackgroundContainer extends StatelessWidget {
   final bool darkenBackground;
   const BlurBackgroundContainer(
       {super.key,
-      this.blurRate = 5,
       required this.body,
       this.border = 0,
       this.padding = 0,

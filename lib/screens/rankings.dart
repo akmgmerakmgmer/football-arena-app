@@ -23,17 +23,17 @@ class _RankingsState extends State<Rankings> {
   Map user = {};
   List rankedUsers = [];
   final String search = '';
-  String searchTime = 'weekly';
+  String searchTime = 'daily';
   int searchMonth = 1;
   int searchYear = 2024;
   String searchWeek = 'thisWeek';
   List<Map> searchByTime = [
+    {"nameAr": 'الترتيب اليومي', "nameEn": "Daily Ranking", "value": 'daily'},
     {
       "nameAr": 'الترتيب الأسبوعي',
       "nameEn": "Weekly Ranking",
       "value": 'weekly'
     },
-    {"nameAr": 'الترتيب اليومي', "nameEn": "Daily Ranking", "value": 'daily'},
     {
       "nameAr": 'الترتيب الشهري',
       "nameEn": "Monthly Ranking",
@@ -71,7 +71,11 @@ class _RankingsState extends State<Rankings> {
   bool openWeeksMenu = false;
   bool openYearsMenu = false;
   bool openMonthsMenu = false;
-
+  List dailyPrizes = [1000, 750, 500, 300, 200];
+  List weeklyPrizes = [3000, 1500, 1000, 500, 250];
+  List monthlyPrizes = [10000, 5000, 2500, 1500, 1000];
+  List yearlyPrizes = [50000, 30000, 10000, 5000, 2500];
+  List currentPrizes = [1000, 750, 500, 300, 200];
   Future<void> getRankings() async {
     setState(() {
       loading = true;
@@ -152,6 +156,10 @@ class _RankingsState extends State<Rankings> {
               callback: (value) {
                 setState(() {
                   searchTime = value;
+                  if (searchTime == 'daily') currentPrizes = dailyPrizes;
+                  if (searchTime == 'weekly') currentPrizes = weeklyPrizes;
+                  if (searchTime == 'monthly') currentPrizes = monthlyPrizes;
+                  if (searchTime == 'yearly') currentPrizes = yearlyPrizes;
                   getRankings();
                 });
               },
@@ -235,11 +243,13 @@ class _RankingsState extends State<Rankings> {
                                     .entries
                                     .map((item) => SingleUser(
                                           locale: locale,
-                                          currentFilter: searchTime,
                                           isSameUser:
                                               item.value['_id'] == userId,
                                           rank: '${item.key + 1}',
                                           item: item.value,
+                                          numberOfCoins: item.key > 4
+                                              ? 0
+                                              : currentPrizes[item.key],
                                         ))
                                     .toList(),
                               ),
@@ -248,10 +258,10 @@ class _RankingsState extends State<Rankings> {
                                       userId != ''
                                   ? SingleUser(
                                       locale: locale,
-                                      currentFilter: searchTime,
                                       isSameUser: user['_id'] == userId,
                                       rank: '$rank',
                                       item: user,
+                                      numberOfCoins: 0,
                                     )
                                   : Container()
                             ],

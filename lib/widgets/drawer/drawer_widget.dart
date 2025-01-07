@@ -152,14 +152,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             text: 'English',
             icon: Icons.language,
             action: () {
-              GeneralMethods().changeLanguage(context, 'en');
+              GeneralMethods().changeLanguage(context);
             },
           ),
           DrawerItem(
             text: 'عربي',
             icon: Icons.language,
             action: () {
-              GeneralMethods().changeLanguage(context, 'ar');
+              GeneralMethods().changeLanguage(context);
             },
           ),
         ],

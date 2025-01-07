@@ -20,14 +20,18 @@ class _GoogleButtonState extends State<GoogleButton> {
   String displayName = '';
   bool loading = false;
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
 
   Future<void> _handleSignIn(context) async {
     try {
       setState(() {
         loading = true;
       });
-
       // Ensure the Google Sign-In flow always prompts for account selection
       final GoogleSignInAccount? googleUser =
           await _googleSignIn.signInSilently();

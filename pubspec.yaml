@@ -128,6 +128,9 @@ flutter:
     - assets/images/reversed_words.jpg
     - assets/images/guess_the_player.jpg
     - assets/images/all_in_one.jpg
+    - assets/images/background_1.jpg
+    - assets/images/background_2.jpg
+    - assets/images/background_3.jpg
     - assets/audio/correct.mp3
     - assets/audio/buzzer.mp3
     

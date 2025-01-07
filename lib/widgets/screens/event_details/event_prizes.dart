@@ -23,7 +23,7 @@ class EventPrizes extends StatelessWidget {
         ),
         GestureDetector(
             onTap: () {
-              ModalContainer.modal(context, PrizesContent(prizes: prizes,showExclusiveText: true,),
+              ModalContainer.modal(context, PrizesContent(prizes: prizes),
                   AppLocalizations.of(context)!.prizes);
             },
             child:

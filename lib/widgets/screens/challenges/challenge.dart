@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/screens/questions.dart';
@@ -42,7 +43,7 @@ class Challenge extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: NetworkImage(challenge['image']),
+                      image: CachedNetworkImageProvider(challenge['image']),
                       fit: BoxFit.cover)),
               width: 225,
               height: 420,

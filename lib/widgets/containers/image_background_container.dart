@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
+import 'package:in_zone_app/widgets/containers/image_global_background.dart';
 
 class ImageBackgroundContainer extends StatelessWidget {
   final Widget body;
@@ -10,32 +11,25 @@ class ImageBackgroundContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/images/background_new.jpg'),
-              fit: BoxFit.cover)),
-      child: Center(
-        child: BlurBackgroundContainer(
-          body: Container(
-            width: width,
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.white.withOpacity(0.1)),
-                color: Colors.black.withOpacity(0.1)),
-            child: Column(
-              mainAxisSize: MainAxisSize
-                  .min, // Wraps content vertically with minimum height
-              children: [
-                // Your body content goes here
-                body,
-              ],
-            ),
+    return ImageGlobalBackground(
+        body: Center(
+      child: BlurBackgroundContainer(
+        body: Container(
+          width: width,
+          padding: const EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.white.withOpacity(0.1)),
+              color: Colors.black.withOpacity(0.1)),
+          child: Column(
+            mainAxisSize: MainAxisSize
+                .min, // Wraps content vertically with minimum height
+            children: [
+              // Your body content goes here
+              body,
+            ],
           ),
         ),
       ),
-    );
+    ));
   }
 }

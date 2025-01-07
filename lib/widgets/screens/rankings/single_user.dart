@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/buttons/main_button_no_width.dart';
-import 'package:in_zone_app/widgets/containers/username_text.dart';
+import 'package:in_zone_app/widgets/general_widgets/username_text.dart';
 import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
+import 'package:in_zone_app/widgets/screens/rankings/ranking_prize.dart';
 import 'package:in_zone_app/widgets/screens/rankings/user_data.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -10,30 +11,15 @@ class SingleUser extends StatelessWidget {
   final dynamic item;
   final String rank;
   final bool isSameUser;
-  final String currentFilter;
   final String locale;
+  final int numberOfCoins;
   const SingleUser(
       {super.key,
       required this.rank,
       required this.isSameUser,
-      required this.currentFilter,
       required this.locale,
-      required this.item});
-
-  String prizeText() {
-    if (currentFilter == 'weekly') {
-      if (rank == '1') {
-        return locale == 'ar' ? '(جائزة 1500 جنيه مصري)' : '(1500 EGP Prize)';
-      } else if (rank == '2') {
-        return locale == 'ar' ? '(جائزة 1000 جنيه مصري)' : '(1000 EGP Prize)';
-      } else if (rank == '3') {
-        return locale == 'ar' ? '(جائزة 500 جنيه مصري)' : '(500 EGP Prize)';
-      } else {
-        return '';
-      }
-    }
-    return '';
-  }
+      required this.item,
+      required this.numberOfCoins});
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +85,15 @@ class SingleUser extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             fontSize: locale == 'ar' ? 17 : 19,
                           )
-                        : Container()
+                        : Container(),
+                    int.parse(rank) < 6
+                        ? const SizedBox(
+                            width: 4,
+                          )
+                        : Container(),
+                    int.parse(rank) < 6
+                        ? RankingPrize(numberOfCoins: numberOfCoins)
+                        : Container(),
                   ],
                 )
               ],

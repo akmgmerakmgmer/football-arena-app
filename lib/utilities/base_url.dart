@@ -1,3 +1,3 @@
 class BaseUrl{
-  final baseUrl = 'https://football-challenge-backend.onrender.com';
+  final baseUrl = 'http://localhost:4000';
 }

@@ -1,39 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/widgets/general_widgets/dialog_widget_blured.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/widgets/screens/home/coins_button.dart';
+import 'package:in_zone_app/widgets/screens/home/video_ad_button.dart';
 
 class ModalContainer {
-  static modal(BuildContext context, Widget widget, String title) {
+  static modal(BuildContext context, Widget widget, String title,
+      {dynamic closeCallBack}) {
     showDialog(
         context: context,
-        builder: (ctx) => AlertDialog(
-              backgroundColor: Colors.black,
-              title: TextWidget(
-                title: title,
-                fontSize: 18,
-              ),
-              content: SingleChildScrollView(child: widget),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(ctx);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 12),
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).splashColor,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10))),
-                    child: TextWidget(
-                      title: AppLocalizations.of(ctx)!.close,
-                      color: Colors.grey.shade300,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              ],
+        builder: (ctx) => DialogWidgetBlured(
+              title: title,
+              widget: SingleChildScrollView(child: widget),
+              closeCallBack: () {
+                if (closeCallBack != null) {
+                  closeCallBack();
+                }
+              },
             ));
   }
 
@@ -52,5 +37,26 @@ class ModalContainer {
                 content: SingleChildScrollView(child: widget),
               ),
             ));
+  }
+
+  static choosePlayOptionModal(
+      BuildContext context, LocaleProvider localeProvider, mode) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => DialogWidgetBlured(
+            title: AppLocalizations.of(context)!.choose_option_to_play,
+            description:
+                AppLocalizations.of(context)!.choose_option_description,
+            widget: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                VideoAdButton(mode: mode, localeProvider: localeProvider),
+                const SizedBox(
+                  width: 16,
+                ),
+                CoinsButton(mode: mode, localeProvider: localeProvider)
+              ],
+            )));
   }
 }

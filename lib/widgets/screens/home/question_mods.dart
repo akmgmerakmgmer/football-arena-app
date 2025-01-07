@@ -3,8 +3,10 @@ import 'package:flutter/widgets.dart';
 import 'package:in_zone_app/widgets/screens/home/single_mode.dart';
 
 class QuestionMods extends StatelessWidget {
+  final bool isOnline;
   const QuestionMods({
     super.key,
+    this.isOnline = false,
   });
 
   @override
@@ -80,8 +82,12 @@ class QuestionMods extends StatelessWidget {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children:
-                  modes.map((mode) => SingleMode(singleMode: mode)).toList(),
+              children: modes
+                  .map((mode) => SingleMode(
+                        singleMode: mode,
+                        isOnline: isOnline,
+                      ))
+                  .toList(),
             ),
           )
         ],

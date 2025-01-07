@@ -25,7 +25,6 @@ class PurchaseButton extends StatelessWidget {
     return GestureDetector(
       onTap: () => action(),
       child: Container(
-          width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
               color: Theme.of(context).primaryColor,
               borderRadius: const BorderRadius.all(Radius.circular(10)),

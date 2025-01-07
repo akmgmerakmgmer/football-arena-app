@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
-import 'package:in_zone_app/widgets/containers/username_text.dart';
+import 'package:in_zone_app/widgets/general_widgets/username_text.dart';
 import 'package:in_zone_app/widgets/screens/questions/player_points.dart';
 import 'package:in_zone_app/widgets/screens/questions/single_perk.dart';
 import 'package:in_zone_app/widgets/screens/questions/user_image.dart';

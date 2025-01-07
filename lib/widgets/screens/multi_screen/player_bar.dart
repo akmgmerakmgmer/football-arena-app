@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:in_zone_app/widgets/containers/username_text.dart';
-import 'package:in_zone_app/widgets/screens/questions/hexagonal_image.dart';
+import 'package:in_zone_app/widgets/general_widgets/username_text.dart';
+import 'package:in_zone_app/widgets/screens/multi_screen/hexagonal_image.dart';
 
 class PlayerBar extends StatelessWidget {
   final Map player;

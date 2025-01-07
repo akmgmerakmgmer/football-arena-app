@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:in_zone_app/utilities/media_query_height.dart';
@@ -28,7 +29,7 @@ class EventImage extends StatelessWidget {
               : MediaQuery.of(context).size.width - 30,
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: NetworkImage(event['image']), fit: BoxFit.cover)),
+                  image: CachedNetworkImageProvider(event['image']), fit: BoxFit.cover)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

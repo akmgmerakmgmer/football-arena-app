@@ -5,7 +5,7 @@ import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
 import 'package:in_zone_app/widgets/containers/image_background_plain.dart';
 import 'package:in_zone_app/widgets/general_widgets/waiting_for_other_players.dart';
-import 'package:in_zone_app/widgets/screens/questions/player_bar.dart';
+import 'package:in_zone_app/widgets/screens/multi_screen/player_bar.dart';
 import 'package:provider/provider.dart';
 
 class MultiScreen extends StatefulWidget {

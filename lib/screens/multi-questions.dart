@@ -10,12 +10,15 @@ import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
 import 'package:in_zone_app/widgets/containers/fade_transition.dart';
 import 'package:in_zone_app/widgets/containers/image_background_plain.dart';
+import 'package:in_zone_app/widgets/containers/modal_container.dart';
 import 'package:in_zone_app/widgets/containers/page_plain_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/waiting_for_other_players.dart';
+import 'package:in_zone_app/widgets/screens/event_details/prizes_content.dart';
 import 'package:in_zone_app/widgets/screens/questions/advertisment.dart';
 import 'package:in_zone_app/widgets/screens/questions/multiple_choices.dart';
 import 'package:in_zone_app/widgets/screens/questions/player_search.dart';
+import 'package:in_zone_app/widgets/screens/questions/rank_change.dart';
 import 'package:in_zone_app/widgets/screens/questions/true_or_false.dart';
 import 'package:in_zone_app/widgets/screens/questions/two_players_stats.dart';
 import 'package:provider/provider.dart';
@@ -504,6 +507,31 @@ class _QuestionsState extends State<MultiQuestions>
     }
   }
 
+  void promotionMethod(prizes) {
+    Map user = Provider.of<LocaleProvider>(context, listen: false).user;
+    String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
+    ModalContainer.modal(context, RankChange(user: user, locale: locale),
+        AppLocalizations.of(context)!.you_have_been_promoted,
+        closeCallBack: () {
+      Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+        ModalContainer.modal(
+            context,
+            PrizesContent(prizes: prizes),
+            AppLocalizations.of(context)!.congratulations);
+      });
+    });
+  }
+
+  void demotionMethod() {
+    Map user = Provider.of<LocaleProvider>(context, listen: false).user;
+    String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
+    ModalContainer.modal(
+      context,
+      RankChange(user: user, locale: locale),
+      AppLocalizations.of(context)!.you_have_been_demoted,
+    );
+  }
+
   Future<void> gameDoneMethod(api, winnerId) async {
     Map room = Provider.of<LocaleProvider>(context, listen: false).room;
     Map payload = {
@@ -514,6 +542,14 @@ class _QuestionsState extends State<MultiQuestions>
     };
     PutApi('$api/$userId', payload, (res) {
       Provider.of<LocaleProvider>(context, listen: false).setUser(res['user']);
+      promotionMethod(res['prizes']);
+      if (res['promoted'] != null && res['promoted']) {
+        promotionMethod(res['prizes']);
+      }
+
+      if (res['demoted'] != null && res['demoted']) {
+        demotionMethod();
+      }
     }).put(context);
   }
 
@@ -644,7 +680,7 @@ class _QuestionsState extends State<MultiQuestions>
       Navigator.pushReplacementNamed(context, '/');
       Map room = Provider.of<LocaleProvider>(context, listen: false).room;
       for (var player in room['players']) {
-        if (player['userId']['_id'] != userId) {
+        if (player['userId']['_id'] == userId) {
           player['isLeft'] = true;
         }
       }
