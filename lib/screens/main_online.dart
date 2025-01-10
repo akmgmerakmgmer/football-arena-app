@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/socket_methods.dart';
+import 'package:in_zone_app/widgets/buttons/main_button.dart';
 import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
-import 'package:in_zone_app/widgets/screens/home/question_mods.dart';
 import 'package:in_zone_app/widgets/screens/main_online/rank_image.dart';
 import 'package:in_zone_app/widgets/screens/main_online/rank_navs.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class MainOnline extends StatefulWidget {
@@ -15,15 +16,25 @@ class MainOnline extends StatefulWidget {
 }
 
 class _MainOnlineState extends State<MainOnline> {
+  bool loading = false;
   final SocketMethods _socketMethods = SocketMethods();
 
   @override
   void initState() {
-    LocaleProvider localeProvider =
-        Provider.of<LocaleProvider>(context, listen: false);
+    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
     _socketMethods.joinRoomSuccesListener(context, localeProvider);
     super.initState();
   }
+
+  joinRoom(localeProvider) async {
+    if (!loading) {
+      setState(() {
+        loading = true;
+      });
+      _socketMethods.joinRoom(context, localeProvider);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     LocaleProvider localeProvider =
@@ -50,7 +61,12 @@ class _MainOnlineState extends State<MainOnline> {
               const SizedBox(
                 height: 16,
               ),
-              const QuestionMods(isOnline: true,)
+              MainButton(
+                  buttonText: AppLocalizations.of(context)!.playNow,
+                  fontSize: 13,
+                  radius: 10,
+                  loading: loading,
+                  action: () => joinRoom(localeProvider))
             ],
           ),
         ));

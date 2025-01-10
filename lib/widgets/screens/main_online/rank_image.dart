@@ -38,12 +38,11 @@ class RankImage extends StatelessWidget {
                         mainAxisSize:
                             MainAxisSize.min, // Adjusts to content size
                         children: [
-                          const TextWidget(
-                            title: 'Season 1',
+                           TextWidget(
+                            title: user['system_info']['current_season']['title'][locale],
                             fontSize: 20,
                             uppercase: true,
                             fontWeight: FontWeight.w800,
-                            alwaysEnglish: true,
                           ),
                           CachedImage(
                             image: user['rank']['image'],

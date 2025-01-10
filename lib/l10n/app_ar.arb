@@ -2,6 +2,7 @@
     "createAccount": "انشئ حساب مستخدم جديد",
     "login": "سجل دخولك",
     "signup": "تسجيل حساب جديد",
+    "menu": "القائمة",
     "user_created": "تم تسجيل حسابك",
     "alreadyHaveAnAccount": "لديك حساب بالفعل؟",
     "doesntHaveAccount": "ليس لديك حساب بعد؟",

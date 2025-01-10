@@ -10,7 +10,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class SingleMode extends StatelessWidget {
+class SingleMode extends StatefulWidget {
   final Map singleMode;
   final bool isOnline;
   const SingleMode({
@@ -19,16 +19,30 @@ class SingleMode extends StatelessWidget {
     this.isOnline = false,
   });
 
+  @override
+  State<SingleMode> createState() => _SingleModeState();
+}
+
+class _SingleModeState extends State<SingleMode> {
+  final SocketMethods _socketMethods = SocketMethods();
+
+  @override
+  void initState() {
+    LocaleProvider localeProvider =
+        Provider.of<LocaleProvider>(context, listen: false);
+    _socketMethods.joinRoomSuccesListener(context, localeProvider);
+    super.initState();
+  }
   bool isPlayedToday(context) {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd').format(now);
 
     List currentMode = user['questionModes']
-        .where((userMode) => userMode['modeName'] == singleMode['mode'])
+        .where((userMode) => userMode['modeName'] == widget.singleMode['mode'])
         .toList();
     if (currentMode.isNotEmpty &&
-        currentMode[0]['modeName'] == singleMode['mode'] &&
+        currentMode[0]['modeName'] == widget.singleMode['mode'] &&
         currentMode[0]['lastPlayedDate'] == formattedDate) {
       return true;
     }
@@ -45,18 +59,18 @@ class SingleMode extends StatelessWidget {
 
     if (isPlayedToday(context)) {
       return ModalContainer.choosePlayOptionModal(
-          context, localeProvider, singleMode['mode']);
+          context, localeProvider, widget.singleMode['mode']);
     }
-    if (isOnline) {
+    if (widget.isOnline) {
       socketMethods.joinRoom(context, localeProvider,
-          questionMode: singleMode['mode']);
+          questionMode: widget.singleMode['mode']);
     } else {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           settings: const RouteSettings(name: '/questions'),
           builder: (context) => Questions(
-            questionMode: singleMode['mode'],
+            questionMode: widget.singleMode['mode'],
             userId:
                 Provider.of<LocaleProvider>(context, listen: false).user['_id'],
           ),
@@ -77,7 +91,7 @@ class SingleMode extends StatelessWidget {
               decoration: BoxDecoration(
                   image: DecorationImage(
                 fit: BoxFit.cover,
-                image: AssetImage(singleMode['image']),
+                image: AssetImage(widget.singleMode['image']),
               )),
               width: 225,
               height: 420,
@@ -97,7 +111,7 @@ class SingleMode extends StatelessWidget {
                   children: [
                     TextWidget(
                       title:
-                          locale == 'ar' ? singleMode['ar'] : singleMode['en'],
+                          locale == 'ar' ? widget.singleMode['ar'] : widget.singleMode['en'],
                       fontSize: 15,
                       textAlign: TextAlign.center,
                       fontWeight: FontWeight.bold,
@@ -107,8 +121,8 @@ class SingleMode extends StatelessWidget {
                     ),
                     TextWidget(
                       title: locale == 'ar'
-                          ? singleMode['descriptionAr']
-                          : singleMode['descriptionEn'],
+                          ? widget.singleMode['descriptionAr']
+                          : widget.singleMode['descriptionEn'],
                       fontSize: 13,
                       textAlign: TextAlign.center,
                       color: Colors.grey.shade300,

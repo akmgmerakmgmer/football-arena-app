@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
-import 'package:in_zone_app/utilities/external_url.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
 import 'package:in_zone_app/widgets/buttons/regular_button.dart';
 import 'package:in_zone_app/widgets/containers/image_background_container.dart';
@@ -12,7 +11,7 @@ class MainMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
+    LocaleProvider localeProvider = Provider.of<LocaleProvider>(context, listen: false);
     return ImageBackgroundContainer(
         body: Column(
       children: [
@@ -20,8 +19,7 @@ class MainMenu extends StatelessWidget {
           fontSize: 15,
           buttonText: AppLocalizations.of(context)!.start,
           action: () {
-            if (Provider.of<LocaleProvider>(context, listen: false)
-                .user
+            if (localeProvider.user
                 .containsKey('username')) {
               Navigator.pushNamed(
                 context,
@@ -51,7 +49,7 @@ class MainMenu extends StatelessWidget {
             fontSize: 15,
             buttonText: AppLocalizations.of(context)!.play_alone,
             action: () {
-              Navigator.pushNamed(context, '/main-online');
+              Navigator.pushNamed(context, '/play-alone');
             },
             uppercase: true),
         // RegularButton(

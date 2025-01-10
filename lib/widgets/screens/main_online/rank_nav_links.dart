@@ -19,6 +19,7 @@ class RankNavLinks extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey.shade400, width: 2),
+          borderRadius: BorderRadius.circular(10)
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

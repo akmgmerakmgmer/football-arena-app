@@ -54,12 +54,12 @@ class BottomNavigation extends StatelessWidget {
               "selected": currentPath == '/profile'
             }
           : {
-              "text": AppLocalizations.of(context)!.navigationBestOffers,
-              "icon": Icons.discount,
+              "text": AppLocalizations.of(context)!.login_word,
+              "icon": Icons.login,
               "action": () {
-                Navigator.pushNamed(context, '/best-offers');
+                Navigator.pushNamed(context, '/login');
               },
-              "selected": currentPath == '/best-offers'
+              "selected": currentPath == '/login'
             },
     ];
     return Container(

@@ -79,7 +79,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
         Provider.of<LocaleProvider>(context, listen: false)
             .setChallenges(data['challenges']);
         int intBuildNumber = int.parse(buildNumber);
-        int intLowestBuildNumber = int.parse(data['lowestBuildNumber']);
+        int intLowestBuildNumber = int.parse(data['system']['lowestBuildNumber']);
         if (intBuildNumber < 1) {
           ModalContainer.updateModal(context, const NeedUpdate(),
               AppLocalizations.of(context)!.update_app_text);

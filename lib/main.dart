@@ -8,6 +8,7 @@ import 'package:in_zone_app/screens/login.dart';
 import 'package:in_zone_app/screens/main_online.dart';
 import 'package:in_zone_app/screens/multi-questions.dart';
 import 'package:in_zone_app/screens/multi_screen.dart';
+import 'package:in_zone_app/screens/play_alone.dart';
 import 'package:in_zone_app/screens/questions.dart';
 import 'package:in_zone_app/screens/rankings.dart';
 import 'package:in_zone_app/screens/results.dart';
@@ -74,6 +75,7 @@ class _MyAppState extends State<MyApp> {
                   '/events': (context) => const EventDetails(),
                   '/best-offers': (context) => const BestOffers(),
                   '/shop': (context) => const Shop(),
+                  '/play-alone': (context) => const PlayAlone(),
                   '/main-online': (context) => const MainOnline(),
                   '/results': (context) => const Results(),
                   '/multi-screen': (context) => const MultiScreen(),

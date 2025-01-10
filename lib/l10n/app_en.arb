@@ -2,6 +2,7 @@
     "createAccount": "Create New User",
     "login": "Login",
     "signup": "Sign up",
+    "menu": "Menu",
     "user_created": "Your user has been created",
     "alreadyHaveAnAccount": "Already have an account?",
     "doesntHaveAccount": "Doesn't have an account yet?",

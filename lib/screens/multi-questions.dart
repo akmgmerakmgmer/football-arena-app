@@ -513,11 +513,12 @@ class _QuestionsState extends State<MultiQuestions>
     ModalContainer.modal(context, RankChange(user: user, locale: locale),
         AppLocalizations.of(context)!.you_have_been_promoted,
         closeCallBack: () {
-      Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      Timer(const Duration(seconds: 500), () {
         ModalContainer.modal(
-            context,
-            PrizesContent(prizes: prizes),
-            AppLocalizations.of(context)!.congratulations);
+          context,
+          PrizesContent(prizes: prizes),
+          AppLocalizations.of(context)!.congratulations,
+        );
       });
     });
   }
