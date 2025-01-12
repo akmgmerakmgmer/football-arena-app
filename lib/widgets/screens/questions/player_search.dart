@@ -5,6 +5,7 @@ import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/widgets/containers/fade_transition.dart';
 import 'package:in_zone_app/widgets/loadings/primary_loading_regular.dart';
 import 'package:in_zone_app/widgets/screens/questions/single_player.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 
 class PlayerSearch extends StatefulWidget {
   final String locale;
@@ -55,12 +56,16 @@ class _PlayerSearchState extends State<PlayerSearch> {
       setState(() {
         loading = true;
       });
-      FetchApi('players?name=${_controller.text}', ((res) {
-        setState(() {
-          loading = false;
-          players = res['player'];
-        });
-      })).fetch(context);
+      EasyDebounce.debounce('debouncer1', const Duration(milliseconds: 300),
+          () {
+        FetchApi('players?name=${_controller.text}', ((res) {
+          setState(() {
+            loading = false;
+            players = res['player'];
+          });
+        })).fetch(context);
+        ;
+      });
     }
     // You can also add logic here, such as updating state, validating text, etc.
   }

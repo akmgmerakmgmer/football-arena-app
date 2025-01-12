@@ -155,5 +155,8 @@
     "monthly_challenge": "التحدي الشهري",
     "yearly_challenge": "التحدي السنوي",
     "play_online": "العب اونلاين",
-    "play_alone": "العب لوحدك"
+    "play_alone": "العب لوحدك",
+    "all_ranks": "جميع التصنيفات",
+    "previous_ranks":"تصنيفاتك السابقة",
+    "no_previous_rank": "ليس لديك تصنيفات سابقة"
 }

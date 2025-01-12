@@ -9,8 +9,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class CoinsButton extends StatelessWidget {
   final String mode;
   final LocaleProvider localeProvider;
+  final bool isOnline;
+  final dynamic callback;
   const CoinsButton(
-      {super.key, required this.mode, required this.localeProvider});
+      {super.key,
+      required this.mode,
+      required this.localeProvider,
+      this.isOnline = false,
+      this.callback});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +56,12 @@ class CoinsButton extends StatelessWidget {
               ],
             ),
             action: () {
-              GeneralMethods().playWithCoins(context, localeProvider, mode);
+              GeneralMethods()
+                  .playWithCoins(context, localeProvider, mode, isOnline);
+              if (callback != null) {
+                Navigator.pop(context);
+                callback();
+              }
             }),
       ),
     );

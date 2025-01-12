@@ -40,7 +40,8 @@ class ModalContainer {
   }
 
   static choosePlayOptionModal(
-      BuildContext context, LocaleProvider localeProvider, mode) {
+      BuildContext context, LocaleProvider localeProvider, mode,
+      {isOnline = false,callback}) {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -51,11 +52,20 @@ class ModalContainer {
             widget: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                VideoAdButton(mode: mode, localeProvider: localeProvider),
+                VideoAdButton(
+                  mode: mode,
+                  localeProvider: localeProvider,
+                  isOnline: isOnline,
+                ),
                 const SizedBox(
                   width: 16,
                 ),
-                CoinsButton(mode: mode, localeProvider: localeProvider)
+                CoinsButton(
+                  mode: mode,
+                  localeProvider: localeProvider,
+                  isOnline: isOnline,
+                  callback: callback,
+                )
               ],
             )));
   }

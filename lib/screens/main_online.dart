@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
+import 'package:in_zone_app/widgets/containers/modal_container.dart';
 import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
 import 'package:in_zone_app/widgets/screens/main_online/rank_image.dart';
 import 'package:in_zone_app/widgets/screens/main_online/rank_navs.dart';
@@ -28,10 +29,12 @@ class _MainOnlineState extends State<MainOnline> {
 
   joinRoom(localeProvider) async {
     if (!loading) {
-      setState(() {
-        loading = true;
+      ModalContainer.choosePlayOptionModal(context, localeProvider, '',
+          isOnline: true, callback: () {
+        setState(() {
+          loading = true;
+        });
       });
-      _socketMethods.joinRoom(context, localeProvider);
     }
   }
 
@@ -66,6 +69,7 @@ class _MainOnlineState extends State<MainOnline> {
                   fontSize: 13,
                   radius: 10,
                   loading: loading,
+                  uppercase: true,
                   action: () => joinRoom(localeProvider))
             ],
           ),

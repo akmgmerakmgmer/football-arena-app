@@ -11,7 +11,8 @@ class MainMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LocaleProvider localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+    LocaleProvider localeProvider =
+        Provider.of<LocaleProvider>(context, listen: false);
     return ImageBackgroundContainer(
         body: Column(
       children: [
@@ -19,8 +20,7 @@ class MainMenu extends StatelessWidget {
           fontSize: 15,
           buttonText: AppLocalizations.of(context)!.start,
           action: () {
-            if (localeProvider.user
-                .containsKey('username')) {
+            if (localeProvider.user.containsKey('username')) {
               Navigator.pushNamed(
                 context,
                 '/questions',
@@ -39,7 +39,11 @@ class MainMenu extends StatelessWidget {
             fontSize: 15,
             buttonText: AppLocalizations.of(context)!.play_online,
             action: () {
-              Navigator.pushNamed(context, '/main-online');
+              if (localeProvider.user.containsKey('username')) {
+                Navigator.pushNamed(context, '/main-online');
+              } else {
+                Navigator.pushNamed(context, '/login');
+              }
             },
             uppercase: true),
         const SizedBox(

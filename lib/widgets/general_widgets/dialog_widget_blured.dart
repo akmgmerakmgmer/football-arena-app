@@ -78,7 +78,7 @@ class DialogWidgetBlured extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 24, vertical: 12),
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade800,
+                          color: Colors.white.withOpacity(0.1),
                           borderRadius:
                               const BorderRadius.all(Radius.circular(10)),
                         ),

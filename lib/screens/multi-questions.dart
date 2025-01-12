@@ -543,7 +543,6 @@ class _QuestionsState extends State<MultiQuestions>
     };
     PutApi('$api/$userId', payload, (res) {
       Provider.of<LocaleProvider>(context, listen: false).setUser(res['user']);
-      promotionMethod(res['prizes']);
       if (res['promoted'] != null && res['promoted']) {
         promotionMethod(res['prizes']);
       }

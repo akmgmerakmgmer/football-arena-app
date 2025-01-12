@@ -13,8 +13,8 @@ class RankNavs extends StatelessWidget {
   final List navs = [
     {
       'title': {
-        'en': "Season Results",
-        "ar": "نتائج الموسم",
+        'en': "Your Season Results",
+        "ar": "نتائجك في الموسم",
       },
       "action": (context, prizes) {
         Navigator.pushNamed(context, '/results');
@@ -30,6 +30,24 @@ class RankNavs extends StatelessWidget {
             context,
             PrizesContent(prizes: prizes),
             AppLocalizations.of(context)!.prizes);
+      },
+    },
+    {
+      'title': {
+        'en': "All Ranks",
+        "ar": "جميع التصنيفات",
+      },
+      "action": (context, prizes) {
+        Navigator.pushNamed(context, '/ranks');
+      },
+    },
+    {
+      'title': {
+        'en': "Your Previous Ranks",
+        "ar": "تصنيفاتك السابقة",
+      },
+      "action": (context, prizes) {
+        Navigator.pushNamed(context, '/prev-ranks');
       },
     },
   ];

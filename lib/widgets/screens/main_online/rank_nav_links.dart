@@ -16,18 +16,21 @@ class RankNavLinks extends StatelessWidget {
     return GestureDetector(
       onTap: () => action(),
       child: Container(
-        padding: const EdgeInsets.all(8),
+        padding: EdgeInsets.only(
+            top: 6,
+            bottom: 6,
+            left: locale == 'en' ? 8 : 0,
+            right: locale == 'en' ? 0 : 8),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade400, width: 2),
-          borderRadius: BorderRadius.circular(10)
-        ),
+            border: Border.all(color: Colors.grey.shade400, width: 2),
+            borderRadius: BorderRadius.circular(10)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextWidget(
               title: title,
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
+              fontSize: 12.5,
+              fontWeight: locale == 'en' ? FontWeight.w600 : FontWeight.bold,
               uppercase: true,
             ),
             Icon(

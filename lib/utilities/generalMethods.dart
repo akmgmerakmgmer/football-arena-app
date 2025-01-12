@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/my_I18n.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/screens/questions.dart';
+import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GeneralMethods {
+  final SocketMethods socketMethods = SocketMethods();
   void changeLanguage(context) async {
     String lang = getLocale(context) == 'ar' ? 'en' : 'ar';
     MyI18n.of(context)!.changeLocale(Locale(lang));
@@ -26,7 +28,8 @@ class GeneralMethods {
     return Provider.of<LocaleProvider>(context, listen: false).locale;
   }
 
-  playWithCoins(context, LocaleProvider localeProvider, String mode) {
+  playWithCoins(
+      context, LocaleProvider localeProvider, String mode, bool isOnline) {
     Map user = localeProvider.user;
     if (user['coins'] < 100) {
       return SnackbarMessage().snackbar(
@@ -37,17 +40,21 @@ class GeneralMethods {
         Navigator.pushNamed(context, '/shop');
       });
     } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          settings: const RouteSettings(name: '/questions'),
-          builder: (context) => Questions(
-            questionMode: mode,
-            price: 100,
-            userId: localeProvider.user['_id'],
+      if (isOnline) {
+        socketMethods.joinRoom(context, localeProvider, questionMode: mode);
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            settings: const RouteSettings(name: '/questions'),
+            builder: (context) => Questions(
+              questionMode: mode,
+              price: 100,
+              userId: localeProvider.user['_id'],
+            ),
           ),
-        ),
-      );
+        );
+      }
     }
   }
 }

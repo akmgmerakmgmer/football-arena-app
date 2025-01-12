@@ -29,12 +29,12 @@ class _LoginFormState extends State<LoginForm> {
       localStorage.setString('token', response['accessToken']);
       String? token = localStorage.getString(('token'));
       // ignore: use_build_context_synchronously
-      await Auth().getUser(token, context);
+      bool havePrize = await Auth().getUser(token, context);
       setState(() {
         loading = false;
       });
       // ignore: use_build_context_synchronously
-      Navigator.pushNamed(context, '/');
+      if(!havePrize) Navigator.pushNamed(context, '/');
     }, errorCallback: (value) {
       if (value.containsKey('username') &&
           value['username'] == 'field_required') {
@@ -126,7 +126,9 @@ class _LoginFormState extends State<LoginForm> {
             Navigator.pushNamed(context, '/signup');
           },
           child: TextWidget(
-              title: AppLocalizations.of(context)!.doesntHaveAccount,fontSize: 16,),
+            title: AppLocalizations.of(context)!.doesntHaveAccount,
+            fontSize: 16,
+          ),
         )
       ],
     );

@@ -43,6 +43,7 @@ dependencies:
   google_sign_in: ^6.0.1
   socket_io_client: ^3.0.2
   connectivity_plus: ^6.1.1
+  easy_debounce: ^2.0.3
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -128,9 +129,7 @@ flutter:
     - assets/images/reversed_words.jpg
     - assets/images/guess_the_player.jpg
     - assets/images/all_in_one.jpg
-    - assets/images/background_1.jpg
     - assets/images/background_2.jpg
-    - assets/images/background_3.jpg
     - assets/audio/correct.mp3
     - assets/audio/buzzer.mp3
     
