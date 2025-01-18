@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/my_I18n.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/screens/questions.dart';
+import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
 import 'package:provider/provider.dart';
@@ -41,6 +42,9 @@ class GeneralMethods {
       });
     } else {
       if (isOnline) {
+        PutApi('users/${user['_id']}', {'coins': user['coins'] - 100}, (res) {
+          localeProvider.setUser(res);
+        }).put(context);
         socketMethods.joinRoom(context, localeProvider, questionMode: mode);
       } else {
         Navigator.pushReplacement(

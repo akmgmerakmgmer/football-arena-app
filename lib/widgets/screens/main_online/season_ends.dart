@@ -4,7 +4,8 @@ import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SeasonEnds extends StatelessWidget {
-  const SeasonEnds({super.key});
+  final String endsDate;
+  const SeasonEnds({super.key, required this.endsDate});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class SeasonEnds extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
             TextWidget(
-              title: ' 23-12-2025',
+              title: ' $endsDate',
               fontSize: 14,
               fontWeight: FontWeight.w600,
               alwaysEnglish: true,

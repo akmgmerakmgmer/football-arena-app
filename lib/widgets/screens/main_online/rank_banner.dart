@@ -8,9 +8,16 @@ class RankBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      top: 0,
-      left: 0,
-      child: CachedImage(width: 120, image: user['rank']['rank_banner'][locale]));
+    return locale == 'en'
+        ? Positioned(
+            top: 0,
+            left: 0,
+            child: CachedImage(
+                width: 120, image: user['rank']['rank_banner'][locale]))
+        : Positioned(
+            top: 0,
+            right: 0,
+            child: CachedImage(
+                width: 120, image: user['rank']['rank_banner'][locale]));
   }
 }

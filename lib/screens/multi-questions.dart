@@ -21,6 +21,8 @@ import 'package:in_zone_app/widgets/screens/questions/player_search.dart';
 import 'package:in_zone_app/widgets/screens/questions/rank_change.dart';
 import 'package:in_zone_app/widgets/screens/questions/true_or_false.dart';
 import 'package:in_zone_app/widgets/screens/questions/two_players_stats.dart';
+import 'package:in_zone_app/widgets/screens/questions/you_lost_image.dart';
+import 'package:in_zone_app/widgets/screens/questions/you_won_image.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:convert'; // For utf8 encoding
@@ -513,13 +515,11 @@ class _QuestionsState extends State<MultiQuestions>
     ModalContainer.modal(context, RankChange(user: user, locale: locale),
         AppLocalizations.of(context)!.you_have_been_promoted,
         closeCallBack: () {
-      Timer(const Duration(seconds: 500), () {
-        ModalContainer.modal(
-          context,
-          PrizesContent(prizes: prizes),
-          AppLocalizations.of(context)!.congratulations,
-        );
-      });
+      ModalContainer.modal(
+        context,
+        PrizesContent(prizes: prizes),
+        AppLocalizations.of(context)!.congratulations,
+      );
     });
   }
 
@@ -554,15 +554,15 @@ class _QuestionsState extends State<MultiQuestions>
   }
 
   Future<void> winnerUpdate() async {
-    await gameDoneMethod('/multi-game-winner', userId);
+    await gameDoneMethod('multi-game-winner', userId);
   }
 
   Future<void> loserUpdate() async {
-    await gameDoneMethod('/multi-game-loser', '');
+    await gameDoneMethod('multi-game-loser', '');
   }
 
   Future<void> drawUpdate() async {
-    await gameDoneMethod('/multi-game-draw', '');
+    await gameDoneMethod('multi-game-draw', '');
   }
 
   void youWon(room) {
@@ -721,16 +721,8 @@ class _QuestionsState extends State<MultiQuestions>
                     fontSize: 50,
                   ))
                 : youWonState
-                    ? Center(
-                        child: TextWidget(
-                        title: 'YOU WON',
-                        fontSize: 50,
-                      ))
-                    : Center(
-                        child: TextWidget(
-                        title: 'YOU Lost',
-                        fontSize: 50,
-                      ))
+                    ? YouWonImage(locale: locale)
+                    : YouLostImage(locale: locale)
             : playerTimeDoneCalled || questionsFinished
                 ? const WaitingForOtherPlayers()
                 : Stack(

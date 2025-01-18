@@ -6,7 +6,7 @@ class SingleChallengeLoadingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color contextColor = Colors.grey.shade800;
+    Color contextColor = Colors.white.withOpacity(0.1);
     return Row(
       children: [
         ClipRRect(
@@ -21,7 +21,7 @@ class SingleChallengeLoadingCard extends StatelessWidget {
                     padding: const EdgeInsets.all(20.0),
                     width: 225,
                     decoration: BoxDecoration(
-                        color:  Theme.of(context).splashColor.withOpacity(0.55),
+                        color: Theme.of(context).splashColor.withOpacity(0.55),
                         borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20),

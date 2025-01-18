@@ -6,7 +6,7 @@ class SingleLoadingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color contextColor = Colors.grey.shade800;
+    Color contextColor = Colors.white.withOpacity(0.1);
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Container(

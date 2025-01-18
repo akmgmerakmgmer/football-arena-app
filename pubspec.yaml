@@ -130,6 +130,10 @@ flutter:
     - assets/images/guess_the_player.jpg
     - assets/images/all_in_one.jpg
     - assets/images/background_2.jpg
+    - assets/images/lost_arabic.png
+    - assets/images/lost_english.png
+    - assets/images/won_arabic.png
+    - assets/images/won_english.png
     - assets/audio/correct.mp3
     - assets/audio/buzzer.mp3
     

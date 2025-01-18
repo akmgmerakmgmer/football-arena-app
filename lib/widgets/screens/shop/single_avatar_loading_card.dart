@@ -6,7 +6,7 @@ class SingleAvatarLoadingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color contextColor = Colors.grey.shade800;
+    Color contextColor = Colors.white.withOpacity(0.1);
     double width = MediaQuery.of(context).size.width;
     double buttonWidth = width > 1280
         ? width * 0.1

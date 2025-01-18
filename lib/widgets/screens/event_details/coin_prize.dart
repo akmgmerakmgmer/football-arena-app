@@ -16,7 +16,7 @@ class CoinPrize extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-          color: Colors.grey.shade800,
+          color: Colors.white.withOpacity(0.1),
           borderRadius: const BorderRadius.all(Radius.circular(8))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

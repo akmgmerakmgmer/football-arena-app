@@ -149,5 +149,6 @@
     "play_alone": "Play Alone",
     "all_ranks": "All Ranks",
     "previous_ranks":"Your Previous Ranks",
-    "no_previous_rank": "No Previous Ranks"
+    "no_previous_rank": "No Previous Ranks",
+    "maximum_free_coins":"You have reached the maximum daily times of free coins"
 }

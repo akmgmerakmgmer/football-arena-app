@@ -6,7 +6,7 @@ class SingleShopLoadingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color contextColor = Colors.grey.shade800;
+    Color contextColor = Colors.white.withOpacity(0.1);
     double defaultWidth = MediaQuery.of(context).size.width;
     double width = MediaQuery.of(context).size.width > 1280
         ? defaultWidth * 1 / 4

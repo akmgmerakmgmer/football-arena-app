@@ -23,7 +23,7 @@ class SingleResult extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             UserImage(
-              image: player1['image'],
+              image: player1['player']['selectedAvatar']['image'],
               borderColor: Colors.transparent,
               imageSize: 65,
             ),
@@ -33,7 +33,7 @@ class SingleResult extends StatelessWidget {
             Row(
               children: [
                 UsernameText(
-                  title: player1['playerName'],
+                  title: player1['player']['username'],
                   fontSize: defaultFontSize,
                   fontWeight: FontWeight.bold,
                 ),
@@ -67,7 +67,7 @@ class SingleResult extends StatelessWidget {
                   width: 8,
                 ),
                 UsernameText(
-                  title: player2['playerName'],
+                  title: player2['player']['username'],
                   fontSize: defaultFontSize,
                   fontWeight: FontWeight.bold,
                 ),
@@ -77,7 +77,7 @@ class SingleResult extends StatelessWidget {
               ],
             ),
             UserImage(
-                image: player2['image'],
+                image: player2['player']['selectedAvatar']['image'],
                 borderColor: Colors.transparent,
                 imageSize: 65),
           ],
