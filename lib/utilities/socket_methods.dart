@@ -10,10 +10,11 @@ class SocketMethods {
       {String questionMode = ''}) {
     Map user = localeProvider.user;
     if (user.isNotEmpty) {
-      _socketClient?.emit(
-          'joinRoom', {'userId': user['_id'], 'questionMode': questionMode});
+      _socketClient?.emit('joinRoom', {'userId': user['_id']});
     } else {
-      Navigator.pushNamed(context, '/login');
+      if (context.mounted) {
+        Navigator.pushNamed(context, '/login');
+      }
     }
   }
 
@@ -50,7 +51,9 @@ class SocketMethods {
       room['players'].remove(myUser);
       room['players'].insert(0, myUser);
       localeProvider.setRoom(room);
-      Navigator.pushNamed(context, '/multi-screen');
+      if (context.mounted) {
+        Navigator.pushNamed(context, '/multi-screen');
+      }
     });
   }
 

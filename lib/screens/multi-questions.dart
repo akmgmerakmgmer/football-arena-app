@@ -497,7 +497,7 @@ class _QuestionsState extends State<MultiQuestions>
 
   void playerTimeDone() {
     if (mounted) {
-      if ((countDown == 0 && !playerTimeDoneCalled) || questionsFinished) {
+      if (countDown == 0 && !playerTimeDoneCalled) {
         setState(() {
           playerTimeDoneCalled = true;
           stopCount = true;

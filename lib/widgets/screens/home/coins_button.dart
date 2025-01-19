@@ -56,8 +56,10 @@ class CoinsButton extends StatelessWidget {
               ],
             ),
             action: () {
-              GeneralMethods()
-                  .playWithCoins(context, localeProvider, mode, isOnline);
+              if (context.mounted) {
+                GeneralMethods()
+                    .playWithCoins(context, localeProvider, mode, isOnline);
+              }
               if (callback != null) {
                 Navigator.pop(context);
                 callback();

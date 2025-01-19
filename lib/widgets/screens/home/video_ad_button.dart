@@ -45,7 +45,7 @@ class VideoAdButton extends StatelessWidget {
                     ],
                   ),
                   rewardMethod: () {
-                    if (isOnline) {
+                    if (isOnline && context.mounted) {
                       socketMethods.joinRoom(context, localeProvider,
                           questionMode: mode);
                     } else {

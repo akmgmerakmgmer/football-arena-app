@@ -29,35 +29,37 @@ class GeneralMethods {
     return Provider.of<LocaleProvider>(context, listen: false).locale;
   }
 
-  playWithCoins(
-      context, LocaleProvider localeProvider, String mode, bool isOnline) {
-    Map user = localeProvider.user;
-    if (user['coins'] < 100) {
-      return SnackbarMessage().snackbar(
-          context, AppLocalizations.of(context)!.not_enough_coins,
-          label: AppLocalizations.of(context)!.buy_coins,
-          error: true, action: () {
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        Navigator.pushNamed(context, '/shop');
-      });
-    } else {
-      if (isOnline) {
-        PutApi('users/${user['_id']}', {'coins': user['coins'] - 100}, (res) {
-          localeProvider.setUser(res);
-        }).put(context);
-        socketMethods.joinRoom(context, localeProvider, questionMode: mode);
+  playWithCoins(BuildContext context, LocaleProvider localeProvider,
+      String mode, bool isOnline) {
+    if (context.mounted) {
+      Map user = localeProvider.user;
+      if (user['coins'] < 100) {
+        return SnackbarMessage().snackbar(
+            context, AppLocalizations.of(context)!.not_enough_coins,
+            label: AppLocalizations.of(context)!.buy_coins,
+            error: true, action: () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          Navigator.pushNamed(context, '/shop');
+        });
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            settings: const RouteSettings(name: '/questions'),
-            builder: (context) => Questions(
-              questionMode: mode,
-              price: 100,
-              userId: localeProvider.user['_id'],
+        if (isOnline) {
+          PutApi('users/${user['_id']}', {'coins': user['coins'] - 100}, (res) {
+            localeProvider.setUser(res);
+          }).put(context);
+          socketMethods.joinRoom(context, localeProvider, questionMode: mode);
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              settings: const RouteSettings(name: '/questions'),
+              builder: (context) => Questions(
+                questionMode: mode,
+                price: 100,
+                userId: localeProvider.user['_id'],
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
     }
   }

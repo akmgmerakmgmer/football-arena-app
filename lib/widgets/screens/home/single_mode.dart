@@ -33,6 +33,7 @@ class _SingleModeState extends State<SingleMode> {
     _socketMethods.joinRoomSuccesListener(context, localeProvider);
     super.initState();
   }
+
   bool isPlayedToday(context) {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     DateTime now = DateTime.now();
@@ -49,7 +50,7 @@ class _SingleModeState extends State<SingleMode> {
     return false;
   }
 
-  playMode(context) {
+  playMode(BuildContext context) {
     final SocketMethods socketMethods = SocketMethods();
     LocaleProvider localeProvider =
         Provider.of<LocaleProvider>(context, listen: false);
@@ -61,7 +62,7 @@ class _SingleModeState extends State<SingleMode> {
       return ModalContainer.choosePlayOptionModal(
           context, localeProvider, widget.singleMode['mode']);
     }
-    if (widget.isOnline) {
+    if (widget.isOnline && context.mounted) {
       socketMethods.joinRoom(context, localeProvider,
           questionMode: widget.singleMode['mode']);
     } else {
@@ -110,8 +111,9 @@ class _SingleModeState extends State<SingleMode> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextWidget(
-                      title:
-                          locale == 'ar' ? widget.singleMode['ar'] : widget.singleMode['en'],
+                      title: locale == 'ar'
+                          ? widget.singleMode['ar']
+                          : widget.singleMode['en'],
                       fontSize: 15,
                       textAlign: TextAlign.center,
                       fontWeight: FontWeight.bold,

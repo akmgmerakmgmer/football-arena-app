@@ -22,19 +22,28 @@ class _MainOnlineState extends State<MainOnline> {
 
   @override
   void initState() {
-    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
-    _socketMethods.joinRoomSuccesListener(context, localeProvider);
+    if (mounted) {
+      LocaleProvider localeProvider =
+          Provider.of<LocaleProvider>(context, listen: false);
+      _socketMethods.joinRoomSuccesListener(context, localeProvider);
+    }
     super.initState();
   }
 
-  joinRoom(localeProvider) async {
-    if (!loading) {
-      ModalContainer.choosePlayOptionModal(context, localeProvider, '',
-          isOnline: true, callback: () {
-        setState(() {
-          loading = true;
-        });
+  joinRoom() async {
+    if (!loading && mounted) {
+      setState(() {
+        loading = true;
       });
+      LocaleProvider localeProvider =
+          Provider.of<LocaleProvider>(context, listen: false);
+      _socketMethods.joinRoom(context, localeProvider);
+      // ModalContainer.choosePlayOptionModal(context, localeProvider, '',
+      //     isOnline: true, callback: () {
+      //   setState(() {
+      //     loading = true;
+      //   });
+      // });
     }
   }
 
@@ -70,7 +79,7 @@ class _MainOnlineState extends State<MainOnline> {
                   radius: 10,
                   loading: loading,
                   uppercase: true,
-                  action: () => joinRoom(localeProvider))
+                  action: () => joinRoom())
             ],
           ),
         ));
