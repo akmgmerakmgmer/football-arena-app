@@ -139,6 +139,7 @@
     "login_word": "سجل",
     "continue_with_google": "سجل باستخدام جوجل",
     "waiting_for_other_players":"انتظر دخول لاعب آخر",
+    "waiting_for_player_to_finish": "انتظر اللاعب الاخر",
     "choose_option_to_play": "اختر خيارًا للعب",
     "choose_option_description": "يمكن لعب هذا التحدي مجانًا مرة واحدة يوميًا",
     "wins": "الفوز",
@@ -159,5 +160,6 @@
     "all_ranks": "جميع التصنيفات",
     "previous_ranks":"تصنيفاتك السابقة",
     "no_previous_rank": "ليس لديك تصنيفات سابقة",
-    "maximum_free_coins": "لقد وصلت إلى الحد الأقصى اليومي من العملات المجانية."
+    "maximum_free_coins": "لقد وصلت إلى الحد الأقصى اليومي من العملات المجانية.",
+    "account_edited": "تم تعديل حسابك"
 }

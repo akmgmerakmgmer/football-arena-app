@@ -7,6 +7,7 @@ import 'package:in_zone_app/widgets/containers/image_background_plain.dart';
 import 'package:in_zone_app/widgets/general_widgets/waiting_for_other_players.dart';
 import 'package:in_zone_app/widgets/screens/multi_screen/player_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MultiScreen extends StatefulWidget {
   const MultiScreen({super.key});
@@ -125,7 +126,7 @@ class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
                 const SizedBox(height: 24),
                 // Show waiting message if not all players have joined
                 room['players'].length != room['numberOfPlayers']
-                    ? const WaitingForOtherPlayers()
+                    ?  WaitingForOtherPlayers(title: AppLocalizations.of(context)!.waiting_for_other_players,)
                     : Container(),
               ],
             ),

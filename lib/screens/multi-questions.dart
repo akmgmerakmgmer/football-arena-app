@@ -497,7 +497,7 @@ class _QuestionsState extends State<MultiQuestions>
 
   void playerTimeDone() {
     if (mounted) {
-      if (countDown == 0 && !playerTimeDoneCalled) {
+      if ((countDown == 0 || questionsFinished) && !playerTimeDoneCalled) {
         setState(() {
           playerTimeDoneCalled = true;
           stopCount = true;
@@ -558,7 +558,15 @@ class _QuestionsState extends State<MultiQuestions>
   }
 
   Future<void> loserUpdate() async {
-    await gameDoneMethod('multi-game-loser', '');
+    String winnerId = '';
+    List players =
+        Provider.of<LocaleProvider>(context, listen: false).room['players'];
+    for (var player in players) {
+      if (player['userId']['_id'] != userId) {
+        winnerId = player['userId']['_id'];
+      }
+    }
+    await gameDoneMethod('multi-game-loser', winnerId);
   }
 
   Future<void> drawUpdate() async {
@@ -724,7 +732,10 @@ class _QuestionsState extends State<MultiQuestions>
                     ? YouWonImage(locale: locale)
                     : YouLostImage(locale: locale)
             : playerTimeDoneCalled || questionsFinished
-                ? const WaitingForOtherPlayers()
+                ? WaitingForOtherPlayers(
+                    title: AppLocalizations.of(context)!
+                        .waiting_for_player_to_finish,
+                  )
                 : Stack(
                     children: [
                       TwoPlayersStats(

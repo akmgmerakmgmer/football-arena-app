@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WaitingForOtherPlayers extends StatefulWidget {
-  const WaitingForOtherPlayers({super.key});
+  final String title;
+  const WaitingForOtherPlayers({super.key, required this.title});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -40,8 +40,7 @@ class _WaitingForOtherPlayersState extends State<WaitingForOtherPlayers> {
   Widget build(BuildContext context) {
     return Center(
       child: TextWidget(
-        title:
-            '${AppLocalizations.of(context)!.waiting_for_other_players}${'.' * _dotCount}', // Add dots dynamically
+        title: '${widget.title}${'.' * _dotCount}', // Add dots dynamically
         fontSize: 20,
         fontWeight: FontWeight.w600,
       ),

@@ -130,6 +130,7 @@
     "login_word": "Register",
     "continue_with_google": "Continue with google",
     "waiting_for_other_players": "Wating for other players",
+    "waiting_for_player_to_finish": "Waiting for the other player",
     "choose_option_to_play": "Choose an Option to Play",
     "choose_option_description": "This mode is playable for free once per day",
     "wins": "Wins",
@@ -150,5 +151,6 @@
     "all_ranks": "All Ranks",
     "previous_ranks":"Your Previous Ranks",
     "no_previous_rank": "No Previous Ranks",
-    "maximum_free_coins":"You have reached the maximum daily times of free coins"
+    "maximum_free_coins":"You have reached the maximum daily times of free coins",
+    "account_edited":"Your account has been edited"
 }

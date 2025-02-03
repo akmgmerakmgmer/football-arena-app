@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:in_zone_app/widgets/buttons/default_button.dart';
+import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
 import 'package:in_zone_app/widgets/user_inputs/input.dart';
 
 class ProfileForm extends StatefulWidget {
@@ -33,6 +34,8 @@ class _ProfileFormState extends State<ProfileForm> {
         setState(() {
           loading = false;
         });
+        SnackbarMessage()
+            .snackbar(context, AppLocalizations.of(context)!.account_edited);
       }, errorCallback: (error) {
         setState(() {
           loading = false;

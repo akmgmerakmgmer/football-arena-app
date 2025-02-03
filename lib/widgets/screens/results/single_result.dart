@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/widgets/general_widgets/username_text.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/screens/questions/user_image.dart';
+import 'package:provider/provider.dart';
 
 class SingleResult extends StatelessWidget {
   final List result;
@@ -11,14 +13,17 @@ class SingleResult extends StatelessWidget {
   Widget build(BuildContext context) {
     Map player1 = result[0];
     Map player2 = result[1];
+    String userId =
+        Provider.of<LocaleProvider>(context, listen: false).user['_id'];
+    List yourData = result
+        .where((item) => item['player']['_id'].toString() == userId.toString())
+        .toList();
+    // bool isWinner = yourData.isNotEmpty ? yourData[0]['isWinner'] : false;
     double defaultFontSize = 17;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Container(
         padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-            color: Theme.of(context).primaryColorDark,
-            borderRadius: BorderRadius.circular(10)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -28,8 +33,8 @@ class SingleResult extends StatelessWidget {
               imageSize: 65,
             ),
             const SizedBox(
-                  width: 8,
-                ),
+              width: 8,
+            ),
             Row(
               children: [
                 UsernameText(
