@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/utilities/auth.dart';
+import 'package:in_zone_app/widgets/buttons/default_button.dart';
 import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/title_with_border.dart';
+import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
 import 'package:in_zone_app/widgets/screens/profile/profile_form.dart';
 import 'package:in_zone_app/widgets/screens/profile/single_perk_profile.dart';
 import 'package:in_zone_app/widgets/screens/profile/single_users_avatars.dart';
@@ -21,7 +24,7 @@ class AccountProfile extends StatelessWidget with ChangeNotifier {
 
     return PageContainerWithFooter(
         background: Theme.of(context).splashColor,
-        body: Container(
+        body:user.isEmpty?const PrimaryLoading(): Container(
           margin: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,6 +135,22 @@ class AccountProfile extends StatelessWidget with ChangeNotifier {
                             ),
                           )
                         : Container(),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    DefaultButton(
+                        loading: false,
+                        isThereIconNext: true,
+                        iconNext: const Icon(
+                          Icons.logout,
+                          size: 18,
+                          color: Colors.white,
+                        ),
+                        buttonText: AppLocalizations.of(context)!.logout,
+                        action: () {
+                          Navigator.pushReplacementNamed(context, '/');
+                          Auth().logout(context);
+                        }),
                   ],
                 ),
               )

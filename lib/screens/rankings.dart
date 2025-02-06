@@ -202,30 +202,18 @@ class _RankingsState extends State<Rankings> {
               show: searchTime == 'monthly',
             ),
             const SizedBox(
-              height: 10,
+              height: 4,
             ),
-            // Container(
-            //   padding: const EdgeInsets.all(8),
-            //   decoration:
-            //       BoxDecoration(color: Theme.of(context).primaryColorDark),
-            //   child: Column(
-            //     children: [
-            //       TextWidget(
-            //         title: AppLocalizations.of(context)!.note,
-            //         fontSize: 12.5,
-            //       ),
-            //       const SizedBox(
-            //         height: 10,
-            //       ),
-            //       TextWidget(
-            //         title: AppLocalizations.of(context)!.additionalNote,
-            //         fontSize: 12.5,
-            //       )
-            //     ],
-            //   ),
-            // ),
+            Container(
+                padding: const EdgeInsets.all(8),
+                decoration:
+                    BoxDecoration(color: Theme.of(context).primaryColorDark),
+                child: TextWidget(
+                  title: AppLocalizations.of(context)!.additionalNote,
+                  fontSize: 12.5,
+                )),
             const SizedBox(
-              height: 5,
+              height: 4,
             ),
             loading
                 ? const UserLoadingCard()

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/screens/questions/game_done_container.dart';
 
-class YouWonImage extends StatelessWidget {
+class YouDrewImage extends StatelessWidget {
   final String locale;
-  const YouWonImage({super.key, required this.locale});
+  const YouDrewImage({super.key, required this.locale});
 
   @override
   Widget build(BuildContext context) {
     return GameDoneContainer(
         image: locale == 'ar'
-            ? 'assets/images/won_arabic.png'
-            : 'assets/images/won_english.png');
+            ? 'assets/images/draw_arabic.png'
+            : 'assets/images/draw_english.png');
   }
 }

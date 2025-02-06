@@ -67,7 +67,7 @@
     "gamesPlayed": "Games Played",
     "tableRankings": "Table Rankings",
     "note": "Note: collecting points weekly prizes will be distributed every Saturday. Please ensure your mobile number is correct and available to collect your prize.",
-    "additionalNote":"Please note that the deadline for collecting points for each week will be by the end of Friday. Points accumulated after this deadline will be counted towards the following week's prizes.",
+    "additionalNote":"Please note that the deadline for collecting points for each week will be on Saturday 2 AM. Points accumulated after this deadline will be counted towards the following week.",
     "noRankedUsers": "No Users Played Yet",
     "buyNow": "Buy Now",
     "yourAvatars": "Your Avatars",
@@ -152,5 +152,7 @@
     "previous_ranks":"Your Previous Ranks",
     "no_previous_rank": "No Previous Ranks",
     "maximum_free_coins":"You have reached the maximum daily times of free coins",
-    "account_edited":"Your account has been edited"
+    "account_edited":"Your account has been edited",
+    "win_promotion_flag": "Win to rank up",
+    "lose_demotion_flag": "If you lose you will be demoted"
 }

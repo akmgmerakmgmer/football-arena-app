@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/ad_reward_methods.dart';
 import 'package:in_zone_app/utilities/generalMethods.dart';
-import 'package:in_zone_app/widgets/animations/ping_animation.dart';
-import 'package:in_zone_app/widgets/general_widgets/coin.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/video_reward_ad.dart';
 import 'package:in_zone_app/widgets/header/neon_icon.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/widgets/animations/pulse_animation.dart';
 
-class HeaderCoin extends StatelessWidget {
+class CoinGift extends StatelessWidget {
   final String locale;
   final LocaleProvider localeProvider;
   final Map user;
-  const HeaderCoin(
+  const CoinGift(
       {super.key,
       required this.locale,
       required this.user,
@@ -27,24 +26,9 @@ class HeaderCoin extends StatelessWidget {
               rewardMethod: () {
                 AddRewardMethods().addCoinsMethod(localeProvider, context);
               },
-              body: Column(
-                children: [
-                  const PingAnimation(
-                    color: Colors.yellow,
-                    seconds: 1,
-                    size: 14,
-                    child: Coin(
-                      width: 20,
-                    ),
+              body: const PulseAnimation(
+                    child: Icon(Icons.wallet_giftcard,color: Colors.white,)
                   ),
-                  TextWidget(
-                    title: user['coins'].toString(),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    alwaysEnglish: true,
-                  ),
-                ],
-              ),
             )
           : GestureDetector(
               onTap: () => Navigator.pushNamed(

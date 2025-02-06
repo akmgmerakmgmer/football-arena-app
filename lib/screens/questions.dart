@@ -94,7 +94,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
         pageLoading = true;
       });
     }
-    FetchApi(
+    await FetchApi(
         'questions?page=$currentPage&search=${widget.mode}&userId=${widget.userId}&name=${widget.name}&questionMode=${widget.questionMode}&price=${widget.price}',
         (res) {
       if (res['user'] != null) {
@@ -605,7 +605,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     if (widget.themePreview == '') {
       gameSaved = true;
       await getAdvertisments();
-      getQuestions();
+      await getQuestions();
     }
   }
 
@@ -680,7 +680,6 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       element['isChosen'] = false;
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

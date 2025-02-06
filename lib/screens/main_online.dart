@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
-import 'package:in_zone_app/widgets/containers/modal_container.dart';
 import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
 import 'package:in_zone_app/widgets/screens/main_online/rank_image.dart';
 import 'package:in_zone_app/widgets/screens/main_online/rank_navs.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:in_zone_app/widgets/containers/modal_container.dart';
 
 class MainOnline extends StatefulWidget {
   const MainOnline({super.key});
@@ -32,18 +32,15 @@ class _MainOnlineState extends State<MainOnline> {
 
   joinRoom() async {
     if (!loading && mounted) {
-      setState(() {
-        loading = true;
-      });
       LocaleProvider localeProvider =
           Provider.of<LocaleProvider>(context, listen: false);
-      _socketMethods.joinRoom(context, localeProvider);
-      // ModalContainer.choosePlayOptionModal(context, localeProvider, '',
-      //     isOnline: true, callback: () {
-      //   setState(() {
-      //     loading = true;
-      //   });
-      // });
+      // _socketMethods.joinRoom(context, localeProvider);
+      ModalContainer.choosePlayOptionModal(context, localeProvider, '',
+          isOnline: true, callback: () {
+        setState(() {
+          loading = true;
+        });
+      });
     }
   }
 
@@ -59,13 +56,6 @@ class _MainOnlineState extends State<MainOnline> {
           margin: const EdgeInsets.all(16),
           child: Column(
             children: [
-              RankNavs(
-                locale: locale,
-                user: user,
-              ),
-              const SizedBox(
-                height: 8,
-              ),
               RankImage(
                 user: user,
                 locale: locale,
@@ -79,7 +69,14 @@ class _MainOnlineState extends State<MainOnline> {
                   radius: 10,
                   loading: loading,
                   uppercase: true,
-                  action: () => joinRoom())
+                  action: () => joinRoom()),
+              const SizedBox(
+                height: 8,
+              ),
+              RankNavs(
+                locale: locale,
+                user: user,
+              ),
             ],
           ),
         ));

@@ -19,17 +19,18 @@ class SingleRank extends StatelessWidget {
       children: [
         CachedImage(
           image: rank['image'],
-          width: alwaysEnglish?140:120,
+          width: alwaysEnglish ? 140 : 120,
         ),
         const SizedBox(
           height: 4,
         ),
         WhiteBgOpacityNoBlur(
             widget: TextWidget(
-                title: rank['title'][locale],
-                alwaysEnglish: alwaysEnglish,
-                fontSize: alwaysEnglish ? 16 : 13,
-                fontWeight: FontWeight.w600,),
+              title: rank['title'][locale],
+              alwaysEnglish: alwaysEnglish,
+              fontSize: alwaysEnglish ? 16 : 13,
+              fontWeight: FontWeight.w600,
+            ),
             padding: EdgeInsets.symmetric(
                 vertical: 8,
                 horizontal: locale == 'en' || alwaysEnglish ? 18 : 8))

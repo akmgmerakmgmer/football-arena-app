@@ -14,6 +14,7 @@ import 'package:in_zone_app/widgets/containers/modal_container.dart';
 import 'package:in_zone_app/widgets/containers/page_plain_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/waiting_for_other_players.dart';
+import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
 import 'package:in_zone_app/widgets/screens/event_details/prizes_content.dart';
 import 'package:in_zone_app/widgets/screens/questions/advertisment.dart';
 import 'package:in_zone_app/widgets/screens/questions/multiple_choices.dart';
@@ -21,6 +22,7 @@ import 'package:in_zone_app/widgets/screens/questions/player_search.dart';
 import 'package:in_zone_app/widgets/screens/questions/rank_change.dart';
 import 'package:in_zone_app/widgets/screens/questions/true_or_false.dart';
 import 'package:in_zone_app/widgets/screens/questions/two_players_stats.dart';
+import 'package:in_zone_app/widgets/screens/questions/you_drew_Image.dart';
 import 'package:in_zone_app/widgets/screens/questions/you_lost_image.dart';
 import 'package:in_zone_app/widgets/screens/questions/you_won_image.dart';
 import 'package:provider/provider.dart';
@@ -73,6 +75,7 @@ class _QuestionsState extends State<MultiQuestions>
   bool youDrewState = false;
   bool allPlayersTimeDone = false;
   bool oneUserLeft = false;
+  bool gameDoneLoading = false;
 
   // Methods
   Future<void> getQuestions() async {
@@ -535,6 +538,9 @@ class _QuestionsState extends State<MultiQuestions>
 
   Future<void> gameDoneMethod(api, winnerId) async {
     Map room = Provider.of<LocaleProvider>(context, listen: false).room;
+    setState(() {
+      gameDoneLoading = true;
+    });
     Map payload = {
       'userId': userId,
       'winnerId': winnerId,
@@ -542,6 +548,9 @@ class _QuestionsState extends State<MultiQuestions>
       'roomId': room['_id']
     };
     PutApi('$api/$userId', payload, (res) {
+      setState(() {
+        gameDoneLoading = false;
+      });
       Provider.of<LocaleProvider>(context, listen: false).setUser(res['user']);
       if (res['promoted'] != null && res['promoted']) {
         promotionMethod(res['prizes']);
@@ -721,128 +730,129 @@ class _QuestionsState extends State<MultiQuestions>
       child: PagePlainContainer(
           body: ImageBackgroundPlain(
         image: user['selectedTheme'],
-        body: allPlayersTimeDone || oneUserLeft
-            ? youDrewState
-                ? Center(
-                    child: TextWidget(
-                    title: 'YOU Drew',
-                    fontSize: 50,
-                  ))
-                : youWonState
-                    ? YouWonImage(locale: locale)
-                    : YouLostImage(locale: locale)
-            : playerTimeDoneCalled || questionsFinished
-                ? WaitingForOtherPlayers(
-                    title: AppLocalizations.of(context)!
-                        .waiting_for_player_to_finish,
-                  )
-                : Stack(
-                    children: [
-                      TwoPlayersStats(
-                        usedPerks: usedPerks,
-                        user: user,
-                        points: points,
-                        stopTime: stopTimeMethod,
-                        penalty: penaltyMethod,
-                        varMethod: varMethod,
-                        stoppageTime: stoppageTimeMethod,
-                        pointsMultiplicationMethod: multiplyPointsMethod,
-                        skipQuestion: skipQuestionMethod,
-                        locale: locale,
-                        localeProvider: localeProvider,
-                      ),
-                      FadeTransitionContainer(
-                        body: Container(
-                          margin:
-                              EdgeInsets.only(top: hints.length > 3 ? 32 : 0),
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                TextWidget(
-                                  title: countDown.toString(),
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.bold,
-                                  alwaysEnglish: true,
-                                ),
-                                const SizedBox(
-                                  height: 4,
-                                ),
-                                BlurBackgroundContainer(
-                                  padding: 12,
-                                  margin: 10,
-                                  body: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      TextWidget(
-                                        title: locale == 'ar'
-                                            ? '${questions[currentQuestion]['question']['ar']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})'
-                                            : '${questions[currentQuestion]['question']['en']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})',
-                                        fontSize: 16.5,
+        body: gameDoneLoading
+            ? const PrimaryLoading()
+            : allPlayersTimeDone || oneUserLeft
+                ? youDrewState
+                    ? YouDrewImage(locale: locale)
+                    : youWonState
+                        ? YouWonImage(locale: locale)
+                        : YouLostImage(locale: locale)
+                : playerTimeDoneCalled || questionsFinished
+                    ? WaitingForOtherPlayers(
+                        title: AppLocalizations.of(context)!
+                            .waiting_for_player_to_finish,
+                      )
+                    : Stack(
+                        children: [
+                          TwoPlayersStats(
+                            usedPerks: usedPerks,
+                            user: user,
+                            points: points,
+                            stopTime: stopTimeMethod,
+                            penalty: penaltyMethod,
+                            varMethod: varMethod,
+                            stoppageTime: stoppageTimeMethod,
+                            pointsMultiplicationMethod: multiplyPointsMethod,
+                            skipQuestion: skipQuestionMethod,
+                            locale: locale,
+                            localeProvider: localeProvider,
+                          ),
+                          FadeTransitionContainer(
+                            body: Container(
+                              margin: EdgeInsets.only(
+                                  top: hints.length > 3 ? 32 : 0),
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    TextWidget(
+                                      title: countDown.toString(),
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.bold,
+                                      alwaysEnglish: true,
+                                    ),
+                                    const SizedBox(
+                                      height: 4,
+                                    ),
+                                    BlurBackgroundContainer(
+                                      padding: 12,
+                                      margin: 10,
+                                      body: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          TextWidget(
+                                            title: locale == 'ar'
+                                                ? '${questions[currentQuestion]['question']['ar']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})'
+                                                : '${questions[currentQuestion]['question']['en']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})',
+                                            fontSize: 16.5,
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                PlayerSearch(
-                                  locale: locale,
-                                  isPlayerSearch:
-                                      questionMode == 'guessThePlayer' ||
+                                    ),
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
+                                    PlayerSearch(
+                                      locale: locale,
+                                      isPlayerSearch: questionMode ==
+                                              'guessThePlayer' ||
                                           questionMode == 'passwordChallenge',
-                                  questionHintsLength:
-                                      questions[currentQuestion]['hints']
-                                          .length,
-                                  hints: hints,
-                                  addHintAction: addHintAction,
-                                  skipAction: skipAction,
-                                  playerAction: choiceAction,
+                                      questionHintsLength:
+                                          questions[currentQuestion]['hints']
+                                              .length,
+                                      hints: hints,
+                                      addHintAction: addHintAction,
+                                      skipAction: skipAction,
+                                      playerAction: choiceAction,
+                                    ),
+                                    MultipleChoices(
+                                      locale: locale,
+                                      choices: questions[currentQuestion]
+                                          ['choices'],
+                                      isMultipleChoices:
+                                          questionMode == 'multipleChoices',
+                                      action: choiceAction,
+                                    ),
+                                    TrueOrFalse(
+                                      locale: locale,
+                                      choices: questions[currentQuestion]
+                                          ['choices'],
+                                      isTrueOrFalse:
+                                          questionMode == 'trueOrFalse',
+                                      action: choiceAction,
+                                    ),
+                                    ReversedWords(
+                                        isReversedWords:
+                                            questionMode == 'reversedWords',
+                                        initiateAnswer: (answer) =>
+                                            choiceAction(answer, 0),
+                                        skipAction: skipAction,
+                                        reversedWord: questions[currentQuestion]
+                                                    ['reversedAnswer'] !=
+                                                null
+                                            ? questions[currentQuestion]
+                                                ['reversedAnswer'][locale]
+                                            : [],
+                                        deleteWord: deleteWord)
+                                  ],
                                 ),
-                                MultipleChoices(
-                                  locale: locale,
-                                  choices: questions[currentQuestion]
-                                      ['choices'],
-                                  isMultipleChoices:
-                                      questionMode == 'multipleChoices',
-                                  action: choiceAction,
-                                ),
-                                TrueOrFalse(
-                                  locale: locale,
-                                  choices: questions[currentQuestion]
-                                      ['choices'],
-                                  isTrueOrFalse: questionMode == 'trueOrFalse',
-                                  action: choiceAction,
-                                ),
-                                ReversedWords(
-                                    isReversedWords:
-                                        questionMode == 'reversedWords',
-                                    initiateAnswer: (answer) =>
-                                        choiceAction(answer, 0),
-                                    skipAction: skipAction,
-                                    reversedWord: questions[currentQuestion]
-                                                ['reversedAnswer'] !=
-                                            null
-                                        ? questions[currentQuestion]
-                                            ['reversedAnswer'][locale]
-                                        : [],
-                                    deleteWord: deleteWord)
-                              ],
+                              ),
                             ),
                           ),
-                        ),
+                          showAd && advertisments.isNotEmpty
+                              ? Advertisment(
+                                  adClicked: () => adClicked(
+                                      advertisments[currentAd]['_id'],
+                                      advertisments[currentAd]
+                                          ['directionLink']),
+                                  seconds: currentAdCountDown,
+                                  skipAdMethod: skipAdMethod,
+                                  image: advertisments[currentAd]['image'])
+                              : Container()
+                        ],
                       ),
-                      showAd && advertisments.isNotEmpty
-                          ? Advertisment(
-                              adClicked: () => adClicked(
-                                  advertisments[currentAd]['_id'],
-                                  advertisments[currentAd]['directionLink']),
-                              seconds: currentAdCountDown,
-                              skipAdMethod: skipAdMethod,
-                              image: advertisments[currentAd]['image'])
-                          : Container()
-                    ],
-                  ),
       )),
     );
   }

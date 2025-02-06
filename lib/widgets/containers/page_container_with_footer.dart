@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
+import 'package:in_zone_app/utilities/audio_manager.dart';
 import 'package:in_zone_app/utilities/auth.dart';
 import 'package:in_zone_app/utilities/external_url.dart';
 import 'package:in_zone_app/utilities/get_app_version.dart';
@@ -62,6 +63,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
     adTimer();
     decreaseAdCount();
     await fetchUsers();
+    AudioManager().preloadAudios();
   }
 
   Future<void> initialFetch() async {

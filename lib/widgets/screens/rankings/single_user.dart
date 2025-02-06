@@ -34,7 +34,7 @@ class SingleUser extends StatelessWidget {
             borderRadius: const BorderRadius.all(Radius.circular(10)),
             color: isSameUser
                 ? Theme.of(context).primaryColor
-                : Theme.of(context).primaryColorDark),
+                : Colors.white.withOpacity(0.05)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -58,16 +58,14 @@ class SingleUser extends StatelessWidget {
                       height: 60,
                     )),
                 const SizedBox(
-                  width: 15,
+                  width: 4,
                 ),
-                rank == '1'
-                    ? Image.asset(
-                        'assets/images/prize.png',
-                        width: 25,
-                      )
-                    : Container(),
+                CachedImage(
+                  image: item['rank']['image'],
+                  width: 50,
+                ),
                 const SizedBox(
-                  width: 5,
+                  width: 4,
                 ),
                 Row(
                   children: [

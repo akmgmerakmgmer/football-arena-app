@@ -134,9 +134,10 @@ flutter:
     - assets/images/lost_english.png
     - assets/images/won_arabic.png
     - assets/images/won_english.png
+    - assets/images/draw_arabic.png
+    - assets/images/draw_english.png
     - assets/audio/correct.mp3
-    - assets/audio/buzzer.mp3
-    
+    - assets/audio/buzzer.mp3    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

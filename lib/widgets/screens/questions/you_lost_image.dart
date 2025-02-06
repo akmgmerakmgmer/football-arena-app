@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
+import 'package:in_zone_app/widgets/screens/questions/game_done_container.dart';
 
 class YouLostImage extends StatelessWidget {
   final String locale;
@@ -7,11 +7,9 @@ class YouLostImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: CachedImage(
-          image: locale == 'ar'
-              ? 'assets/images/lost_arabic.png'
-              : 'assets/images/lost_english.png'),
-    );
+    return GameDoneContainer(
+        image: locale == 'ar'
+            ? 'assets/images/lost_arabic.png'
+            : 'assets/images/lost_english.png');
   }
 }

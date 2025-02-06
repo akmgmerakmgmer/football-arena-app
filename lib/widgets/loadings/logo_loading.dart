@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:in_zone_app/widgets/loadings/pulse_animation.dart';
+import 'package:in_zone_app/widgets/animations/pulse_animation.dart';
 
 class LogoLoading extends StatelessWidget {
   const LogoLoading({super.key});

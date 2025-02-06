@@ -9,6 +9,7 @@ import 'package:in_zone_app/widgets/screens/home/video_ad_button.dart';
 class ModalContainer {
   static modal(BuildContext context, Widget widget, String title,
       {dynamic closeCallBack}) {
+    // showAnimatedDialog(context, title: title, widget: widget);
     showDialog(
         context: context,
         builder: (ctx) => DialogWidgetBlured(
@@ -41,7 +42,7 @@ class ModalContainer {
 
   static choosePlayOptionModal(
       BuildContext context, LocaleProvider localeProvider, mode,
-      {isOnline = false,callback}) {
+      {isOnline = false, callback}) {
     showDialog(
         context: context,
         barrierDismissible: false,

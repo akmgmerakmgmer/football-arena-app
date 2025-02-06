@@ -6,6 +6,7 @@ import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
 import 'package:in_zone_app/widgets/containers/image_background_plain.dart';
 import 'package:in_zone_app/widgets/general_widgets/waiting_for_other_players.dart';
 import 'package:in_zone_app/widgets/screens/multi_screen/player_bar.dart';
+import 'package:in_zone_app/widgets/screens/questions/rank_flag.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -78,6 +79,10 @@ class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     Map room = Provider.of<LocaleProvider>(context, listen: true).room;
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
+    bool willPromote = user['rank']['wins_to_promote'] ==
+        user['season_results']['consecutive_rank_wins'] + 1;
+    bool willDemote = user['rank']['loses_to_demote'] ==
+        user['season_results']['consecutive_rank_loses'] + 1;
 
     return PopScope(
       canPop: false,
@@ -93,6 +98,11 @@ class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
               height: MediaQuery.of(context).size.height,
               child: BlurBackgroundContainer(body: Container()),
             ),
+            willPromote || willDemote
+                ? RankFlag(
+                    promote: willPromote ? true : false,
+                  )
+                : Container(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -126,7 +136,10 @@ class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
                 const SizedBox(height: 24),
                 // Show waiting message if not all players have joined
                 room['players'].length != room['numberOfPlayers']
-                    ?  WaitingForOtherPlayers(title: AppLocalizations.of(context)!.waiting_for_other_players,)
+                    ? WaitingForOtherPlayers(
+                        title: AppLocalizations.of(context)!
+                            .waiting_for_other_players,
+                      )
                     : Container(),
               ],
             ),
