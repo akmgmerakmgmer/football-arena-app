@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:in_zone_app/utilities/ad_methods.dart';
 
 class VideoRewardAd extends StatefulWidget {
   final Widget body;
@@ -19,14 +20,17 @@ class _VideoRewardAdState extends State<VideoRewardAd> {
   @override
   void initState() {
     super.initState();
-    _loadRewardedAd();
+    _loadRewardedAd(); // Load the ad earlier so it's ready when needed
   }
 
+  Future<void> _loadRewardedAd({show = false}) async {
+    setState(() {
+      _isAdLoaded = false; // Ensure UI knows ad is not yet loaded
+    });
 
-  Future<void> _loadRewardedAd() async {
     await RewardedAd.load(
       adUnitId:
-          'ca-app-pub-6065065349715677/8836064686', // Replace with your Ad Unit ID
+          AdMethods().rewardedAdUnitId, // Replace with your Ad Unit ID
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (RewardedAd ad) {
@@ -36,38 +40,36 @@ class _VideoRewardAdState extends State<VideoRewardAd> {
           });
         },
         onAdFailedToLoad: (LoadAdError error) {
+          setState(() {
+            _isAdLoaded = false;
+            _rewardedAd = null; // Update UI accordingly
+          });
         },
       ),
     );
   }
 
-  void _showRewardedAd() async {
+  void _showRewardedAd() {
     if (_isAdLoaded && _rewardedAd != null) {
-      _rewardedAd!.show(
-        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-           widget.rewardMethod();
-        },
-      );
-
-      // Dispose of the ad after showing it
       _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdDismissedFullScreenContent: (AdWithoutView ad) {
           ad.dispose();
-          _loadRewardedAd(); // Load a new ad for next use
+          _loadRewardedAd(); // Preload the next ad
         },
         onAdFailedToShowFullScreenContent: (AdWithoutView ad, AdError error) {
           ad.dispose();
+          _loadRewardedAd();
+        },
+      );
+      _rewardedAd!.show(
+        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+          widget.rewardMethod();
         },
       );
     } else {
-      await _loadRewardedAd().then((value) => {
-            _rewardedAd!.show(
-              onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-                widget.rewardMethod();
-              },
-            )
-          });
+      _loadRewardedAd(show: true); // Ensure ad loads again
     }
+    _rewardedAd = null;
   }
 
   @override
@@ -75,7 +77,7 @@ class _VideoRewardAdState extends State<VideoRewardAd> {
     return GestureDetector(
       onTap: () => _isAdLoaded ? _showRewardedAd() : null,
       child: widget.body,
-      );
+    );
   }
 
   @override

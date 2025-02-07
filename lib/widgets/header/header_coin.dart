@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/utilities/ad_methods.dart';
 import 'package:in_zone_app/utilities/ad_reward_methods.dart';
 import 'package:in_zone_app/utilities/generalMethods.dart';
 import 'package:in_zone_app/widgets/animations/ping_animation.dart';
 import 'package:in_zone_app/widgets/general_widgets/coin.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
-import 'package:in_zone_app/widgets/general_widgets/video_reward_ad.dart';
 import 'package:in_zone_app/widgets/header/neon_icon.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -23,11 +23,16 @@ class HeaderCoin extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: GeneralMethods().isUserExists(context)
-          ? VideoRewardAd(
-              rewardMethod: () {
-                AddRewardMethods().addCoinsMethod(localeProvider, context);
+          ? GestureDetector(
+              onTap: () {
+                if (AddRewardMethods()
+                    .isFreeCoinsAvailable(localeProvider, context)) {
+                  AdMethods().showInterstitialAd(() {
+                    AddRewardMethods().addCoinsMethod(localeProvider, context);
+                  }, context);
+                }
               },
-              body: Column(
+              child: Column(
                 children: [
                   const PingAnimation(
                     color: Colors.yellow,

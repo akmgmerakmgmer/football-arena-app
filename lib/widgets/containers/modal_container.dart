@@ -42,16 +42,16 @@ class ModalContainer {
 
   static choosePlayOptionModal(
       BuildContext context, LocaleProvider localeProvider, mode,
-      {isOnline = false, callback}) {
+      {isOnline = false, callback, showDesc = true}) {
     showDialog(
         context: context,
         barrierDismissible: false,
         builder: (ctx) => DialogWidgetBlured(
             title: AppLocalizations.of(context)!.choose_option_to_play,
-            description:
-                AppLocalizations.of(context)!.choose_option_description,
+            description: showDesc
+                ? AppLocalizations.of(context)!.choose_option_description
+                : '',
             widget: Row(
-              mainAxisSize: MainAxisSize.min,
               children: [
                 VideoAdButton(
                   mode: mode,

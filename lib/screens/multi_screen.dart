@@ -77,8 +77,11 @@ class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    LocaleProvider localeProvider =
+        Provider.of<LocaleProvider>(context, listen: false);
     Map room = Provider.of<LocaleProvider>(context, listen: true).room;
-    Map user = Provider.of<LocaleProvider>(context, listen: false).user;
+    Map user = localeProvider.user;
+    String locale = localeProvider.locale;
     bool willPromote = user['rank']['wins_to_promote'] ==
         user['season_results']['consecutive_rank_wins'] + 1;
     bool willDemote = user['rank']['loses_to_demote'] ==
@@ -101,6 +104,7 @@ class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
             willPromote || willDemote
                 ? RankFlag(
                     promote: willPromote ? true : false,
+                    locale: locale,
                   )
                 : Container(),
             Column(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class LocaleProvider with ChangeNotifier {
   String _locale = '';
@@ -9,6 +10,17 @@ class LocaleProvider with ChangeNotifier {
 
   void changeLocale(value) {
     _locale = value;
+    notifyListeners();
+  }
+
+  InterstitialAd? _interstitialAd;
+
+  InterstitialAd? get interstitialAd {
+    return _interstitialAd;
+  }
+
+  void setInterstitialAd(value) {
+    _interstitialAd = value;
     notifyListeners();
   }
 

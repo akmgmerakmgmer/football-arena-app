@@ -21,51 +21,49 @@ class CoinsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: IntrinsicHeight(
-        child: MainButton(
-            radius: 10,
-            buttonText: '',
-            isWidget: true,
-            widget: Column(
-              children: [
-                TextWidget(
-                  title: AppLocalizations.of(context)!.playNow,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                ),
-                const SizedBox(
-                  height: 4,
-                ),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    TextWidget(
-                      title: '100',
-                      alwaysEnglish: true,
-                      fontSize: 14,
-                    ),
-                    SizedBox(
-                      width: 4,
-                    ),
-                    Coin(
-                      width: 20,
-                    )
-                  ],
-                ),
-              ],
-            ),
-            action: () {
-              if (context.mounted) {
-                GeneralMethods()
-                    .playWithCoins(context, localeProvider, mode, isOnline);
-              }
-              if (callback != null) {
-                Navigator.pop(context);
-                callback();
-              }
-            }),
-      ),
+      child: MainButton(
+          radius: 10,
+          buttonText: '',
+          isWidget: true,
+          widget: Column(
+            children: [
+              TextWidget(
+                title: AppLocalizations.of(context)!.playNow,
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TextWidget(
+                    title: '100',
+                    alwaysEnglish: true,
+                    fontSize: 14,
+                  ),
+                  SizedBox(
+                    width: 4,
+                  ),
+                  Coin(
+                    width: 20,
+                  )
+                ],
+              ),
+            ],
+          ),
+          action: () {
+            if (context.mounted) {
+              GeneralMethods()
+                  .playWithCoins(context, localeProvider, mode, isOnline);
+            }
+            if (callback != null) {
+              Navigator.pop(context);
+              callback();
+            }
+          }),
     );
   }
 }

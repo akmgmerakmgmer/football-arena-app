@@ -16,6 +16,7 @@ class Auth {
         'data': {'token': token}
       },
       (value) {
+        print(value['free_coins']);
         Provider.of<LocaleProvider>(context, listen: false)
             .setUser(value['user']);
         if (value['prizes'].isNotEmpty) {

@@ -6,6 +6,7 @@ class MediaQueryHeight {
     if (width >= 1280) return 500;
     if (width >= 1024) return 400;
     if (width >= 720) return 300;
+    if (width >= 450) return 250;
     return 200;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:in_zone_app/utilities/media_query_height.dart';
 import 'package:in_zone_app/widgets/containers/background_image_black.dart';
 import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
@@ -17,7 +18,7 @@ class RankImage extends StatelessWidget {
     return BackgroundImageBlack(
         image: user['rank']['bgImage'],
         padding: const EdgeInsets.all(0),
-        height: 250,
+        height: MediaQueryHeight().largeImageHeight(context),
         radius: 10,
         body: SizedBox(
           width: MediaQuery.of(context).size.width,

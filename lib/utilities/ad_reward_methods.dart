@@ -9,12 +9,19 @@ import 'package:in_zone_app/widgets/screens/event_details/prizes_content.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddRewardMethods {
-  addCoinsMethod(LocaleProvider localeProvider, BuildContext context) {
+  bool isFreeCoinsAvailable(
+      LocaleProvider localeProvider, BuildContext context) {
     Map user = localeProvider.user;
     if (user['free_coins']['numberOfTimes'] >= 3) {
       String message = AppLocalizations.of(context)!.maximum_free_coins;
-      return SnackbarMessage().snackbar(context, message, error: true);
+      SnackbarMessage().snackbar(context, message, error: true);
+      return false;
     }
+    return true;
+  }
+
+  addCoinsMethod(LocaleProvider localeProvider, BuildContext context) {
+    Map user = localeProvider.user;
     int getRandomCoin() {
       List coinsList = [50, 100, 50, 25, 50, 200, 50, 100, 50, 25, 50];
       final random = Random(); // Create a Random instance
@@ -25,13 +32,13 @@ class AddRewardMethods {
     int coins = getRandomCoin();
     user['coins'] += coins;
     localeProvider.setUser(user);
-    PutApi('users/${user['_id']}', {'coins': user['coins']}, (value) {
+    PutApi('add-coins/${user['_id']}', {'coins': coins}, (value) {
       localeProvider.setUser(value);
+      List<Map> prizes = [
+        {"prizeType": "coins", "coins": coins}
+      ];
+      ModalContainer.modal(context, PrizesContent(prizes: prizes),
+          AppLocalizations.of(context)!.congratulations);
     }).put(context);
-    List<Map> prizes = [
-      {"prizeType": "coins", "coins": coins}
-    ];
-    ModalContainer.modal(context, PrizesContent(prizes: prizes),
-        AppLocalizations.of(context)!.congratulations);
   }
 }

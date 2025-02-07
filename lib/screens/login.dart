@@ -27,7 +27,7 @@ class Login extends StatelessWidget {
                 const SizedBox(
                   height: 16,
                 ),
-                GoogleButton()
+                // GoogleButton()
               ],
             )));
   }

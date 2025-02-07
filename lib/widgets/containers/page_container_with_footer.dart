@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/utilities/ad_methods.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/audio_manager.dart';
 import 'package:in_zone_app/utilities/auth.dart';
@@ -63,10 +64,11 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
     adTimer();
     decreaseAdCount();
     await fetchUsers();
-    AudioManager().preloadAudios();
   }
 
   Future<void> initialFetch() async {
+    AdMethods().createInterstitialAd(context);
+    AudioManager().preloadAudios();
     if (Provider.of<LocaleProvider>(context, listen: false)
         .advertisments
         .isEmpty) {
@@ -81,7 +83,8 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
         Provider.of<LocaleProvider>(context, listen: false)
             .setChallenges(data['challenges']);
         int intBuildNumber = int.parse(buildNumber);
-        int intLowestBuildNumber = int.parse(data['system']['lowestBuildNumber']);
+        int intLowestBuildNumber =
+            int.parse(data['system']['lowestBuildNumber']);
         if (intBuildNumber < 1) {
           ModalContainer.updateModal(context, const NeedUpdate(),
               AppLocalizations.of(context)!.update_app_text);
