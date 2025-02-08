@@ -20,8 +20,7 @@ class VideoAdButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final SocketMethods socketMethods = SocketMethods();
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.4,
+    return Expanded(
       child: MainButton(
           radius: 10,
           buttonText: '',
