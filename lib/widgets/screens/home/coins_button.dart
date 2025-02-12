@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/generalMethods.dart';
-import 'package:in_zone_app/widgets/buttons/main_button.dart';
-import 'package:in_zone_app/widgets/general_widgets/coin.dart';
-import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/widgets/buttons/purchase_button.dart';
 
-class CoinsButton extends StatelessWidget {
+class CoinsButton extends StatefulWidget {
   final String mode;
   final LocaleProvider localeProvider;
   final bool isOnline;
@@ -19,49 +16,28 @@ class CoinsButton extends StatelessWidget {
       this.callback});
 
   @override
+  State<CoinsButton> createState() => _CoinsButtonState();
+}
+
+class _CoinsButtonState extends State<CoinsButton> {
+  bool loading = false;
+  @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: MainButton(
-          radius: 10,
+      child: PurchaseButton(
           buttonText: '',
-          isWidget: true,
-          widget: Column(
-            children: [
-              TextWidget(
-                title: AppLocalizations.of(context)!.playNow,
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-              ),
-              const SizedBox(
-                height: 4,
-              ),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  TextWidget(
-                    title: '100',
-                    alwaysEnglish: true,
-                    fontSize: 14,
-                  ),
-                  SizedBox(
-                    width: 4,
-                  ),
-                  Coin(
-                    width: 20,
-                  )
-                ],
-              ),
-            ],
-          ),
+          loading: loading,
+          price: '100',
           action: () {
             if (context.mounted) {
-              GeneralMethods()
-                  .playWithCoins(context, localeProvider, mode, isOnline);
+              setState(() {
+                loading = true;
+              });
+              GeneralMethods().playWithCoins(
+                  context, widget.localeProvider, widget.mode, widget.isOnline);
             }
-            if (callback != null) {
-              Navigator.pop(context);
-              callback();
+            if (widget.callback != null) {
+              widget.callback();
             }
           }),
     );

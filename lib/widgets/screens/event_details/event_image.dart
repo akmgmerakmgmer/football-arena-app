@@ -23,7 +23,7 @@ class EventImage extends StatelessWidget {
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(10)),
       child: Container(
-          height: MediaQueryHeight().largeImageHeight(context),
+          height: MediaQueryHeight().largeImageHeight(context,mobileDefaultWidth: 200),
           width: numberOfImages == 1
               ? MediaQuery.of(context).size.width - 16
               : MediaQuery.of(context).size.width - 30,

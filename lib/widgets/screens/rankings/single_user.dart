@@ -28,7 +28,7 @@ class SingleUser extends StatelessWidget {
       child: Container(
         constraints:
             BoxConstraints(minWidth: MediaQuery.of(context).size.width),
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 16.0),
         margin: const EdgeInsets.only(bottom: 15),
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -54,16 +54,16 @@ class SingleUser extends StatelessWidget {
                     borderRadius: const BorderRadius.all(Radius.circular(100)),
                     child: CachedImage(
                       image: item['selectedAvatar']['image'],
-                      width: 60,
-                      height: 60,
+                      width: 75,
+                      height: 75,
                     )),
                 const SizedBox(
                   width: 4,
                 ),
-                CachedImage(
-                  image: item['rank']['image'],
-                  width: 50,
-                ),
+                // CachedImage(
+                //   image: item['rank']['image'],
+                //   width: 50,
+                // ),
                 const SizedBox(
                   width: 4,
                 ),

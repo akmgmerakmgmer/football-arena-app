@@ -33,6 +33,7 @@ class GameDoneContainer extends StatelessWidget {
                     isOnline: true),
                 icon: Icons.restart_alt,
                 radius: 10,
+                fontSize: 16,
               ),
               const SizedBox(
                 width: 15,
@@ -43,6 +44,7 @@ class GameDoneContainer extends StatelessWidget {
                     Navigator.pushReplacementNamed(context, '/main-online'),
                 icon: Icons.exit_to_app,
                 radius: 10,
+                fontSize: 16,
               ),
             ],
           )

@@ -35,64 +35,67 @@ class DialogWidgetBlured extends StatelessWidget {
               color: Colors.white.withOpacity(0.05), // Semi-transparent overlay
               borderRadius: BorderRadius.circular(15),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextWidget(
-                        title: title,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        uppercase: false,
-                      ),
-                      const SizedBox(height: 16),
-                      if (description.isNotEmpty)
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
                         TextWidget(
-                          title: description,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w600,
+                          title: title,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          uppercase: false,
                         ),
-                      if (description.isNotEmpty) const SizedBox(height: 16),
-                      widget,
-                    ],
+                        const SizedBox(height: 16),
+                        if (description.isNotEmpty)
+                          TextWidget(
+                            title: description,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        if (description.isNotEmpty) const SizedBox(height: 16),
+                        widget,
+                      ],
+                    ),
                   ),
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        if (closeCallBack != null) {
-                          closeCallBack();
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 12),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
-                        ),
-                        child: TextWidget(
-                          title: AppLocalizations.of(context)!.close,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          if (closeCallBack != null) {
+                            closeCallBack();
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.1),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                          ),
+                          child: TextWidget(
+                            title: AppLocalizations.of(context)!.close,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

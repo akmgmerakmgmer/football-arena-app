@@ -45,9 +45,10 @@ class RankImage extends StatelessWidget {
                             uppercase: true,
                             fontWeight: FontWeight.w800,
                           ),
+                          const SizedBox(height: 8,),
                           CachedImage(
                             image: user['rank']['image'],
-                            width: 140,
+                            width: 120,
                           ),
                         ],
                       ),

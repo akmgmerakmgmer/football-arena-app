@@ -534,7 +534,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       });
       stopCount = true;
       anyTimePerkActive = true;
-      Timer.periodic(const Duration(seconds: 30), (Timer timer) {
+      Timer.periodic(const Duration(seconds: 15), (Timer timer) {
         stopCount = false;
         anyTimePerkActive = false;
       });

@@ -50,9 +50,9 @@ class Stats extends StatelessWidget {
         case 'Stop Time':
           stopTime(perk['id']['_id']);
         case 'Double Points':
-          pointsMultiplicationMethod(perk['id']['_id'], 2, 60);
+          pointsMultiplicationMethod(perk['id']['_id'], 2, 30);
         case 'Hero Personality':
-          pointsMultiplicationMethod(perk['id']['_id'], 3, 40);
+          pointsMultiplicationMethod(perk['id']['_id'], 3, 20);
         case 'Skip Question':
           skipQuestion(perk['id']['_id']);
         default:

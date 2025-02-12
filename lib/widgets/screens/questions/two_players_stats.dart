@@ -51,9 +51,9 @@ class _TwoPlayersStatsState extends State<TwoPlayersStats> {
         case 'Stop Time':
           widget.stopTime(perk['id']['_id']);
         case 'Double Points':
-          widget.pointsMultiplicationMethod(perk['id']['_id'], 2, 60);
+          widget.pointsMultiplicationMethod(perk['id']['_id'], 2, 30);
         case 'Hero Personality':
-          widget.pointsMultiplicationMethod(perk['id']['_id'], 3, 40);
+          widget.pointsMultiplicationMethod(perk['id']['_id'], 3, 20);
         case 'Skip Question':
           widget.skipQuestion(perk['id']['_id']);
         default:

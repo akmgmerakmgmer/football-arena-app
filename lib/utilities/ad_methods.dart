@@ -69,9 +69,7 @@ class AdMethods {
       interstitialAd.show();
       localeProvider.setInterstitialAd(null);
       createInterstitialAd(context);
-      Future.delayed(const Duration(seconds: 4), () {
-        callback();
-      });
+      callback();
     }
   }
 }
