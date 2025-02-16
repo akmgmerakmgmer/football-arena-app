@@ -51,7 +51,7 @@ class MainMenu extends StatelessWidget {
         ),
         RegularButton(
             fontSize: 15,
-            buttonText: AppLocalizations.of(context)!.play_alone,
+            buttonText: AppLocalizations.of(context)!.events_and_challenges,
             action: () {
               Navigator.pushNamed(context, '/play-alone');
             },

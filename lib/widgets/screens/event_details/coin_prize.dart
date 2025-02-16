@@ -6,9 +6,13 @@ import 'package:in_zone_app/widgets/screens/event_details/prize_reason.dart';
 
 class CoinPrize extends StatelessWidget {
   final int numberOfCoins;
-  final String searchTime;
+  final Map message;
+  final String locale;
   const CoinPrize(
-      {super.key, required this.numberOfCoins, this.searchTime = ''});
+      {super.key,
+      required this.numberOfCoins,
+      this.message = const {"en": "", "ar": ""},
+      required this.locale});
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +25,13 @@ class CoinPrize extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          PrizeReason(
-            searchTime: searchTime,
-          ),
-          searchTime.isNotEmpty
+          message[locale].isNotEmpty
+              ? PrizeReason(
+                  message: message,
+                  locale: locale,
+                )
+              : Container(),
+          message[locale].isNotEmpty
               ? const SizedBox(
                   height: 4,
                 )

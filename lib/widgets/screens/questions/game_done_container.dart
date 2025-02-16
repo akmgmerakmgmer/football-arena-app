@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/widgets/buttons/save_exit_button.dart';
 import 'package:in_zone_app/widgets/containers/modal_container.dart';
-import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +18,11 @@ class GameDoneContainer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          CachedImage(image: image, width: 200),
+          Image.asset(
+            image,
+            width: 200,
+            fit: BoxFit.cover,
+          ),
           const SizedBox(
             height: 8,
           ),

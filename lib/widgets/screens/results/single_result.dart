@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/widgets/general_widgets/username_text.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/screens/questions/user_image.dart';
-import 'package:provider/provider.dart';
+import 'package:in_zone_app/widgets/screens/results/winner_loser_dot.dart';
 
 class SingleResult extends StatelessWidget {
   final List result;
@@ -13,13 +12,7 @@ class SingleResult extends StatelessWidget {
   Widget build(BuildContext context) {
     Map player1 = result[0];
     Map player2 = result[1];
-    String userId =
-        Provider.of<LocaleProvider>(context, listen: false).user['_id'];
-    List yourData = result
-        .where((item) => item['player']['_id'].toString() == userId.toString())
-        .toList();
-    // bool isWinner = yourData.isNotEmpty ? yourData[0]['isWinner'] : false;
-    double defaultFontSize = 17;
+    double defaultFontSize = 15;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Container(
@@ -30,8 +23,9 @@ class SingleResult extends StatelessWidget {
             UserImage(
               image: player1['player']['selectedAvatar']['image'],
               borderColor: Colors.transparent,
-              imageSize: 65,
+              imageSize: 55,
             ),
+            WinnerLoserDot(isWinner: player1['isWinner']),
             const SizedBox(
               width: 8,
             ),
@@ -85,6 +79,7 @@ class SingleResult extends StatelessWidget {
                 image: player2['player']['selectedAvatar']['image'],
                 borderColor: Colors.transparent,
                 imageSize: 65),
+            WinnerLoserDot(isWinner: player2['isWinner']),
           ],
         ),
       ),

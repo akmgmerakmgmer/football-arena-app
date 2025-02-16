@@ -166,6 +166,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
             countDown = defaultCountDown;
           });
         }
+        if (countDown < 6 && countDown > -1) playCountDownSound();
       }
     });
   }
@@ -299,6 +300,11 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     });
   }
 
+  void playCountDownSound() async {
+    _audioPlayer.stop();
+    _audioPlayer.play(AssetSource('audio/countdown.mp3'));
+  }
+
   void playCorrectSound() async {
     _audioPlayer.stop();
     _audioPlayer.play(AssetSource('audio/correct.mp3'));
@@ -404,6 +410,22 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     return 1;
   }
 
+  void navigationDestination() {
+    if (widget.eventId != '') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          settings: const RouteSettings(name: '/events'),
+          builder: (context) => EventDetails(
+            eventId: widget.eventId,
+          ),
+        ),
+      );
+    } else {
+      Navigator.pushReplacementNamed(context, '/rankings');
+    }
+  }
+
   void saveGame(navigate) {
     stopCount = true;
     if (points == 0 && navigate) {
@@ -421,22 +443,11 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
         saveLoading = true;
       });
       PostApi('user-save-game/$userId', payload, (res) {
+        gameSaved = true;
         Provider.of<LocaleProvider>(context, listen: false)
             .setUser(res['user']);
         if (navigate) {
-          if (widget.eventId != '') {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                settings: const RouteSettings(name: '/events'),
-                builder: (context) => EventDetails(
-                  eventId: widget.eventId,
-                ),
-              ),
-            );
-          } else {
-            Navigator.pushReplacementNamed(context, '/rankings');
-          }
+          navigationDestination();
         } else {
           setState(() {
             saveLoading = false;
@@ -688,7 +699,11 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
-        saveGame(true);
+        if (!gameSaved) {
+          saveGame(true);
+        } else {
+          navigationDestination();
+        }
       },
       child: PagePlainContainer(
           body: ImageBackgroundPlain(

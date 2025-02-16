@@ -122,6 +122,7 @@ class _QuestionsState extends State<MultiQuestions>
           } else {
             playerTimeDone();
           }
+          if (countDown < 6 && countDown > -1) playCountDownSound();
         }
       });
     }
@@ -226,6 +227,11 @@ class _QuestionsState extends State<MultiQuestions>
         points = points + (pointDefaultValue * pointValue * multiplyPoints);
       });
     }
+  }
+
+  void playCountDownSound() async {
+    _audioPlayer.stop();
+    _audioPlayer.play(AssetSource('audio/countdown.mp3'));
   }
 
   void playCorrectSound() async {
@@ -597,7 +603,7 @@ class _QuestionsState extends State<MultiQuestions>
         int maxPoints = 0;
         for (var player in room['players']) {
           if (player['points'] > maxPoints &&
-              player['userId']['_id'] != userId) {
+              player['userId']['_id'].toString() != userId.toString()) {
             maxPoints = player['points'];
           }
         }
@@ -663,6 +669,7 @@ class _QuestionsState extends State<MultiQuestions>
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.inactive) {
     } else if (state == AppLifecycleState.paused) {
+      leaveRoom();
     } else if (state == AppLifecycleState.detached) {
       leaveRoom();
     }

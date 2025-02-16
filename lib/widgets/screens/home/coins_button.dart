@@ -29,7 +29,7 @@ class _CoinsButtonState extends State<CoinsButton> {
           loading: loading,
           price: '100',
           action: () {
-            if (context.mounted) {
+            if (context.mounted && !loading) {
               setState(() {
                 loading = true;
               });

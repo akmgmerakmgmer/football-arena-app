@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/widgets/screens/event_details/image_prize.dart';
 import 'package:in_zone_app/widgets/screens/event_details/coin_prize.dart';
+import 'package:provider/provider.dart';
 
 class PrizesContent extends StatelessWidget {
   final List prizes;
@@ -8,12 +10,15 @@ class PrizesContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget prizeWidget(prizeType, numberOfCoins, image, theme, searchTime) {
+    String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
+    Widget prizeWidget(prizeType, numberOfCoins, image, theme,
+        {message = const {"en": "", "ar": ""}}) {
       switch (prizeType) {
         case "coins":
           return CoinPrize(
             numberOfCoins: numberOfCoins,
-            searchTime: searchTime,
+            message: message,
+            locale: locale,
           );
         case "avatar":
           return ImagePrize(image: image, prizeType: prizeType);
@@ -31,7 +36,8 @@ class PrizesContent extends StatelessWidget {
     return Column(
       children: prizes
           .map((prize) => prizeWidget(prize['prizeType'], prize['coins'],
-              prize['avatar'], prize['theme'], prize['searchTime'] ?? ''))
+              prize['avatar'], prize['theme'],
+              message: prize['message'] ?? {"en": "", "ar": ""}))
           .toList(),
     );
   }

@@ -12,6 +12,7 @@ class ModalContainer {
     // showAnimatedDialog(context, title: title, widget: widget);
     showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (ctx) => DialogWidgetBlured(
               title: title,
               widget: SingleChildScrollView(child: widget),

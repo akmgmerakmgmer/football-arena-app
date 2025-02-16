@@ -8,6 +8,7 @@ import 'package:in_zone_app/utilities/audio_manager.dart';
 import 'package:in_zone_app/utilities/auth.dart';
 import 'package:in_zone_app/utilities/external_url.dart';
 import 'package:in_zone_app/utilities/get_app_version.dart';
+import 'package:in_zone_app/utilities/image_manager.dart';
 import 'package:in_zone_app/widgets/containers/modal_container.dart';
 import 'package:in_zone_app/widgets/footer/footer.dart';
 import 'package:in_zone_app/widgets/general_widgets/bottom_navigation.dart';
@@ -69,6 +70,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
   Future<void> initialFetch() async {
     AdMethods().createInterstitialAd(context);
     AudioManager().preloadAudios();
+    ImageManager().preloadImages(context);
     if (Provider.of<LocaleProvider>(context, listen: false)
         .advertisments
         .isEmpty) {

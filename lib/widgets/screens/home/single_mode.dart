@@ -36,7 +36,7 @@ class _SingleModeState extends State<SingleMode> {
 
   bool isPlayedToday(context) {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
-    DateTime now = DateTime.now();
+    DateTime now = DateTime.now().subtract(const Duration(hours: 2));
     String formattedDate = DateFormat('yyyy-MM-dd').format(now);
 
     List currentMode = user['questionModes']
