@@ -25,7 +25,7 @@ class _RankingsState extends State<Rankings> {
   final String search = '';
   String searchTime = 'daily';
   int searchMonth = 1;
-  int searchYear = 2024;
+  int searchYear = 2025;
   String searchWeek = 'thisWeek';
   List<Map> searchByTime = [
     {"nameAr": 'الترتيب اليومي', "nameEn": "Daily Ranking", "value": 'daily'},
@@ -61,9 +61,9 @@ class _RankingsState extends State<Rankings> {
   ];
   List<Map> years = [
     {
-      "nameAr": "2024",
-      "nameEn": "2024",
-      "value": 2024,
+      "nameAr": "2025",
+      "nameEn": "2025",
+      "value": 2025,
     }
   ];
   bool loading = false;
@@ -148,7 +148,7 @@ class _RankingsState extends State<Rankings> {
           children: [
             TitleWithBorder(title: AppLocalizations.of(context)!.tableRankings),
             const SizedBox(
-              height: 15,
+              height: 12,
             ),
             DropDownWidget(
               items: searchByTime,
@@ -164,9 +164,6 @@ class _RankingsState extends State<Rankings> {
                 });
               },
               show: true,
-            ),
-            const SizedBox(
-              height: 15,
             ),
             DropDownWidget(
               items: weeks,
@@ -188,7 +185,7 @@ class _RankingsState extends State<Rankings> {
                   getRankings();
                 });
               },
-              show: searchTime == 'yearly',
+              show: searchTime == 'yearly' || searchTime == 'monthly',
             ),
             DropDownWidget(
               items: months,

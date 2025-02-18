@@ -215,7 +215,7 @@ class _QuestionsState extends State<MultiQuestions>
       } else if (showHints()) {
         int hintsSubtract =
             questions[currentQuestion]['hints'].length - hints.length + 1;
-        pointDefaultValue = hintsSubtract > 3 ? 15 : hintsSubtract * 5;
+        pointDefaultValue = hintsSubtract > 3 ? 10 : 5;
       } else if (questions[currentQuestion]['difficulty'] == 'hard') {
         pointDefaultValue = 3;
       } else if (questions[currentQuestion]['difficulty'] == 'medium') {

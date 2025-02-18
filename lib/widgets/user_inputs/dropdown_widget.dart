@@ -24,38 +24,43 @@ class DropDownWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return show
-        ? DropdownButtonHideUnderline(
-            child: DropdownButtonFormField(
-                dropdownColor: Theme.of(context).splashColor,
-                value: initialValue,
-                decoration: InputDecoration(
-                  enabled: !loading,
-                  fillColor: Theme.of(context).splashColor,
-                  focusColor: Colors.grey,
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade600)),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey.shade600),
-                  ),
-                ),
-                items: items
-                    .map((item) => DropdownMenuItem(
-                        value: item['value'],
-                        child:
-                            Provider.of<LocaleProvider>(context, listen: false)
-                                        .locale ==
-                                    'ar'
-                                ? TextWidget(
-                                    title: item['nameAr'],
-                                    fontSize: 15,
-                                  )
-                                : TextWidget(
-                                    title: item['nameEn'],
-                                    fontSize: 15,
-                                  )))
-                    .toList(),
-                onChanged: (value) => {callback(value)}),
-          )
+        ? Column(
+          children: [
+            DropdownButtonHideUnderline(
+                child: DropdownButtonFormField(
+                    dropdownColor: Theme.of(context).splashColor,
+                    value: initialValue,
+                    decoration: InputDecoration(
+                      enabled: !loading,
+                      fillColor: Theme.of(context).splashColor,
+                      focusColor: Colors.grey,
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey.shade600)),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade600),
+                      ),
+                    ),
+                    items: items
+                        .map((item) => DropdownMenuItem(
+                            value: item['value'],
+                            child:
+                                Provider.of<LocaleProvider>(context, listen: false)
+                                            .locale ==
+                                        'ar'
+                                    ? TextWidget(
+                                        title: item['nameAr'],
+                                        fontSize: 15,
+                                      )
+                                    : TextWidget(
+                                        title: item['nameEn'],
+                                        fontSize: 15,
+                                      )))
+                        .toList(),
+                    onChanged: (value) => {callback(value)}),
+              ),
+              const SizedBox(height: 12,)
+          ],
+        )
         : Container();
   }
 }

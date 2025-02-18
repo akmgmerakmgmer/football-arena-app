@@ -31,8 +31,6 @@ class PlayerSearch extends StatefulWidget {
 
 class _PlayerSearchState extends State<PlayerSearch> {
   final TextEditingController _controller = TextEditingController(text: "");
-  String playerValue = '';
-  String previousValue = '';
   late List players = [];
   bool loading = false;
 
@@ -89,7 +87,10 @@ class _PlayerSearchState extends State<PlayerSearch> {
                 allHintsLength: widget.questionHintsLength,
                 isPlayerSearch: widget.isPlayerSearch,
                 addHintAction: widget.addHintAction,
-                skipAction: widget.skipAction,
+                skipAction: (){
+                  widget.skipAction();
+                  emptySearch();
+                },
               ),
               Container(
                 padding: EdgeInsets.only(
