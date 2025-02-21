@@ -95,11 +95,12 @@ class BottomNavigation extends StatelessWidget {
                             color: route['selected']
                                 ? Colors.red
                                 : Colors.grey.shade300,
+                                size: 28,
                           ),
                         ),
                         TextWidget(
                           title: route['text'],
-                          fontSize: 12,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: route['selected']
                               ? Colors.red

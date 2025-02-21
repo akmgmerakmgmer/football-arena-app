@@ -59,12 +59,27 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
     }
   }
 
+  showRateAppModal() {
+    LocaleProvider localeProvider =
+        Provider.of<LocaleProvider>(context, listen: false);
+    Map user = localeProvider.user.isNotEmpty ? localeProvider.user : {};
+    if (user.isNotEmpty) {
+      if (!user['app_rated'] &&
+          user['alreadyAsked'] == null &&
+          user['season_results']['consecutive_wins'] >= 3) {
+        user['alreadyAsked'] = true;
+        ModalContainer.rateOurApp(context, localeProvider);
+      }
+    }
+  }
+
   getInitialData() async {
     buildNumber = await getAppVersion();
     await initialFetch();
     adTimer();
     decreaseAdCount();
     await fetchUsers();
+    showRateAppModal();
   }
 
   Future<void> initialFetch() async {
@@ -179,14 +194,11 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
 
   @override
   Widget build(BuildContext context) {
-    List advertisments = Provider.of<LocaleProvider>(context, listen: false)
-                .advertisments
-                .isNotEmpty &&
-            Provider.of<LocaleProvider>(context, listen: false)
-                .advertisments['advertisments']
-                .isNotEmpty
-        ? Provider.of<LocaleProvider>(context, listen: false)
-            .advertisments['advertisments']
+    LocaleProvider localeProvider =
+        Provider.of<LocaleProvider>(context, listen: false);
+    List advertisments = localeProvider.advertisments.isNotEmpty &&
+            localeProvider.advertisments['advertisments'].isNotEmpty
+        ? localeProvider.advertisments['advertisments']
         : [];
     return SafeArea(
       child: Scaffold(

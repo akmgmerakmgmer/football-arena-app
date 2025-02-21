@@ -11,13 +11,14 @@ class MainMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const double defaultFontSize = 16;
     LocaleProvider localeProvider =
         Provider.of<LocaleProvider>(context, listen: false);
     return ImageBackgroundContainer(
         body: Column(
       children: [
         MainButton(
-          fontSize: 15,
+          fontSize: defaultFontSize,
           buttonText: AppLocalizations.of(context)!.start,
           action: () {
             if (localeProvider.user.containsKey('username')) {
@@ -36,7 +37,7 @@ class MainMenu extends StatelessWidget {
           height: 15,
         ),
         RegularButton(
-            fontSize: 15,
+            fontSize: defaultFontSize,
             buttonText: AppLocalizations.of(context)!.play_online,
             action: () {
               if (localeProvider.user.containsKey('username')) {
@@ -50,7 +51,7 @@ class MainMenu extends StatelessWidget {
           height: 15,
         ),
         RegularButton(
-            fontSize: 15,
+            fontSize: defaultFontSize,
             buttonText: AppLocalizations.of(context)!.events_and_challenges,
             action: () {
               Navigator.pushNamed(context, '/play-alone');
@@ -69,7 +70,7 @@ class MainMenu extends StatelessWidget {
           height: 15,
         ),
         RegularButton(
-            fontSize: 15,
+            fontSize: defaultFontSize,
             buttonText: AppLocalizations.of(context)!.rankings,
             action: () {
               Navigator.pushNamed(context, '/rankings');

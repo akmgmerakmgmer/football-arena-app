@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/utilities/api_methods.dart';
+import 'package:in_zone_app/utilities/external_url.dart';
+import 'package:in_zone_app/widgets/buttons/main_button.dart';
 import 'package:in_zone_app/widgets/general_widgets/dialog_widget_blured.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -70,5 +73,25 @@ class ModalContainer {
                 )
               ],
             )));
+  }
+
+  static rateOurApp(BuildContext context, LocaleProvider localeProvider) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => DialogWidgetBlured(
+            title: AppLocalizations.of(context)!.rate_our_app,
+            description: AppLocalizations.of(context)!.rate_our_app_desc,
+            widget: MainButton(
+              fontSize: 13,
+                buttonText: AppLocalizations.of(context)!.rate_app,
+                action: () {
+                  Navigator.of(context).pop();
+                  Map user = localeProvider.user;
+                  ExternalUrl().launchNewUrl(
+                      'https://play.google.com/store/apps/details?id=soccer.in_zone_gaming_app');
+                  PutApi('users/${user['_id']}', {"app_rated": true},
+                      (value) => {localeProvider.setUser(value)}).put(context);
+                })));
   }
 }

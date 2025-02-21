@@ -155,5 +155,8 @@
     "account_edited":"Your account has been edited",
     "win_promotion_flag": "Win to rank up",
     "lose_demotion_flag": "If you lose you will be demoted",
-    "events_and_challenges": "Events & Challenges"
+    "events_and_challenges": "Events & Challenges",
+    "rate_our_app": "Rate our app please",
+    "rate_our_app_desc": "Please rate our app to expand and attract more users",
+    "rate_app": "Rate Our App"
 }

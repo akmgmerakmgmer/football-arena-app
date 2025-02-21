@@ -164,5 +164,8 @@
     "account_edited": "تم تعديل حسابك",
     "win_promotion_flag": "سيتم ترقيتك لو فزت هذه المبارة",
     "lose_demotion_flag": "سيتم تخفيض رتبتك لو خسرت هذه المبارة",
-    "events_and_challenges": "التحديات و الأحداث"
+    "events_and_challenges": "التحديات و الأحداث",
+    "rate_our_app": "من فضلك قيم التطبيق رأيك يهمنا",
+    "rate_our_app_desc": "نرجو تقييم التطبيق للانتشار اكثر بين المستخدمين",
+    "rate_app": "قيم التطبيق"
 }
