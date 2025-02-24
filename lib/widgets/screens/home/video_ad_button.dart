@@ -25,6 +25,7 @@ class VideoAdButton extends StatelessWidget {
           radius: 10,
           buttonText: '',
           isWidget: true,
+          blueColor: true,
           widget: Column(
             children: [
               TextWidget(
@@ -35,11 +36,27 @@ class VideoAdButton extends StatelessWidget {
               const SizedBox(
                 height: 4,
               ),
-              const Icon(
-                Icons.video_camera_back,
-                color: Colors.white,
-                size: 20,
-              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                textDirection: TextDirection.ltr,
+                children: [
+                  const Icon(
+                    Icons.video_camera_back,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  TextWidget(
+                    title: AppLocalizations.of(context)!.ad,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white.withOpacity(0.9),
+                  )
+                ],
+              )
             ],
           ),
           action: () {

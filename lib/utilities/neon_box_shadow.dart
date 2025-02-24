@@ -46,4 +46,27 @@ class NeonBoxShadow {
       ),
     ];
   }
+
+  List<BoxShadow> boxShadowBlue(context) {
+    return [
+      BoxShadow(
+        color: Colors.blue,
+        spreadRadius: 0,
+        blurRadius: 5,
+        offset: const Offset(0, 0),
+      ),
+      BoxShadow(
+        color: Colors.blue,
+        spreadRadius: 0,
+        blurRadius: 5,
+        offset: const Offset(0, 0),
+      ),
+      BoxShadow(
+        color: Colors.blue,
+        spreadRadius: 0,
+        blurRadius: 5,
+        offset: const Offset(0, 0),
+      ),
+    ];
+  }
 }

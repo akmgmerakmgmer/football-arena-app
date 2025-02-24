@@ -8,12 +8,14 @@ class CoinsButton extends StatefulWidget {
   final LocaleProvider localeProvider;
   final bool isOnline;
   final dynamic callback;
+  final String buttonText;
   const CoinsButton(
       {super.key,
       required this.mode,
       required this.localeProvider,
       this.isOnline = false,
-      this.callback});
+      this.callback,
+      this.buttonText = ''});
 
   @override
   State<CoinsButton> createState() => _CoinsButtonState();
@@ -25,7 +27,7 @@ class _CoinsButtonState extends State<CoinsButton> {
   Widget build(BuildContext context) {
     return Expanded(
       child: PurchaseButton(
-          buttonText: '',
+          buttonText: widget.buttonText,
           loading: loading,
           price: '100',
           action: () {

@@ -135,6 +135,7 @@ flutter:
     - assets/images/won_english.png
     - assets/images/draw_arabic.png
     - assets/images/draw_english.png
+    - assets/images/video_ad.png
     - assets/audio/correct.mp3
     - assets/audio/buzzer.mp3    
     - assets/audio/countdown.mp3

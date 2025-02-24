@@ -108,6 +108,8 @@
     "navigationRankings": "Rankings",
     "navigationBestOffers": "Offers",
     "edit": "Edit",
+    "ad":"Ad 5 Seconds",
+    "coinAd": "Ad: Free Coins!",
     "wordsLimit": "At least type 3 words",
     "addHint": "Add Hint",
     "deleteWord": "Delete Word",

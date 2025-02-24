@@ -4,8 +4,12 @@ import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 class ProfileImages extends StatelessWidget {
   final bool isSelected;
   final String image;
+  final bool isTheme;
   const ProfileImages(
-      {super.key, required this.isSelected, required this.image});
+      {super.key,
+      required this.isSelected,
+      required this.image,
+      this.isTheme = false});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +28,7 @@ class ProfileImages extends StatelessWidget {
           child: CachedImage(
             image: image,
             width: 220,
-            height: 180,
+            height: isTheme ? 280 : 200,
           ),
         ),
       ),

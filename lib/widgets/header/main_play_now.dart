@@ -36,7 +36,7 @@ class MainPlayNow extends StatelessWidget {
           child: TextWidget(
             title: AppLocalizations.of(context)!.playNow,
             uppercase: true,
-            fontSize: 17,
+            fontSize: 19,
             fontWeight: FontWeight.w600,
           ),
         ),

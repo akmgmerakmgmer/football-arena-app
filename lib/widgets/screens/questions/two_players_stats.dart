@@ -40,7 +40,7 @@ class _TwoPlayersStatsState extends State<TwoPlayersStats> {
         .where((item) => item == perk['id']['_id'])
         .toList()
         .isNotEmpty;
-    if (perk['quantity'] > 0 && !isPerkUsed) {
+    if (perk['quantity'] > 0 && !isPerkUsed && perk['id']['applicableOnline']) {
       switch (perk['id']['title']['en']) {
         case '+90':
           widget.stoppageTime(perk['id']['_id']);
@@ -63,7 +63,9 @@ class _TwoPlayersStatsState extends State<TwoPlayersStats> {
   }
 
   bool isPerkDisabled(perk) {
-    if (perk['quantity'] == 0 || widget.usedPerks.contains(perk['id']['_id'])) {
+    if (perk['quantity'] == 0 ||
+        widget.usedPerks.contains(perk['id']['_id']) ||
+        !perk['id']['applicableOnline']) {
       return true;
     }
     return false;

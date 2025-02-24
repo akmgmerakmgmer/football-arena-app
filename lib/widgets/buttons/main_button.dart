@@ -17,6 +17,7 @@ class MainButton extends StatelessWidget {
   final bool offersPage;
   final bool disabled;
   final EdgeInsets padding;
+  final bool blueColor;
   const MainButton(
       {super.key,
       required this.buttonText,
@@ -31,7 +32,8 @@ class MainButton extends StatelessWidget {
       this.isChallengesPage = false,
       this.offersPage = false,
       this.disabled = false,
-      this.padding = const EdgeInsets.all(12.0)});
+      this.padding = const EdgeInsets.all(12.0),
+      this.blueColor = false});
 
   @override
   Widget build(BuildContext context) {
@@ -42,14 +44,19 @@ class MainButton extends StatelessWidget {
         decoration: BoxDecoration(
             color: disabled
                 ? Colors.white.withOpacity(0.1)
-                : Theme.of(context).primaryColor,
+                : blueColor
+                    ? Colors.blue
+                    : Theme.of(context).primaryColor,
             borderRadius: offersPage
                 ? BorderRadius.only(
                     bottomLeft: Radius.circular(radius),
                     bottomRight: Radius.circular(radius))
                 : BorderRadius.all(Radius.circular(radius)),
-            boxShadow:
-                disabled ? null : NeonBoxShadow().boxShadowNeon(context)),
+            boxShadow: disabled
+                ? null
+                : blueColor
+                    ? NeonBoxShadow().boxShadowBlue(context)
+                    : NeonBoxShadow().boxShadowNeon(context)),
         padding: isWidget && !loading ? const EdgeInsets.all(8.0) : padding,
         child: loading
             ? const PrimaryLoading()

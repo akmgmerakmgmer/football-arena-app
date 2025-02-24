@@ -65,7 +65,7 @@ class _MainOnlineState extends State<MainOnline> {
               ),
               MainButton(
                   buttonText: AppLocalizations.of(context)!.playNow,
-                  fontSize: 13,
+                  fontSize: 16,
                   radius: 10,
                   loading: loading,
                   uppercase: true,

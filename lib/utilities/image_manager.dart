@@ -11,6 +11,7 @@ class ImageManager {
       'assets/images/lost_arabic.png',
       'assets/images/lost_english.png',
       'assets/images/vs.png',
+      'assets/images/video_ad.png'
     ];
 
     for (String path in imagePaths) {

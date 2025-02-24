@@ -30,7 +30,11 @@ class SingleUsersAvatars extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          ProfileImages(isSelected: isSelected, image: image),
+          ProfileImages(
+            isSelected: isSelected,
+            image: image,
+            isTheme: isTheme,
+          ),
           ProfileButton(
               isTheme: isTheme,
               isSelected: isSelected,

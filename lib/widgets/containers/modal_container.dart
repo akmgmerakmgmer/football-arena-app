@@ -70,6 +70,7 @@ class ModalContainer {
                   localeProvider: localeProvider,
                   isOnline: isOnline,
                   callback: callback,
+                  buttonText: AppLocalizations.of(context)!.playNow,
                 )
               ],
             )));

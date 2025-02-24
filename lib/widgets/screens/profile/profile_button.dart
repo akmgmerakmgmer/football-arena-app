@@ -45,7 +45,7 @@ class _ProfileButtonState extends State<ProfileButton> {
     return Positioned(
         bottom: 15,
         child: Container(
-            width: MediaQuery.of(context).size.width * 0.6,
+            width: MediaQuery.of(context).size.width * 0.4,
             constraints: const BoxConstraints(maxWidth: 200),
             child: MainButton(
               padding: const EdgeInsets.symmetric(vertical: 9.0,horizontal: 4.0),

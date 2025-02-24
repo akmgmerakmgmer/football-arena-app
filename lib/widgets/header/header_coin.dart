@@ -1,11 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/ad_methods.dart';
 import 'package:in_zone_app/utilities/ad_reward_methods.dart';
 import 'package:in_zone_app/utilities/generalMethods.dart';
-import 'package:in_zone_app/widgets/animations/ping_animation.dart';
-import 'package:in_zone_app/widgets/general_widgets/coin.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
+import 'package:in_zone_app/widgets/header/coin_animation.dart';
 import 'package:in_zone_app/widgets/header/neon_icon.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -28,29 +29,14 @@ class HeaderCoin extends StatelessWidget {
                 if (AddRewardMethods()
                     .isFreeCoinsAvailable(localeProvider, context)) {
                   AdMethods().showInterstitialAd(() {
-                    AddRewardMethods().addCoinsMethod(localeProvider, context);
+                    Future.delayed(const Duration(seconds: 3), () {
+                      AddRewardMethods()
+                          .addCoinsMethod(localeProvider, context);
+                    });
                   }, context);
                 }
               },
-              child: Column(
-                children: [
-                  const PingAnimation(
-                    color: Colors.yellow,
-                    seconds: 1,
-                    size: 15,
-                    child: Coin(
-                      width: 22,
-                    ),
-                  ),
-                  const SizedBox(height: 3,),
-                  TextWidget(
-                    title: user['coins'].toString(),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    alwaysEnglish: true,
-                  ),
-                ],
-              ),
+              child: CoinAnimation(user: user)
             )
           : GestureDetector(
               onTap: () => Navigator.pushNamed(
