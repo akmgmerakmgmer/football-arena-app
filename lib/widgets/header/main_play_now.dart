@@ -27,7 +27,7 @@ class MainPlayNow extends StatelessWidget {
         GestureDetector(
           onTap: () => playNow(context),
           child: CustomPaint(
-            size: const Size(200, 45), // Adjust size as needed
+            size: const Size(200, 50), // Adjust size as needed
             painter: PolygonPainter(),
           ),
         ),

@@ -23,7 +23,7 @@ class ProfileImages extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(15)),
           child: CachedImage(
             image: image,
-            width: 260,
+            width: 220,
             height: 180,
           ),
         ),

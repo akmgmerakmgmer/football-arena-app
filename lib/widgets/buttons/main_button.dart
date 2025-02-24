@@ -16,6 +16,7 @@ class MainButton extends StatelessWidget {
   final bool isChallengesPage;
   final bool offersPage;
   final bool disabled;
+  final EdgeInsets padding;
   const MainButton(
       {super.key,
       required this.buttonText,
@@ -29,7 +30,8 @@ class MainButton extends StatelessWidget {
       this.widget,
       this.isChallengesPage = false,
       this.offersPage = false,
-      this.disabled = false});
+      this.disabled = false,
+      this.padding = const EdgeInsets.all(12.0)});
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +48,9 @@ class MainButton extends StatelessWidget {
                     bottomLeft: Radius.circular(radius),
                     bottomRight: Radius.circular(radius))
                 : BorderRadius.all(Radius.circular(radius)),
-            boxShadow: disabled ? null : NeonBoxShadow().boxShadowNeon(context)),
-        padding: isChallengesPage
-            ? const EdgeInsets.all(10.0)
-            : isWidget && !loading
-                ? const EdgeInsets.all(8.0)
-                : const EdgeInsets.all(12.0),
+            boxShadow:
+                disabled ? null : NeonBoxShadow().boxShadowNeon(context)),
+        padding: isWidget && !loading ? const EdgeInsets.all(8.0) : padding,
         child: loading
             ? const PrimaryLoading()
             : isWidget

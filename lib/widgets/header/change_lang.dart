@@ -14,13 +14,13 @@ class ChangeLang extends StatelessWidget {
         onTap: () => GeneralMethods().changeLanguage(context),
         child: Column(
           children: [
-            const NeonIcon(icon: Icons.language),
+            const NeonIcon(icon: Icons.language,size: 20,),
             SizedBox(
               height: locale == 'ar' ? 4 : 2,
             ),
             TextWidget(
               title: locale == 'ar' ? 'English' : 'عربي',
-              fontSize: locale == 'ar' ? 14 : 12,
+              fontSize: locale == 'ar' ? 14 : 16,
               fontWeight: FontWeight.w600,
               alwaysEnglish: locale == 'ar' ? true : false,
               alwaysArabic: locale == 'ar' ? false : true,

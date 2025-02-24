@@ -45,8 +45,10 @@ class VideoAdButton extends StatelessWidget {
           action: () {
             AdMethods().showInterstitialAd(() {
               if (isOnline && context.mounted) {
-                socketMethods.joinRoom(context, localeProvider,
-                    questionMode: mode);
+                Future.delayed(const Duration(seconds: 3), () {
+                  socketMethods.joinRoom(context, localeProvider,
+                      questionMode: mode);
+                });
               } else {
                 Navigator.pushReplacement(
                   context,

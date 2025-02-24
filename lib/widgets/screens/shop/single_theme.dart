@@ -60,11 +60,13 @@ class _SingleThemeState extends State<SingleTheme> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Container(
-        height: 300,
+        height: 400,
         margin: const EdgeInsets.symmetric(horizontal: 3),
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: CachedNetworkImageProvider(widget.theme['image']), fit: BoxFit.cover),
+            image: CachedNetworkImageProvider(widget.theme['image']),
+            fit: BoxFit.cover,
+          ),
           borderRadius: const BorderRadius.all(Radius.circular(15)),
         ),
         child: Stack(

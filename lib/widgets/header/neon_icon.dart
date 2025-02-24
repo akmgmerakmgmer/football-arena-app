@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class NeonIcon extends StatelessWidget {
   final IconData icon;
-  const NeonIcon({super.key, required this.icon});
+  final double size;
+  const NeonIcon({super.key, required this.icon, this.size = 18});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class NeonIcon extends StatelessWidget {
         // Main Icon
         Icon(
           icon, // Change to your preferred icon
-          size: 18,
+          size: size,
           color: Colors.white,
         ),
       ],

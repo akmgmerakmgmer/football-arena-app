@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/screens/multi_screen.dart';
+import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/socket.dart';
 
 class SocketMethods {
@@ -18,7 +20,13 @@ class SocketMethods {
     }
   }
 
-  void leaveRoomEarly(data) {
+  void leaveRoomEarly(data, coinsPayed, BuildContext context,
+      LocaleProvider localeProvider, user) {
+    if (coinsPayed) {
+      PutApi('users/${user['_id']}', {'coins': user['coins'] + 100}, (res) {
+        localeProvider.setUser(res);
+      }).put(context);
+    }
     _socketClient?.emit('leaveRoomEarly', data);
   }
 
@@ -52,7 +60,15 @@ class SocketMethods {
       room['players'].insert(0, myUser);
       localeProvider.setRoom(room);
       if (context.mounted) {
-        Navigator.pushNamed(context, '/multi-screen');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            settings: const RouteSettings(name: '/multi-screen'),
+            builder: (context) => const MultiScreen(
+              coinsPayed: true,
+            ),
+          ),
+        );
       }
     });
   }

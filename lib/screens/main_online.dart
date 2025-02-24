@@ -35,8 +35,8 @@ class _MainOnlineState extends State<MainOnline> {
       LocaleProvider localeProvider =
           Provider.of<LocaleProvider>(context, listen: false);
       // _socketMethods.joinRoom(context, localeProvider);
-      ModalContainer.choosePlayOptionModal(context, localeProvider, '',showDesc: false,
-          isOnline: true, callback: () {
+      ModalContainer.choosePlayOptionModal(context, localeProvider, '',
+          showDesc: false, isOnline: true, callback: () {
         setState(() {
           loading = true;
         });

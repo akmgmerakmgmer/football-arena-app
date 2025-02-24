@@ -11,7 +11,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MultiScreen extends StatefulWidget {
-  const MultiScreen({super.key});
+  final bool coinsPayed;
+  const MultiScreen({super.key, this.coinsPayed = false});
 
   @override
   State<MultiScreen> createState() => _MultiScreenState();
@@ -67,11 +68,13 @@ class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
   void leaveRoomEarly() {
     final LocaleProvider localeProvider =
         Provider.of<LocaleProvider>(context, listen: false);
+    Map user = localeProvider.user;
     Map data = {
       'roomId': localeProvider.room['_id'],
       'userId': localeProvider.user['_id']
     };
-    _socketMethods.leaveRoomEarly(data);
+    _socketMethods.leaveRoomEarly(
+        data, widget.coinsPayed, context, localeProvider, user);
     Navigator.pushReplacementNamed(context, '/');
   }
 

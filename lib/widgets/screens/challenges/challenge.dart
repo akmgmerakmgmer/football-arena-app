@@ -94,7 +94,7 @@ class Challenge extends StatelessWidget {
                           fontSize: 12.5,
                           uppercase: true,
                           letterSpacing: 1.1,
-                          isChallengesPage: true,
+                          padding: const EdgeInsets.all(10.0),
                           radius: 10,
                           action: () {
                             if (isPlayedToday(context)) {

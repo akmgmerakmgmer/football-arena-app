@@ -29,7 +29,7 @@ class NeedUpdate extends StatelessWidget {
               radius: 10,
               action: () {
                 ExternalUrl().launchNewUrl(
-                    'https://www.facebook.com/profile.php?id=61560132416554');
+                      'https://play.google.com/store/apps/details?id=soccer.in_zone_gaming_app');
               })
         ],
       ),

@@ -37,14 +37,15 @@ class HeaderCoin extends StatelessWidget {
                   const PingAnimation(
                     color: Colors.yellow,
                     seconds: 1,
-                    size: 14,
+                    size: 15,
                     child: Coin(
-                      width: 20,
+                      width: 22,
                     ),
                   ),
+                  const SizedBox(height: 3,),
                   TextWidget(
                     title: user['coins'].toString(),
-                    fontSize: 13,
+                    fontSize: 14,
                     fontWeight: FontWeight.w600,
                     alwaysEnglish: true,
                   ),

@@ -48,6 +48,7 @@ class _ProfileButtonState extends State<ProfileButton> {
             width: MediaQuery.of(context).size.width * 0.6,
             constraints: const BoxConstraints(maxWidth: 200),
             child: MainButton(
+              padding: const EdgeInsets.symmetric(vertical: 9.0,horizontal: 4.0),
               buttonText: widget.isSelected
                   ? widget.isTheme
                       ? AppLocalizations.of(context)!.selectedTheme

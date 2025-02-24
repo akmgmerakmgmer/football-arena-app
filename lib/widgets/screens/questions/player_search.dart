@@ -87,7 +87,7 @@ class _PlayerSearchState extends State<PlayerSearch> {
                 allHintsLength: widget.questionHintsLength,
                 isPlayerSearch: widget.isPlayerSearch,
                 addHintAction: widget.addHintAction,
-                skipAction: (){
+                skipAction: () {
                   widget.skipAction();
                   emptySearch();
                 },
@@ -167,6 +167,9 @@ class _PlayerSearchState extends State<PlayerSearch> {
                               player: players[index], // Access player by index
                               locale: widget.locale,
                               action: () {
+                                setState(() {
+                                  players = [];
+                                });
                                 widget.playerAction(
                                     players[index]['nameEn'], 0);
                                 emptySearch();
