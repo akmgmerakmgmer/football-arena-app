@@ -44,14 +44,14 @@ class VideoAdButton extends StatelessWidget {
                   const Icon(
                     Icons.video_camera_back,
                     color: Colors.white,
-                    size: 20,
+                    size: 18,
                   ),
                   const SizedBox(
                     width: 2,
                   ),
                   TextWidget(
                     title: AppLocalizations.of(context)!.ad,
-                    fontSize: 13,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: Colors.white.withOpacity(0.9),
                   )
@@ -67,16 +67,18 @@ class VideoAdButton extends StatelessWidget {
                       questionMode: mode);
                 });
               } else {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    settings: const RouteSettings(name: '/questions'),
-                    builder: (context) => Questions(
-                      questionMode: mode,
-                      userId: localeProvider.user['_id'],
+                Future.delayed(const Duration(seconds: 2), () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      settings: const RouteSettings(name: '/questions'),
+                      builder: (context) => Questions(
+                        questionMode: mode,
+                        userId: localeProvider.user['_id'],
+                      ),
                     ),
-                  ),
-                );
+                  );
+                });
               }
             }, context);
           }),

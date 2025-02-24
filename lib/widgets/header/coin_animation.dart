@@ -37,8 +37,8 @@ class _CoinAnimationState extends State<CoinAnimation> {
       duration: const Duration(milliseconds: 1000),
       child: showCoin
           ? Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               key: const ValueKey('coinColumn'),
               children: [
                 const PingAnimation(
@@ -67,17 +67,20 @@ class _CoinAnimationState extends State<CoinAnimation> {
                 PingAnimation(
                     color: Colors.red,
                     seconds: 1,
-                    size: 20,
+                    size: 18,
                     child: Image.asset(
                       'assets/images/video_ad.png',
                       width: 28,
                       fit: BoxFit.cover,
                     )),
+                const SizedBox(
+                  height: 2,
+                ),
                 TextWidget(
                   title: AppLocalizations.of(context)!.coinAd,
                   fontWeight: FontWeight.w600,
                   color: Colors.white.withOpacity(0.8),
-                  fontSize: 12,
+                  fontSize: 11,
                 ),
               ],
             ),
