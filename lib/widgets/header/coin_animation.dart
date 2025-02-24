@@ -67,7 +67,7 @@ class _CoinAnimationState extends State<CoinAnimation> {
                 PingAnimation(
                     color: Colors.red,
                     seconds: 1,
-                    size: 15,
+                    size: 20,
                     child: Image.asset(
                       'assets/images/video_ad.png',
                       width: 28,
