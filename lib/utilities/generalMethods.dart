@@ -46,7 +46,7 @@ class GeneralMethods {
           PutApi('users/${user['_id']}', {'coins': user['coins'] - 100}, (res) {
             localeProvider.setUser(res);
           }).put(context);
-          socketMethods.joinRoom(context, localeProvider, questionMode: mode);
+          socketMethods.joinRoom(context, localeProvider, questionMode: mode,coinsPayed: true);
         } else {
           Navigator.pushReplacement(
             context,

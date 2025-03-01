@@ -10,7 +10,7 @@ class MainPlayNow extends StatelessWidget {
     if (!GeneralMethods().isUserExists(context)) {
       return Navigator.pushNamed(
         context,
-        '/login',
+        '/signup',
       );
     }
     Navigator.pushNamed(

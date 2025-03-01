@@ -27,7 +27,7 @@ class _SingleEventState extends State<SingleEvent> {
         ),
       );
     } else {
-      Navigator.pushNamed(context, '/login');
+      Navigator.pushNamed(context, '/signup');
     }
   }
 

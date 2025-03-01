@@ -22,7 +22,7 @@ class _SingleCoinShopState extends State<SingleCoinShop> {
   Future<void> buyCoins(amount, quantity) async {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     if (user.isEmpty) {
-      Navigator.pushNamed(context, '/login');
+      Navigator.pushNamed(context, '/signup');
     } else {
       setState(() {
         loading = true;

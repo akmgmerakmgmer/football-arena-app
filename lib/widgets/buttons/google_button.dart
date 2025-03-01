@@ -21,10 +21,6 @@ class _GoogleButtonState extends State<GoogleButton> {
   bool loading = false;
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ],
   );
 
   Future<void> _handleSignIn(context) async {
@@ -33,13 +29,6 @@ class _GoogleButtonState extends State<GoogleButton> {
         loading = true;
       });
       // Ensure the Google Sign-In flow always prompts for account selection
-      final GoogleSignInAccount? googleUser =
-          await _googleSignIn.signInSilently();
-      if (googleUser != null) {
-        await _googleSignIn
-            .disconnect(); // Disconnect the previous session to force account selection
-      }
-
       final GoogleSignInAccount? selectedGoogleUser =
           await _googleSignIn.signIn();
       if (selectedGoogleUser == null) {

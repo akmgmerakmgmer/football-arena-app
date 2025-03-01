@@ -119,7 +119,7 @@ class Challenge extends StatelessWidget {
                                 ),
                               );
                             } else {
-                              Navigator.pushNamed(context, '/login');
+                              Navigator.pushNamed(context, '/signup');
                             }
                           }),
                     )

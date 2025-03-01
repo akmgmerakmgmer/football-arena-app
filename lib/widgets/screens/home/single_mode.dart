@@ -55,7 +55,7 @@ class _SingleModeState extends State<SingleMode> {
     LocaleProvider localeProvider =
         Provider.of<LocaleProvider>(context, listen: false);
     if (!GeneralMethods().isUserExists(context)) {
-      return Navigator.pushNamed(context, '/login');
+      return Navigator.pushNamed(context, '/signup');
     }
 
     if (isPlayedToday(context)) {

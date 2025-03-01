@@ -24,10 +24,10 @@ class Login extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
                 const LoginForm(),
-                // const SizedBox(
-                //   height: 16,
-                // ),
-                // const GoogleButton()
+                const SizedBox(
+                  height: 16,
+                ),
+                const GoogleButton()
               ],
             )));
   }

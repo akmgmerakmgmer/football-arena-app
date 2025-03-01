@@ -45,7 +45,7 @@ class _SinglePerkShopState extends State<SinglePerkShop> {
   Future<void> buyPerk() async {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     if (user.isEmpty) {
-      Navigator.pushNamed(context, '/login');
+      Navigator.pushNamed(context, '/signup');
     } else {
       setState(() {
         loading = true;

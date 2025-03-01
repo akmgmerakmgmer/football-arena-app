@@ -23,7 +23,7 @@ class _SingleAvatarState extends State<SingleAvatar> {
   Future<void> onClick() async {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     if (user.isEmpty) {
-      Navigator.pushNamed(context, '/login');
+      Navigator.pushNamed(context, '/signup');
     } else {
       setState(() {
         loading = true;

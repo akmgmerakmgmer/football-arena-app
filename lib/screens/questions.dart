@@ -614,9 +614,10 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
 
   void initialFetch() async {
     if (widget.themePreview == '') {
-      gameSaved = true;
       await getAdvertisments();
       await getQuestions();
+    } else {
+      gameSaved = true;
     }
   }
 
@@ -699,7 +700,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
-        if (!gameSaved) {
+        if (!gameSaved && !saveLoading) {
           saveGame(true);
         } else {
           navigationDestination();

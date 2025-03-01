@@ -27,7 +27,7 @@ class MainMenu extends StatelessWidget {
                 '/questions',
               );
             } else {
-              Navigator.pushNamed(context, '/login');
+              Navigator.pushNamed(context, '/signup');
             }
           },
           uppercase: true,
@@ -43,7 +43,7 @@ class MainMenu extends StatelessWidget {
               if (localeProvider.user.containsKey('username')) {
                 Navigator.pushNamed(context, '/main-online');
               } else {
-                Navigator.pushNamed(context, '/login');
+                Navigator.pushNamed(context, '/signup');
               }
             },
             uppercase: true),

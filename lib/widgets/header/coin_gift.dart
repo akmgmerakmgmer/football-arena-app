@@ -33,7 +33,7 @@ class CoinGift extends StatelessWidget {
           : GestureDetector(
               onTap: () => Navigator.pushNamed(
                 context,
-                '/login',
+                '/signup',
               ),
               child: Column(
                 children: [

@@ -9,13 +9,14 @@ class SocketMethods {
 
   // Emitters
   void joinRoom(BuildContext context, LocaleProvider localeProvider,
-      {String questionMode = ''}) {
+      {String questionMode = '', bool coinsPayed = false}) {
     Map user = localeProvider.user;
     if (user.isNotEmpty) {
-      _socketClient?.emit('joinRoom', {'userId': user['_id']});
+      _socketClient
+          ?.emit('joinRoom', {'userId': user['_id'], 'coinsPayed': coinsPayed});
     } else {
       if (context.mounted) {
-        Navigator.pushNamed(context, '/login');
+        Navigator.pushNamed(context, '/signup');
       }
     }
   }
@@ -49,23 +50,23 @@ class SocketMethods {
   // Listeners
   void joinRoomSuccesListener(
       BuildContext context, LocaleProvider localeProvider) {
-    _socketClient?.on('joinRoomSuccess', (room) {
+    _socketClient?.on('joinRoomSuccess', (data) {
       // Access and modify the room data
       String userId = localeProvider.user['_id'];
 
       // Find and rearrange the current user's data
-      Map myUser = room['players']
+      Map myUser = data['room']['players']
           .firstWhere((player) => player['userId']['_id'].toString() == userId);
-      room['players'].remove(myUser);
-      room['players'].insert(0, myUser);
-      localeProvider.setRoom(room);
+      data['room']['players'].remove(myUser);
+      data['room']['players'].insert(0, myUser);
+      localeProvider.setRoom(data['room']);
       if (context.mounted) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             settings: const RouteSettings(name: '/multi-screen'),
-            builder: (context) => const MultiScreen(
-              coinsPayed: true,
+            builder: (context) => MultiScreen(
+              coinsPayed: data['coinsPayed'],
             ),
           ),
         );

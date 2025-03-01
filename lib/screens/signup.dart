@@ -24,10 +24,10 @@ class Signup extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
                 const SignupForm(),
-                // const SizedBox(
-                //   height: 16,
-                // ),
-                // // const GoogleButton()
+                const SizedBox(
+                  height: 16,
+                ),
+                const GoogleButton()
               ],
             )));
   }

@@ -58,7 +58,7 @@ class _ChooseTeamState extends State<ChooseTeam> {
         }
       }
     } else {
-      Navigator.pushNamed(context, '/login');
+      Navigator.pushNamed(context, '/signup');
     }
   }
 

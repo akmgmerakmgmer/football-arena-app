@@ -312,6 +312,7 @@ class _QuestionsState extends State<MultiQuestions>
   }
 
   void choiceAction(answer, index) {
+    print(answer);
     String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
     if (questionMode == 'reversedWords' &&
         generateSHA256Hash(answer) ==
