@@ -3,13 +3,15 @@ import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 
 class UserImage extends StatelessWidget {
   final String image;
+  final dynamic video;
   final Color borderColor;
   final double imageSize;
   const UserImage(
       {super.key,
       required this.image,
       required this.borderColor,
-      this.imageSize = 75});
+      this.imageSize = 75,
+      this.video});
 
   @override
   Widget build(BuildContext context) {

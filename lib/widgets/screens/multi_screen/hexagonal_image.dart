@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/containers/hexagon_painter.dart';
 import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
+import 'package:in_zone_app/widgets/general_widgets/video_network_widget.dart';
 
 class HexagonalImage extends StatelessWidget {
   final String image;
-  const HexagonalImage({super.key, required this.image});
+  final dynamic video;
+  const HexagonalImage({super.key, required this.image, this.video});
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +26,18 @@ class HexagonalImage extends StatelessWidget {
           // Hexagonal Image
           ClipPath(
             clipper: HexagonPainter(),
-            child: CachedImage(
-              image: image, // Replace with your image path
-              width: 90,
-              height: 90,
-            ),
+            child: video != null && video != ''
+                ? NetworkVideoWidget(
+                    videoUrl: Uri.parse(video),
+                    radius: 0,
+                    height: 90,
+                    width: 90,
+                  )
+                : CachedImage(
+                    image: image, // Replace with your image path
+                    width: 90,
+                    height: 90,
+                  ),
           ),
         ],
       ),

@@ -9,6 +9,7 @@ class PlayerBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(player);
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       child: SizedBox(
@@ -18,7 +19,9 @@ class PlayerBar extends StatelessWidget {
           children: [
             index.isEven
                 ? HexagonalImage(
-                    image: player['userId']['selectedAvatar']['image'])
+                    image: player['userId']['selectedAvatar']['image'],
+                    video: player['userId']['selectedAvatar']['video'],
+                  )
                 : Container(),
             Expanded(
               child: Container(
@@ -43,7 +46,12 @@ class PlayerBar extends StatelessWidget {
                 ),
               ),
             ),
-            index.isEven ? Container() : HexagonalImage(image: player['userId']['selectedAvatar']['image']),
+            index.isEven
+                ? Container()
+                : HexagonalImage(
+                    image: player['userId']['selectedAvatar']['image'],
+                    video: player['userId']['selectedAvatar']['video'],
+                  ),
           ],
         ),
       ),

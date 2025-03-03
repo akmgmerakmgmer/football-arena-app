@@ -1,10 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
-import 'package:in_zone_app/widgets/buttons/purchase_button.dart';
+import 'package:in_zone_app/widgets/containers/background_network_image.dart';
+import 'package:in_zone_app/widgets/containers/background_network_video.dart';
 import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/widgets/screens/shop/single_avatar_data.dart';
 import 'package:provider/provider.dart';
 
 class SingleAvatar extends StatefulWidget {
@@ -56,38 +57,27 @@ class _SingleAvatarState extends State<SingleAvatar> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Container(
-        height: 300,
-        margin: const EdgeInsets.symmetric(horizontal: 3),
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: CachedNetworkImageProvider(widget.avatar['image']), fit: BoxFit.cover),
-          borderRadius: const BorderRadius.all(Radius.circular(15)),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-                width: width > 1280
-                    ? width * 0.1
-                    : width > 1024
-                        ? width * 0.2
-                        : width > 450
-                            ? width * 0.3
-                            : width * 0.6,
-                child: PurchaseButton(
-                  price: widget.avatar['price'].toString(),
-                  buttonText: AppLocalizations.of(context)!.buyNow,
-                  action: () {
-                    onClick();
-                  },
-                  loading: loading,
-                )),
-            const SizedBox(
-              height: 15,
-            )
-          ],
-        ));
+    final Uri videoUrl = widget.avatar['video'] != null
+        ? Uri.parse("${widget.avatar['video']}")
+        : Uri.parse('');
+    return widget.avatar['video'] != null
+        ? BackgroundNetworkVideo(
+            videoUrl: videoUrl,
+            body: SingleAvatarData(
+                width: width,
+                avatar: widget.avatar,
+                action: () {
+                  onClick();
+                },
+                loading: loading))
+        : BackgroundNetworkImage(
+            image: widget.avatar['image'],
+            body: SingleAvatarData(
+                width: width,
+                avatar: widget.avatar,
+                action: () {
+                  onClick();
+                },
+                loading: loading));
   }
 }

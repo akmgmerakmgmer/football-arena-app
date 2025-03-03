@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/buttons/main_button_no_width.dart';
 import 'package:in_zone_app/widgets/general_widgets/username_text.dart';
-import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
+import 'package:in_zone_app/widgets/screens/questions/user_image.dart';
 import 'package:in_zone_app/widgets/screens/rankings/ranking_prize.dart';
 import 'package:in_zone_app/widgets/screens/rankings/user_data.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -28,7 +28,7 @@ class SingleUser extends StatelessWidget {
       child: Container(
         constraints:
             BoxConstraints(minWidth: MediaQuery.of(context).size.width),
-        padding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 16.0),
         margin: const EdgeInsets.only(bottom: 15),
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -50,13 +50,11 @@ class SingleUser extends StatelessWidget {
                 const SizedBox(
                   width: 15,
                 ),
-                ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(100)),
-                    child: CachedImage(
-                      image: item['selectedAvatar']['image'],
-                      width: 75,
-                      height: 75,
-                    )),
+                UserImage(
+                  image: item['selectedAvatar']['image'],
+                  borderColor: Colors.transparent,
+                  video: item['selectedAvatar']['video'],
+                ),
                 const SizedBox(
                   width: 4,
                 ),
@@ -64,9 +62,6 @@ class SingleUser extends StatelessWidget {
                 //   image: item['rank']['image'],
                 //   width: 50,
                 // ),
-                const SizedBox(
-                  width: 4,
-                ),
                 Row(
                   children: [
                     UsernameText(
