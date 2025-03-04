@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/screens/multi-questions.dart';
 import 'package:in_zone_app/utilities/socket_methods.dart';
@@ -25,6 +26,8 @@ class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
   void initState() {
     if (mounted) {
       super.initState();
+      WidgetsBinding.instance.addObserver(this);
+      leavePageWhenStateChanges();
       final LocaleProvider localeProvider =
           Provider.of<LocaleProvider>(context, listen: false);
       _socketMethods.leaveRoomEarlyListener(localeProvider);
@@ -43,16 +46,17 @@ class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.inactive) {
-      leaveRoomEarly();
-    } else if (state == AppLifecycleState.paused) {
-      leaveRoomEarly();
-    } else if (state == AppLifecycleState.detached) {
-      leaveRoomEarly();
-    }
+  void leavePageWhenStateChanges() {
+    SystemChannels.lifecycle.setMessageHandler((message) async {
+      if (message == AppLifecycleState.inactive.toString()) {
+        leaveRoomEarly();
+      } else if (message == AppLifecycleState.paused.toString()) {
+        leaveRoomEarly();
+      } else if (message == AppLifecycleState.detached.toString()) {
+        leaveRoomEarly();
+      }
+      return null;
+    });
   }
 
   void navigateToGame() {

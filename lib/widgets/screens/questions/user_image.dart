@@ -26,20 +26,14 @@ class UserImage extends StatelessWidget {
         ? NetworkVideoWidget(
             videoUrl: Uri.parse(video),
             radius: radius,
-            height: width,
-            width: height,
+            height: height,
+            width: width,
           )
-        : Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(radius)),
-                border: Border.all(color: borderColor, width: 4)),
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(radius)),
-              child: CachedImage(
-                image: image,
-                height: height,
-                width: width,
-              ),
-            ));
+        : CachedImage(
+            image: image,
+            height: height,
+            width: width,
+            radius: radius,
+          );
   }
 }

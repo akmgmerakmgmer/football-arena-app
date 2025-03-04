@@ -24,6 +24,10 @@ class SingleResult extends StatelessWidget {
               image: player1['player']['selectedAvatar']['image'],
               height: 65,
               width: 65,
+              radius: 100,
+            ),
+            const SizedBox(
+              width: 2,
             ),
             WinnerLoserDot(isWinner: player1['isWinner']),
             const SizedBox(
@@ -79,6 +83,10 @@ class SingleResult extends StatelessWidget {
               image: player2['player']['selectedAvatar']['image'],
               height: 65,
               width: 65,
+              radius: 100,
+            ),
+            const SizedBox(
+              width: 2,
             ),
             WinnerLoserDot(isWinner: player2['isWinner']),
           ],
