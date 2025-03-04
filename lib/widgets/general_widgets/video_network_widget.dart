@@ -40,7 +40,7 @@ class _NetworkVideoWidgetState extends State<NetworkVideoWidget> {
   }
 
   void _handleVisibility(double visibilityFraction) {
-    if (visibilityFraction > 0.5) {
+    if (visibilityFraction > 0.3) {
       if (!_controller.value.isPlaying) {
         _controller.play();
         setState(() => _isPlaying = true);

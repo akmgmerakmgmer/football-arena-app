@@ -15,8 +15,8 @@ class UserRankData extends StatelessWidget {
         children: [
           UserImage(
             image: user['selectedAvatar']['image'],
-            borderColor: Colors.transparent,
-            imageSize: 100,
+            width: 100,
+            height: 100,
             video: user['selectedAvatar']['video'],
           ),
           const SizedBox(

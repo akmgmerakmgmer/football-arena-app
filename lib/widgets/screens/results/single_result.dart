@@ -22,8 +22,8 @@ class SingleResult extends StatelessWidget {
           children: [
             UserImage(
               image: player1['player']['selectedAvatar']['image'],
-              borderColor: Colors.transparent,
-              imageSize: 55,
+              height: 65,
+              width: 65,
             ),
             WinnerLoserDot(isWinner: player1['isWinner']),
             const SizedBox(
@@ -76,9 +76,10 @@ class SingleResult extends StatelessWidget {
               ],
             ),
             UserImage(
-                image: player2['player']['selectedAvatar']['image'],
-                borderColor: Colors.transparent,
-                imageSize: 65),
+              image: player2['player']['selectedAvatar']['image'],
+              height: 65,
+              width: 65,
+            ),
             WinnerLoserDot(isWinner: player2['isWinner']),
           ],
         ),

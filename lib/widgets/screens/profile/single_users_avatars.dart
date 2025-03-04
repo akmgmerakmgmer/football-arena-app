@@ -10,6 +10,8 @@ class SingleUsersAvatars extends StatelessWidget {
   final bool isSelected;
   final String image;
   final bool isTheme;
+  final dynamic video;
+  final bool showVideo;
   const SingleUsersAvatars({
     super.key,
     required this.body,
@@ -18,6 +20,8 @@ class SingleUsersAvatars extends StatelessWidget {
     required this.isSelected,
     required this.image,
     required this.isTheme,
+    this.video,
+    required this.showVideo,
   });
 
   @override
@@ -34,6 +38,8 @@ class SingleUsersAvatars extends StatelessWidget {
             isSelected: isSelected,
             image: image,
             isTheme: isTheme,
+            video: video,
+            showVideo: showVideo,
           ),
           ProfileButton(
               isTheme: isTheme,

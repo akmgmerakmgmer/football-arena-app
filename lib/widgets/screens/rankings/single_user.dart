@@ -52,7 +52,6 @@ class SingleUser extends StatelessWidget {
                 ),
                 UserImage(
                   image: item['selectedAvatar']['image'],
-                  borderColor: Colors.transparent,
                   video: item['selectedAvatar']['video'],
                 ),
                 const SizedBox(

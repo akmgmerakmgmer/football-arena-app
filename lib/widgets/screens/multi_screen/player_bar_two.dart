@@ -22,8 +22,8 @@ class PlayerBarTwo extends StatelessWidget {
           children: [
             UserImage(
               image: player['userId']['selectedAvatar']['image'],
-              borderColor: Colors.transparent,
-              imageSize: 100,
+              width: 100,
+              height: 100,
             ),
             Column(
               children: [

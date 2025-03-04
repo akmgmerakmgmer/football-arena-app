@@ -39,8 +39,8 @@ class MultiStats extends StatelessWidget {
                 children: [
                   UserImage(
                     image: image,
-                    borderColor: Colors.transparent,
-                    imageSize: 60,
+                    width: 60,
+                    height: 60,
                   ),
                   const SizedBox(
                     width: 4,
@@ -52,7 +52,9 @@ class MultiStats extends StatelessWidget {
                         title: username,
                         fontSize: 18,
                       ),
-                      const SizedBox(height: 1,),
+                      const SizedBox(
+                        height: 1,
+                      ),
                       isMainUser
                           ? Row(
                               children: user['perks']

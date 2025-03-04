@@ -9,7 +9,6 @@ class PlayerBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(player);
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       child: SizedBox(

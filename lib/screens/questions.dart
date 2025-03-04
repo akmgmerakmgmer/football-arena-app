@@ -295,8 +295,12 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     } else {
       pointDefaultValue = 1;
     }
+    int newPoints = pointDefaultValue * pointValue * multiplyPoints;
+    int newCoins = newPoints ~/ 5; // Convert points to coins
+
     setState(() {
-      points = points + (pointDefaultValue * pointValue * multiplyPoints);
+      points += newPoints;
+      coins += newCoins; // Add calculated coins
     });
   }
 
@@ -365,6 +369,14 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     }
   }
 
+  void calculateCoins() {
+    if ((points / numberOfPointsToCoin).floor() != coins) {
+      setState(() {
+        coins = (points / numberOfPointsToCoin).floor();
+      });
+    }
+  }
+
   String generateSHA256Hash(String input) {
     // Convert the input string to a list of UTF-8 encoded bytes
     List<int> bytes = utf8.encode(input);
@@ -382,17 +394,15 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     if (isReversedWords() &&
         generateSHA256Hash(answer) ==
             questions[currentQuestion]['answer'][locale].toLowerCase()) {
-      return rightAnswer();
+      rightAnswer();
+      return calculateCoins();
     }
     if (generateSHA256Hash(answer) == questions[currentQuestion]['answer']) {
-      return rightAnswer();
+      rightAnswer();
+      return calculateCoins();
     }
     wrongAnswer(index);
-    if ((points / numberOfPointsToCoin).floor() != coins) {
-      setState(() {
-        coins = (points / numberOfPointsToCoin).floor();
-      });
-    }
+    calculateCoins();
   }
 
   int showPointsValue() {
