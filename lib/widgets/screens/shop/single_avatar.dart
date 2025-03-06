@@ -62,6 +62,7 @@ class _SingleAvatarState extends State<SingleAvatar> {
         : Uri.parse('');
     return widget.avatar['video'] != null
         ? BackgroundNetworkVideo(
+            image: widget.avatar['image'],
             videoUrl: videoUrl,
             body: SingleAvatarData(
                 width: width,

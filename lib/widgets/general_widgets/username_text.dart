@@ -17,7 +17,7 @@ class UsernameText extends StatelessWidget {
   Widget build(BuildContext context) {
     final hasEnglishChar = RegExp(r'[a-zA-Z]').hasMatch(title);
     return TextWidget(
-      title: title,
+      title: title.length > 14 ? '${title.substring(0, 14)}...' : title,
       fontSize: fontSize,
       fontWeight: fontWeight,
       alwaysEnglish: hasEnglishChar,

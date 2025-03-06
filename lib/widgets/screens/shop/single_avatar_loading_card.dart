@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/loadings/loading_card.dart';
 
 class SingleAvatarLoadingCard extends StatelessWidget {
-  const SingleAvatarLoadingCard({super.key});
+  final double radius;
+  const SingleAvatarLoadingCard({super.key, this.radius = 15});
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +27,18 @@ class SingleAvatarLoadingCard extends StatelessWidget {
           LoadingCard(
             height: 300,
             width: width,
-            radius: 15,
+            radius: radius,
             scaleEnd: 1.02,
             bgColor: Theme.of(context).primaryColorDark,
           ),
           Positioned(
-              bottom: 15, child: LoadingCard(height: 50, width: buttonWidth,bgColor: contextColor,scaleEnd: 1.02,))
+              bottom: 15,
+              child: LoadingCard(
+                height: 50,
+                width: buttonWidth,
+                bgColor: contextColor,
+                scaleEnd: 1.02,
+              ))
         ],
       ),
     );

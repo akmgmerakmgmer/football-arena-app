@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/screens/reversed_words.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
@@ -642,6 +643,7 @@ class _QuestionsState extends State<MultiQuestions>
     super.initState();
     if (mounted) {
       initialFetch();
+      leaveRoomWhenStateChanges();
       WidgetsBinding.instance.addObserver(this);
     }
   }
@@ -665,15 +667,17 @@ class _QuestionsState extends State<MultiQuestions>
     }
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.inactive) {
-    } else if (state == AppLifecycleState.paused) {
-      leaveRoom();
-    } else if (state == AppLifecycleState.detached) {
-      leaveRoom();
-    }
+  void leaveRoomWhenStateChanges() {
+    SystemChannels.lifecycle.setMessageHandler((message) async {
+      if (message == AppLifecycleState.inactive.toString()) {
+        leaveRoom();
+      } else if (message == AppLifecycleState.paused.toString()) {
+        leaveRoom();
+      } else if (message == AppLifecycleState.detached.toString()) {
+        leaveRoom();
+      }
+      return null;
+    });
   }
 
   void addHintAction() {

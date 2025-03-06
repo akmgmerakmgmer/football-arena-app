@@ -57,9 +57,9 @@ class BottomNavigation extends StatelessWidget {
               "text": AppLocalizations.of(context)!.login_word,
               "icon": Icons.login,
               "action": () {
-                Navigator.pushNamed(context, '/login');
+                Navigator.pushNamed(context, '/signup');
               },
-              "selected": currentPath == '/login'
+              "selected": currentPath == '/signup' || currentPath == '/login'
             },
     ];
     return Container(
@@ -95,7 +95,7 @@ class BottomNavigation extends StatelessWidget {
                             color: route['selected']
                                 ? Colors.red
                                 : Colors.grey.shade300,
-                                size: 28,
+                            size: 28,
                           ),
                         ),
                         TextWidget(

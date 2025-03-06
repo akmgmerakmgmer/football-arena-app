@@ -10,6 +10,7 @@ class UserImage extends StatelessWidget {
   final double radius;
   final double width;
   final double height;
+  final bool showPauseIcon;
   const UserImage(
       {super.key,
       required this.image,
@@ -18,7 +19,8 @@ class UserImage extends StatelessWidget {
       this.showVideo = false,
       this.radius = 100,
       this.width = 75,
-      this.height = 75});
+      this.height = 75,
+      this.showPauseIcon = false});
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +30,22 @@ class UserImage extends StatelessWidget {
             radius: radius,
             height: height,
             width: width,
-          )
-        : CachedImage(
+            showPauseIcon: showPauseIcon,
             image: image,
-            height: height,
-            width: width,
-            radius: radius,
-          );
+          )
+        : Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(radius)),
+                border: Border.all(
+                    color: borderColor,
+                    width: borderColor == Colors.transparent ? 0 : 4)),
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(radius)),
+              child: CachedImage(
+                image: image,
+                height: height,
+                width: width,
+              ),
+            ));
   }
 }

@@ -32,6 +32,7 @@ class HexagonalImage extends StatelessWidget {
                     radius: 0,
                     height: 90,
                     width: 90,
+                    image: image,
                   )
                 : CachedImage(
                     image: image, // Replace with your image path
