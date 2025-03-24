@@ -9,13 +9,17 @@ class CoinsButton extends StatefulWidget {
   final bool isOnline;
   final dynamic callback;
   final String buttonText;
+  final bool hostRoom;
+  final bool isCasual;
   const CoinsButton(
       {super.key,
       required this.mode,
       required this.localeProvider,
       this.isOnline = false,
       this.callback,
-      this.buttonText = ''});
+      this.buttonText = '',
+      this.hostRoom = false,
+      this.isCasual = false});
 
   @override
   State<CoinsButton> createState() => _CoinsButtonState();
@@ -36,7 +40,12 @@ class _CoinsButtonState extends State<CoinsButton> {
                 loading = true;
               });
               GeneralMethods().playWithCoins(
-                  context, widget.localeProvider, widget.mode, widget.isOnline);
+                  context,
+                  widget.localeProvider,
+                  widget.mode,
+                  widget.isOnline,
+                  widget.hostRoom,
+                  widget.isCasual);
             }
             if (widget.callback != null) {
               widget.callback();

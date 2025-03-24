@@ -37,21 +37,22 @@ class TextWidget extends StatelessWidget {
       uppercase ? title.toUpperCase() : title,
       textDirection: number ? TextDirection.ltr : null,
       textAlign: textAlign,
+      softWrap: true, // Ensures text wraps instead of overflowing
       style: TextStyle(
-          overflow: TextOverflow.clip,
-          height: height,
-          fontSize: locale == 'ar' ? fontSize - 1 : fontSize,
-          fontWeight: fontWeight,
-          fontFamily: alwaysEnglish
-              ? 'Oswald'
-              : alwaysArabic
-                  ? 'NotoKufiArabic'
-                  : locale == 'ar'
-                      ? 'NotoKufiArabic'
-                      : 'Oswald',
-          color: color,
-          letterSpacing: locale == 'ar' ? 0 : letterSpacing,
-          decoration: textDecoration),
+        height: height,
+        fontSize: locale == 'ar' ? fontSize - 1 : fontSize,
+        fontWeight: fontWeight,
+        fontFamily: alwaysEnglish
+            ? 'Oswald'
+            : alwaysArabic
+                ? 'NotoKufiArabic'
+                : locale == 'ar'
+                    ? 'NotoKufiArabic'
+                    : 'Oswald',
+        color: color,
+        letterSpacing: locale == 'ar' ? 0 : letterSpacing,
+        decoration: textDecoration,
+      ),
     );
   }
 }

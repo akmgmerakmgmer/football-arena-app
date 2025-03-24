@@ -41,7 +41,7 @@ class MainMenu extends StatelessWidget {
             buttonText: AppLocalizations.of(context)!.play_online,
             action: () {
               if (localeProvider.user.containsKey('username')) {
-                Navigator.pushNamed(context, '/main-online');
+                Navigator.pushNamed(context, '/main-online-screen');
               } else {
                 Navigator.pushNamed(context, '/signup');
               }

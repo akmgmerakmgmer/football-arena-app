@@ -11,11 +11,15 @@ class VideoAdButton extends StatelessWidget {
   final String mode;
   final LocaleProvider localeProvider;
   final bool isOnline;
+  final bool hostRoom;
+  final bool isCasual;
   const VideoAdButton(
       {super.key,
       required this.mode,
       required this.localeProvider,
-      this.isOnline = false});
+      this.isOnline = false,
+      this.hostRoom = false,
+      this.isCasual = false});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +68,9 @@ class VideoAdButton extends StatelessWidget {
               if (isOnline && context.mounted) {
                 Future.delayed(const Duration(seconds: 4), () {
                   socketMethods.joinRoom(context, localeProvider,
-                      questionMode: mode);
+                      questionMode: mode,
+                      hostRoom: hostRoom,
+                      isCasual: isCasual);
                 });
               } else {
                 Future.delayed(const Duration(seconds: 2), () {

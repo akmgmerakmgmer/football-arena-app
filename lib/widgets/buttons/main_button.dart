@@ -18,57 +18,94 @@ class MainButton extends StatelessWidget {
   final bool disabled;
   final EdgeInsets padding;
   final bool blueColor;
-  const MainButton(
-      {super.key,
-      required this.buttonText,
-      required this.action,
-      this.uppercase = false,
-      this.fontSize = 18,
-      this.letterSpacing = 2.0,
-      this.radius = 0,
-      this.loading = false,
-      this.isWidget = false,
-      this.widget,
-      this.isChallengesPage = false,
-      this.offersPage = false,
-      this.disabled = false,
-      this.padding = const EdgeInsets.all(12.0),
-      this.blueColor = false});
+
+  const MainButton({
+    super.key,
+    required this.buttonText,
+    required this.action,
+    this.uppercase = false,
+    this.fontSize = 18,
+    this.letterSpacing = 2.0,
+    this.radius = 0,
+    this.loading = false,
+    this.isWidget = false,
+    this.widget,
+    this.isChallengesPage = false,
+    this.offersPage = false,
+    this.disabled = false,
+    this.padding = const EdgeInsets.all(12.0),
+    this.blueColor = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => action(),
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-            color: disabled
-                ? Colors.white.withOpacity(0.1)
-                : blueColor
-                    ? Colors.blue
-                    : Theme.of(context).primaryColor,
-            borderRadius: offersPage
-                ? BorderRadius.only(
-                    bottomLeft: Radius.circular(radius),
-                    bottomRight: Radius.circular(radius))
-                : BorderRadius.all(Radius.circular(radius)),
-            boxShadow: disabled
-                ? null
-                : blueColor
-                    ? NeonBoxShadow().boxShadowBlue(context)
-                    : NeonBoxShadow().boxShadowNeon(context)),
-        padding: isWidget && !loading ? const EdgeInsets.all(8.0) : padding,
-        child: loading
-            ? const PrimaryLoading()
-            : isWidget
-                ? widget
-                : TextWidget(
-                    title: uppercase ? buttonText.toUpperCase() : buttonText,
-                    textAlign: TextAlign.center,
-                    fontWeight: FontWeight.w600,
-                    fontSize: fontSize,
-                    letterSpacing: letterSpacing,
-                  ),
+    final borderRadius = offersPage
+        ? BorderRadius.only(
+            bottomLeft: Radius.circular(radius),
+            bottomRight: Radius.circular(radius),
+          )
+        : BorderRadius.all(Radius.circular(radius));
+
+    final backgroundColor = disabled
+        ? Colors.white.withOpacity(0.1)
+        : blueColor
+            ? Colors.blue
+            : Theme.of(context).primaryColor;
+
+    final boxShadow = disabled
+        ? null
+        : blueColor
+            ? NeonBoxShadow().boxShadowBlue(context)
+            : NeonBoxShadow().boxShadowNeon(context);
+
+    final childWidget = loading
+        ? const PrimaryLoading()
+        : isWidget
+            ? widget
+            : TextWidget(
+                title: uppercase ? buttonText.toUpperCase() : buttonText,
+                textAlign: TextAlign.center,
+                fontWeight: FontWeight.w600,
+                fontSize: fontSize,
+                letterSpacing: letterSpacing,
+              );
+
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        borderRadius: borderRadius,
+        boxShadow: boxShadow,
+      ),
+      child: ClipRRect(
+        borderRadius: borderRadius,
+        child: TextButton(
+          onPressed: disabled ? null : () => action(),
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+            backgroundColor: MaterialStateProperty.all<Color>(backgroundColor),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: borderRadius,
+              ),
+            ),
+            minimumSize: MaterialStateProperty.all<Size>(
+              Size(MediaQuery.of(context).size.width, 0),
+            ),
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            overlayColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+                if (states.contains(MaterialState.pressed)) {
+                  return Colors.white.withOpacity(0.2);
+                }
+                return Colors.transparent;
+              },
+            ),
+          ),
+          child: Padding(
+            padding: isWidget && !loading ? const EdgeInsets.all(8.0) : padding,
+            child: childWidget,
+          ),
+        ),
       ),
     );
   }

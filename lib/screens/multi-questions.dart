@@ -69,6 +69,7 @@ class _QuestionsState extends State<MultiQuestions>
   bool stoppageTimeActive = false;
   bool playerTimeDoneCalled = false;
   final AudioPlayer _audioPlayer = AudioPlayer();
+  final AudioPlayer _multiGameAudio = AudioPlayer();
   List roomPlayers = [];
   final SocketMethods _socketMethods = SocketMethods();
   bool questionsFinished = false;
@@ -77,6 +78,7 @@ class _QuestionsState extends State<MultiQuestions>
   bool allPlayersTimeDone = false;
   bool oneUserLeft = false;
   bool gameDoneLoading = false;
+  bool multiGameSoundPlaying = false;
 
   // Methods
   Future<void> getQuestions() async {
@@ -313,7 +315,6 @@ class _QuestionsState extends State<MultiQuestions>
   }
 
   void choiceAction(answer, index) {
-    print(answer);
     String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
     if (questionMode == 'reversedWords' &&
         generateSHA256Hash(answer) ==
@@ -332,7 +333,7 @@ class _QuestionsState extends State<MultiQuestions>
     } else if (showHints()) {
       int hintsSubtract =
           questions[currentQuestion]['hints'].length - hints.length + 1;
-      return hintsSubtract > 3 ? 15 : hintsSubtract * 5;
+      return hintsSubtract > 3 ? 10 : 5;
     } else if (questions[currentQuestion]['difficulty'] == 'hard') {
       return 3;
     } else if (questions[currentQuestion]['difficulty'] == 'medium') {
@@ -482,6 +483,8 @@ class _QuestionsState extends State<MultiQuestions>
   }
 
   void leaveRoomListenerMethod(players, room) {
+    _multiGameAudio.stop();
+    _audioPlayer.stop();
     if (mounted) {
       roomPlayers = players;
       if (roomPlayers.length == 1) {
@@ -546,28 +549,32 @@ class _QuestionsState extends State<MultiQuestions>
 
   Future<void> gameDoneMethod(api, winnerId) async {
     Map room = Provider.of<LocaleProvider>(context, listen: false).room;
-    setState(() {
-      gameDoneLoading = true;
-    });
-    Map payload = {
-      'userId': userId,
-      'winnerId': winnerId,
-      'players': room['players'],
-      'roomId': room['_id']
-    };
-    PutApi('$api/$userId', payload, (res) {
-      setState(() {
-        gameDoneLoading = false;
-      });
-      Provider.of<LocaleProvider>(context, listen: false).setUser(res['user']);
-      if (res['promoted'] != null && res['promoted']) {
-        promotionMethod(res['prizes']);
-      }
 
-      if (res['demoted'] != null && res['demoted']) {
-        demotionMethod();
-      }
-    }).put(context);
+    if (!room['isCasual'] && (room['code'] == '' || room['code'] == null)) {
+      setState(() {
+        gameDoneLoading = true;
+      });
+      Map payload = {
+        'userId': userId,
+        'winnerId': winnerId,
+        'players': room['players'],
+        'roomId': room['_id']
+      };
+      PutApi('$api/$userId', payload, (res) {
+        setState(() {
+          gameDoneLoading = false;
+        });
+        Provider.of<LocaleProvider>(context, listen: false)
+            .setUser(res['user']);
+        if (res['promoted'] != null && res['promoted']) {
+          promotionMethod(res['prizes']);
+        }
+
+        if (res['demoted'] != null && res['demoted']) {
+          demotionMethod();
+        }
+      }).put(context);
+    }
   }
 
   Future<void> winnerUpdate() async {
@@ -638,12 +645,21 @@ class _QuestionsState extends State<MultiQuestions>
     }
   }
 
+  void playMultiGameSound() async {
+    setState(() {
+      multiGameSoundPlaying = true;
+    });
+    _multiGameAudio.setVolume(0.8);
+    _multiGameAudio.play(AssetSource('audio/multi_game.mp3'));
+  }
+
   @override
   void initState() {
     super.initState();
     if (mounted) {
       initialFetch();
       leaveRoomWhenStateChanges();
+      playMultiGameSound();
       WidgetsBinding.instance.addObserver(this);
     }
   }
@@ -705,6 +721,8 @@ class _QuestionsState extends State<MultiQuestions>
   }
 
   void leaveRoom() {
+    _multiGameAudio.stop();
+    _audioPlayer.stop();
     if (!playerTimeDoneCalled && !youWonState && !youDrewState) {
       Navigator.pushReplacementNamed(context, '/');
       Map room = Provider.of<LocaleProvider>(context, listen: false).room;
@@ -734,6 +752,8 @@ class _QuestionsState extends State<MultiQuestions>
         Provider.of<LocaleProvider>(context, listen: false);
     String locale = localeProvider.locale;
     Map user = localeProvider.user;
+    String code = localeProvider.room['code'];
+    bool isCasual = localeProvider.room['isCasual'];
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
@@ -746,10 +766,22 @@ class _QuestionsState extends State<MultiQuestions>
             ? const PrimaryLoading()
             : allPlayersTimeDone || oneUserLeft
                 ? youDrewState
-                    ? YouDrewImage(locale: locale)
+                    ? YouDrewImage(
+                        locale: locale,
+                        isCasual: isCasual,
+                        code: code,
+                      )
                     : youWonState
-                        ? YouWonImage(locale: locale)
-                        : YouLostImage(locale: locale)
+                        ? YouWonImage(
+                            locale: locale,
+                            isCasual: isCasual,
+                            code: code,
+                          )
+                        : YouLostImage(
+                            locale: locale,
+                            isCasual: isCasual,
+                            code: code,
+                          )
                 : playerTimeDoneCalled || questionsFinished
                     ? WaitingForOtherPlayers(
                         title: AppLocalizations.of(context)!
@@ -770,6 +802,23 @@ class _QuestionsState extends State<MultiQuestions>
                             locale: locale,
                             localeProvider: localeProvider,
                           ),
+                          // Positioned(
+                          //   left: 10,
+                          //   right: 10,
+                          //   child: PauseAndPlay(
+                          //       isPlaying: multiGameSoundPlaying,
+                          //       isSound: true,
+                          //       action: () {
+                          //         if (multiGameSoundPlaying) {
+                          //           _multiGameAudio.pause();
+                          //           setState(() {
+                          //             multiGameSoundPlaying = false;
+                          //           });
+                          //         } else {
+                          //           playMultiGameSound();
+                          //         }
+                          //       }),
+                          // ),
                           FadeTransitionContainer(
                             body: Container(
                               margin: EdgeInsets.only(

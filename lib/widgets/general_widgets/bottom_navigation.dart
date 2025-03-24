@@ -29,12 +29,12 @@ class BottomNavigation extends StatelessWidget {
         "selected": currentPath == '/rankings'
       },
       {
-        "text": AppLocalizations.of(context)!.challengesWord,
-        "icon": Icons.webhook,
+        "text": AppLocalizations.of(context)!.play_online,
+        "icon": Icons.tap_and_play_sharp,
         "action": () {
-          Navigator.pushNamed(context, '/challenges');
+          Navigator.pushNamed(context, '/main-online-screen');
         },
-        "selected": currentPath == '/challenges'
+        "selected": currentPath == '/main-online-screen'
       },
       {
         "text": AppLocalizations.of(context)!.shop,

@@ -23,13 +23,15 @@ class EventImage extends StatelessWidget {
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(10)),
       child: Container(
-          height: MediaQueryHeight().largeImageHeight(context,mobileDefaultWidth: 200.00),
+          height: MediaQueryHeight()
+              .largeImageHeight(context, mobileDefaultWidth: 200.00),
           width: numberOfImages == 1
               ? MediaQuery.of(context).size.width - 16
               : MediaQuery.of(context).size.width - 30,
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: CachedNetworkImageProvider(event['image']), fit: BoxFit.cover)),
+                  image: CachedNetworkImageProvider(event['image']),
+                  fit: BoxFit.cover)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

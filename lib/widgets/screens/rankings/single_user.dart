@@ -55,7 +55,7 @@ class SingleUser extends StatelessWidget {
                   video: item['selectedAvatar']['video'],
                 ),
                 const SizedBox(
-                  width: 4,
+                  width: 8,
                 ),
                 // CachedImage(
                 //   image: item['rank']['image'],

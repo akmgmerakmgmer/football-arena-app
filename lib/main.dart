@@ -7,6 +7,7 @@ import 'package:in_zone_app/screens/event_details.dart';
 import 'package:in_zone_app/screens/home.dart';
 import 'package:in_zone_app/screens/login.dart';
 import 'package:in_zone_app/screens/main_online.dart';
+import 'package:in_zone_app/screens/main_online_screen.dart';
 import 'package:in_zone_app/screens/multi-questions.dart';
 import 'package:in_zone_app/screens/multi_screen.dart';
 import 'package:in_zone_app/screens/play_alone.dart';
@@ -79,13 +80,14 @@ class _MyAppState extends State<MyApp> {
                   '/shop': (context) => const Shop(),
                   '/play-alone': (context) => const PlayAlone(),
                   '/main-online': (context) => const MainOnline(),
+                  '/main-online-screen': (context) => const MainOnlineScreen(),
                   '/results': (context) => const Results(),
                   '/ranks': (context) => const AllRanks(),
                   '/prev-ranks': (context) => const PrevRanks(),
                   '/multi-screen': (context) => const MultiScreen(),
                   '/multi-questions': (context) => const MultiQuestions()
                 },
-                title: 'InZone',
+                title: 'InZone Football',
                 localizationsDelegates: const [
                   AppLocalizations.delegate,
                   GlobalMaterialLocalizations.delegate,

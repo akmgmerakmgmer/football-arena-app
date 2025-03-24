@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
+import 'package:in_zone_app/widgets/general_widgets/pause_and_play.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -111,32 +112,17 @@ class _NetworkVideoWidgetState extends State<NetworkVideoWidget>
             // Optional: Add play/pause controls
             if (_isInitialized && widget.showPauseIcon)
               Positioned(
-                bottom: 10,
-                right: 10,
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _controller.value.isPlaying
-                          ? _controller.pause()
-                          : _controller.play();
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.black45,
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Icon(
-                      _controller.value.isPlaying
-                          ? Icons.pause
-                          : Icons.play_arrow,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                  ),
-                ),
-              ),
+                  bottom: 10,
+                  right: 10,
+                  child: PauseAndPlay(
+                      isPlaying: _controller.value.isPlaying,
+                      action: () {
+                        setState(() {
+                          _controller.value.isPlaying
+                              ? _controller.pause()
+                              : _controller.play();
+                        });
+                      })),
           ],
         ),
       ),

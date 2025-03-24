@@ -10,6 +10,7 @@ class BlurBackgroundContainer extends StatelessWidget {
   final bool isSymmetricPadding;
   final EdgeInsets symmetricPadding;
   final bool darkenBackground;
+  final bool whitenBackground;
   const BlurBackgroundContainer(
       {super.key,
       required this.body,
@@ -18,16 +19,19 @@ class BlurBackgroundContainer extends StatelessWidget {
       this.margin = 0,
       this.isSymmetricPadding = false,
       this.symmetricPadding = const EdgeInsets.all(0),
-      this.darkenBackground = false});
+      this.darkenBackground = false,
+      this.whitenBackground = false});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: margin),
       decoration: BoxDecoration(
-        color: darkenBackground
-            ? Colors.black.withOpacity(0.35)
-            : Colors.transparent,
+        color: whitenBackground
+            ? Colors.white.withOpacity(0.1)
+            : darkenBackground
+                ? Colors.black.withOpacity(0.35)
+                : Colors.transparent,
         borderRadius: BorderRadius.circular(border),
       ),
       child: ClipRRect(

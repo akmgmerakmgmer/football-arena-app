@@ -3,17 +3,28 @@ import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/screens/multi_screen.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/socket.dart';
+import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
 
 class SocketMethods {
   final _socketClient = SocketClient.instance?.socket;
 
   // Emitters
   void joinRoom(BuildContext context, LocaleProvider localeProvider,
-      {String questionMode = '', bool coinsPayed = false}) {
+      {String questionMode = '',
+      bool coinsPayed = false,
+      String code = '',
+      bool hostRoom = false,
+      bool isCasual = false}) {
     Map user = localeProvider.user;
     if (user.isNotEmpty) {
-      _socketClient
-          ?.emit('joinRoom', {'userId': user['_id'], 'coinsPayed': coinsPayed});
+      _socketClient?.emit('joinRoom', {
+        'userId': user['_id'],
+        'coinsPayed': coinsPayed,
+        'hostRoom': hostRoom,
+        'code': code,
+        'isCasual': isCasual,
+        'questionMode': questionMode
+      });
     } else {
       if (context.mounted) {
         Navigator.pushNamed(context, '/signup');
@@ -88,6 +99,13 @@ class SocketMethods {
 
   void navigateToGameListener(callback) {
     _socketClient?.once('navigateToGameListener', (room) {
+      callback();
+    });
+  }
+
+  void joinRoomErrorListener(BuildContext context, String locale, callback) {
+    _socketClient?.once('joinRoomError', (data) {
+      SnackbarMessage().snackbar(context, data['message'][locale], error: true);
       callback();
     });
   }

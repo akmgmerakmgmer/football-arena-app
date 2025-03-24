@@ -10,41 +10,39 @@ class GameOver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      child: FadeTransitionContainer(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/gameOver.png',
-              width: 200,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SaveExitButton(
-                  buttonText: AppLocalizations.of(context)!.playAgain,
-                  action: () => playAgain(),
-                  icon: Icons.restart_alt,
-                  radius: 10,
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                SaveExitButton(
-                  buttonText: AppLocalizations.of(context)!.exitGame,
-                  action: () => exitGame(),
-                  icon: Icons.exit_to_app,
-                  radius: 10,
-                ),
-              ],
-            )
-          ],
-        ),
+    return FadeTransitionContainer(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            'assets/images/gameOver.png',
+            width: 200,
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SaveExitButton(
+                buttonText: AppLocalizations.of(context)!.playAgain,
+                action: () => playAgain(),
+                icon: Icons.restart_alt,
+                radius: 10,
+              ),
+              const SizedBox(
+                width: 15,
+              ),
+              SaveExitButton(
+                buttonText: AppLocalizations.of(context)!.exitGame,
+                action: () => exitGame(),
+                icon: Icons.exit_to_app,
+                radius: 10,
+              ),
+            ],
+          )
+        ],
       ),
     );
   }

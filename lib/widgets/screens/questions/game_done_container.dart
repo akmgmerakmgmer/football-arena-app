@@ -7,12 +7,36 @@ import 'package:provider/provider.dart';
 
 class GameDoneContainer extends StatelessWidget {
   final String image;
-  const GameDoneContainer({super.key, required this.image});
+  final bool isCasual;
+  final String code;
+  const GameDoneContainer(
+      {super.key,
+      required this.image,
+      required this.isCasual,
+      required this.code});
 
   @override
   Widget build(BuildContext context) {
     LocaleProvider localeProvider =
         Provider.of<LocaleProvider>(context, listen: false);
+    playAgain() {
+      if (isCasual) {
+        return ModalContainer.bottomSheetHostGame(context, localeProvider,
+            isCasual: true);
+      } else {
+        ModalContainer.choosePlayOptionModal(context, localeProvider, '',
+            isOnline: true);
+      }
+    }
+
+    exit() {
+      if (isCasual || code != '') {
+        Navigator.pushReplacementNamed(context, '/main-online-screen');
+      } else {
+        Navigator.pushReplacementNamed(context, '/main-online');
+      }
+    }
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -29,22 +53,23 @@ class GameDoneContainer extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SaveExitButton(
-                buttonText: AppLocalizations.of(context)!.playAgain,
-                action: () => ModalContainer.choosePlayOptionModal(
-                    context, localeProvider, '',
-                    isOnline: true),
-                icon: Icons.restart_alt,
-                radius: 10,
-                fontSize: 16,
-              ),
-              const SizedBox(
-                width: 15,
-              ),
+              code == ''
+                  ? SaveExitButton(
+                      buttonText: AppLocalizations.of(context)!.playAgain,
+                      action: () => playAgain(),
+                      icon: Icons.restart_alt,
+                      radius: 10,
+                      fontSize: 16,
+                    )
+                  : Container(),
+              code == ''
+                  ? const SizedBox(
+                      width: 15,
+                    )
+                  : Container(),
               SaveExitButton(
                 buttonText: AppLocalizations.of(context)!.exitGame,
-                action: () =>
-                    Navigator.pushReplacementNamed(context, '/main-online'),
+                action: () => exit(),
                 icon: Icons.exit_to_app,
                 radius: 10,
                 fontSize: 16,

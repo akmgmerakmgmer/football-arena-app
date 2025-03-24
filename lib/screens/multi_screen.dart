@@ -8,6 +8,7 @@ import 'package:in_zone_app/widgets/containers/image_background_plain.dart';
 import 'package:in_zone_app/widgets/general_widgets/waiting_for_other_players.dart';
 import 'package:in_zone_app/widgets/screens/multi_screen/player_bar.dart';
 import 'package:in_zone_app/widgets/screens/questions/rank_flag.dart';
+import 'package:in_zone_app/widgets/screens/questions/room_code.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -93,7 +94,6 @@ class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
         user['season_results']['consecutive_rank_wins'] + 1;
     bool willDemote = user['rank']['loses_to_demote'] ==
         user['season_results']['consecutive_rank_loses'] + 1;
-
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
@@ -108,7 +108,12 @@ class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
               height: MediaQuery.of(context).size.height,
               child: BlurBackgroundContainer(body: Container()),
             ),
-            willPromote || willDemote
+            room['code'] != null && room['code'] != ''
+                ? RoomCode(code: room['code'])
+                : Container(),
+            (willPromote || willDemote) &&
+                    (room['code'] == '' || room['code'] == null) &&
+                    !room['isCasual']
                 ? RankFlag(
                     promote: willPromote ? true : false,
                     locale: locale,

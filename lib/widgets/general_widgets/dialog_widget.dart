@@ -16,6 +16,9 @@ class DialogWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Colors.black,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ), 
       title: TextWidget(
         title: title,
         fontSize: 18,

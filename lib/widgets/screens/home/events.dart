@@ -10,17 +10,21 @@ class Events extends StatelessWidget {
   Widget build(BuildContext context) {
     List events = Provider.of<LocaleProvider>(context, listen: false).events;
     return Container(
-      padding: const EdgeInsets.only(right: 8.0, left: 8.0, top: 16.0),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: events
-              .map((event) => SingleEvent(
-                    event: event,
-                    numberOfImages: events.length,
-                  ))
-              .toList(),
-        ),
+      padding: const EdgeInsets.only(right: 8.0, left: 8.0, top: 8.0),
+      child: Column(
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: events
+                  .map((event) => SingleEvent(
+                        event: event,
+                        numberOfImages: events.length,
+                      ))
+                  .toList(),
+            ),
+          ),
+        ],
       ),
     );
   }

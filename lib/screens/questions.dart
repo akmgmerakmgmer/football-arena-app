@@ -12,6 +12,7 @@ import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
 import 'package:in_zone_app/widgets/containers/fade_transition.dart';
 import 'package:in_zone_app/widgets/containers/image_background_plain.dart';
 import 'package:in_zone_app/widgets/containers/page_plain_container.dart';
+import 'package:in_zone_app/widgets/general_widgets/pause_and_play.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
 import 'package:in_zone_app/widgets/screens/questions/advertisment.dart';
@@ -87,6 +88,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   bool stoppageTimeActive = false;
   bool playerTimeDoneCalled = false;
   final AudioPlayer _audioPlayer = AudioPlayer();
+  final AudioPlayer _mainGame = AudioPlayer();
+  bool mainGameSoundPlaying = false;
   // Methods
   Future<void> getQuestions() async {
     if (questions.isEmpty) {
@@ -319,6 +322,14 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     _audioPlayer.play(AssetSource('audio/buzzer.mp3'));
   }
 
+  void playMainGameSound() async {
+    setState(() {
+      mainGameSoundPlaying = true;
+    });
+    _mainGame.setVolume(0.45);
+    _mainGame.play(AssetSource('audio/main_game.mp3'));
+  }
+
   void rightAnswer() {
     playCorrectSound();
     rightAnswerPoints();
@@ -411,7 +422,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     } else if (showHints()) {
       int hintsSubtract =
           questions[currentQuestion]['hints'].length - hints.length + 1;
-      return hintsSubtract > 3 ? 15 : hintsSubtract * 5;
+      return hintsSubtract > 3 ? 10 : 5;
     } else if (questions[currentQuestion]['difficulty'] == 'hard') {
       return 3;
     } else if (questions[currentQuestion]['difficulty'] == 'medium') {
@@ -438,7 +449,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
 
   void saveGame(navigate) {
     stopCount = true;
+    _audioPlayer.stop();
     if (points == 0 && navigate) {
+      _mainGame.stop();
       Navigator.pushReplacementNamed(context, '/rankings');
     } else {
       Map payload = {
@@ -453,6 +466,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
         saveLoading = true;
       });
       PostApi('user-save-game/$userId', payload, (res) {
+        _mainGame.stop();
         gameSaved = true;
         Provider.of<LocaleProvider>(context, listen: false)
             .setUser(res['user']);
@@ -590,6 +604,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void finishTutorialAction() {
+    playMainGameSound();
     setState(() {
       stopCount = false;
       showTut = false;
@@ -744,6 +759,22 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                               loading: saveLoading,
                             ),
                           ),
+                          Positioned(
+                              bottom: 10,
+                              left: 10,
+                              child: PauseAndPlay(
+                                  isPlaying: mainGameSoundPlaying,
+                                  isSound: true,
+                                  action: () {
+                                    if (mainGameSoundPlaying) {
+                                      _mainGame.pause();
+                                      setState(() {
+                                        mainGameSoundPlaying = false;
+                                      });
+                                    } else {
+                                      playMainGameSound();
+                                    }
+                                  })),
                           Stats(
                             usedPerks: usedPerks,
                             user: user,
