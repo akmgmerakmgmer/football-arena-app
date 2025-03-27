@@ -76,34 +76,22 @@ class MainButton extends StatelessWidget {
         borderRadius: borderRadius,
         boxShadow: boxShadow,
       ),
-      child: ClipRRect(
-        borderRadius: borderRadius,
-        child: TextButton(
-          onPressed: disabled ? null : () => action(),
-          style: ButtonStyle(
-            padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
-            backgroundColor: MaterialStateProperty.all<Color>(backgroundColor),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: borderRadius,
-              ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: borderRadius,
+          onTap: disabled ? null : () => action(),
+          splashColor: Colors.white.withOpacity(0.2),
+          highlightColor: Colors.white.withOpacity(0.1),
+          child: Ink(
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: borderRadius,
             ),
-            minimumSize: MaterialStateProperty.all<Size>(
-              Size(MediaQuery.of(context).size.width, 0),
+            child: Padding(
+              padding: isWidget && !loading ? const EdgeInsets.all(8.0) : padding,
+              child: childWidget,
             ),
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            overlayColor: MaterialStateProperty.resolveWith<Color>(
-              (Set<MaterialState> states) {
-                if (states.contains(MaterialState.pressed)) {
-                  return Colors.white.withOpacity(0.2);
-                }
-                return Colors.transparent;
-              },
-            ),
-          ),
-          child: Padding(
-            padding: isWidget && !loading ? const EdgeInsets.all(8.0) : padding,
-            child: childWidget,
           ),
         ),
       ),

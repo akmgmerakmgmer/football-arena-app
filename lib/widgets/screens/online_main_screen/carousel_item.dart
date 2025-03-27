@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/utilities/media_query_height.dart';
 
@@ -24,14 +23,14 @@ class CarouselItem extends StatelessWidget {
             borderRadius: const BorderRadius.all(Radius.circular(10)),
             child: Container(
               alignment: Alignment.bottomCenter,
-              height: MediaQueryHeight()
-                  .largeImageHeight(context, mobileDefaultWidth: 200.00),
+              height: MediaQueryHeight().largeImageHeight(context),
               width: allDataLength == 1
                   ? MediaQuery.of(context).size.width - 16
                   : MediaQuery.of(context).size.width - 60,
               decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
                   image: DecorationImage(
-                      image: CachedNetworkImageProvider(item['image']),
+                      image: AssetImage(item['image']),
                       fit: BoxFit.cover)),
               child: body,
             ),

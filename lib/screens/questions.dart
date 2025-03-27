@@ -11,6 +11,7 @@ import 'package:in_zone_app/widgets/buttons/save_exit_button.dart';
 import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
 import 'package:in_zone_app/widgets/containers/fade_transition.dart';
 import 'package:in_zone_app/widgets/containers/image_background_plain.dart';
+import 'package:in_zone_app/widgets/containers/modal_container.dart';
 import 'package:in_zone_app/widgets/containers/page_plain_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/pause_and_play.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
@@ -577,9 +578,18 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void playAgain() {
+    if (widget.questionMode != '') {
+      LocaleProvider localeProvider =
+          Provider.of<LocaleProvider>(context, listen: false);
+      // ignore: void_checks
+      return ModalContainer.choosePlayOptionModal(
+          context, localeProvider, widget.questionMode);
+    }
     stopCount = false;
     currentAd = 0;
     stoppageTimeActive = false;
+    playMainGameSound();
+    initializeHints();
     setState(() {
       currentQuestion = currentQuestion + 1;
       lives = 10;

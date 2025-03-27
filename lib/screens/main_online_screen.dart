@@ -12,7 +12,7 @@ class MainOnlineScreen extends StatelessWidget {
     return PageContainerWithFooter(
       background: Theme.of(context).splashColor,
       body: Container(
-        padding: const EdgeInsets.only(right: 8.0, left: 8.0, top: 8.0),
+        padding: const EdgeInsets.only(right: 12.0, left: 12.0, top: 8.0),
         child: const Column(
           children: [
             RankedMatches(),

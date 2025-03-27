@@ -11,7 +11,7 @@ class ContainerBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
           color: Colors.black.withOpacity(0.3),
