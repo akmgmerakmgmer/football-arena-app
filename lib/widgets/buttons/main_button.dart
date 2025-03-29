@@ -89,7 +89,8 @@ class MainButton extends StatelessWidget {
               borderRadius: borderRadius,
             ),
             child: Padding(
-              padding: isWidget && !loading ? const EdgeInsets.all(8.0) : padding,
+              padding:
+                  isWidget && !loading ? const EdgeInsets.all(8.0) : padding,
               child: childWidget,
             ),
           ),

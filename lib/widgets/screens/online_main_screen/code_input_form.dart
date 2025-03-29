@@ -3,6 +3,7 @@ import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/generalMethods.dart';
 import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
+import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -63,13 +64,20 @@ class _CodeInputFormState extends State<CodeInputForm> {
   }
 
   void joinMatch() {
-    setState(() {
-      loading = true;
-    });
     String code = _controllers.map((controller) => controller.text).join();
-    LocaleProvider localeProvider =
-        Provider.of<LocaleProvider>(context, listen: false);
-    GeneralMethods().joinGameWithAds(context, localeProvider, code: code);
+    if (code != '') {
+      setState(() {
+        loading = true;
+      });
+      LocaleProvider localeProvider =
+          Provider.of<LocaleProvider>(context, listen: false);
+      GeneralMethods().joinGameWithAds(context, localeProvider, code: code);
+    } else {
+      Navigator.of(context).pop();
+      SnackbarMessage().snackbar(
+          context, AppLocalizations.of(context)!.code_empty,
+          error: true);
+    }
   }
 
   @override

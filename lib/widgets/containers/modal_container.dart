@@ -135,7 +135,7 @@ class ModalContainer {
         builder: (ctx) => DialogWidget(
             title: AppLocalizations.of(context)!.match_code,
             description: AppLocalizations.of(context)!.enter_code,
-            widget: CodeInputForm()));
+            widget: const CodeInputForm()));
   }
 }
 

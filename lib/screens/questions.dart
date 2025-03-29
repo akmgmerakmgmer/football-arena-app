@@ -59,14 +59,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   int currentPage = 1;
   bool pageLoading = false;
   int currentQuestion = 0;
-  int points = 0;
-  int lives = 10;
-  int coins = 0;
-  List chosenPlayers = [];
-  List displayChosenPlayers = [];
-  List hints = [];
   int defaultCountDown = 20;
-  int countDown = 20;
   int pointValue = 1;
   int pointDefaultValue = 0;
   int multiplyPoints = 1;
@@ -91,6 +84,12 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   final AudioPlayer _audioPlayer = AudioPlayer();
   final AudioPlayer _mainGame = AudioPlayer();
   bool mainGameSoundPlaying = false;
+  late ValueNotifier<int> _countDownNotifier;
+  late ValueNotifier<int> _livesNotifier;
+  late ValueNotifier<int> _pointsNotifier;
+  late ValueNotifier<int> _coinsNotifier;
+  late ValueNotifier<List> _hintsNotifier;
+
   // Methods
   Future<void> getQuestions() async {
     if (questions.isEmpty) {
@@ -116,17 +115,13 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       initializeCount();
       initializeHints();
     }, errorCallback: () {
-      setState(() {
-        Navigator.pushReplacementNamed(context, '/');
-      });
+      Navigator.pushReplacementNamed(context, '/');
     }).fetch(context);
   }
 
   void initializeCount() {
     if (!countStarted) {
-      setState(() {
-        countDown = setCount();
-      });
+      _countDownNotifier.value = setCount();
       decreaseCount();
       decreaseAdCount();
       countStarted = true;
@@ -134,50 +129,42 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void initializeHints() {
-    if (currentQuestion == 0 && hints.isEmpty && showHints()) {
-      setState(() {
-        hints = [questions[currentQuestion]['hints'][0]];
-      });
+    if (currentQuestion == 0 && _hintsNotifier.value.isEmpty && showHints()) {
+      _hintsNotifier.value = [questions[currentQuestion]['hints'][0]];
     }
   }
 
   void decreaseCount() {
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      if (!stopCount && lives != 0) {
-        if (countDown > 0) {
-          setState(() {
-            countDown = countDown - 1;
-          });
+      if (!stopCount && _livesNotifier.value != 0) {
+        if (_countDownNotifier.value > 0) {
+          _countDownNotifier.value = _countDownNotifier.value - 1;
         } else {
           getToNextQuestion();
-          if (lives > 0) {
+          if (_livesNotifier.value > 0) {
             playWrongSound();
-            setState(() {
-              lives = lives - 1;
-            });
+            _livesNotifier.value = _livesNotifier.value - 1;
           }
-          if (points > 0) {
-            setState(() {
-              points = points - 1;
-            });
+          if (_pointsNotifier.value > 0) {
+            _pointsNotifier.value = _pointsNotifier.value - 1;
           }
-          if ((points / numberOfPointsToCoin).floor() != coins) {
-            setState(() {
-              coins = (points / numberOfPointsToCoin).floor();
-            });
+          if ((_pointsNotifier.value / numberOfPointsToCoin).floor() !=
+              _coinsNotifier.value) {
+            _coinsNotifier.value =
+                (_pointsNotifier.value / numberOfPointsToCoin).floor();
           }
-          setState(() {
-            countDown = defaultCountDown;
-          });
+          _countDownNotifier.value = defaultCountDown;
         }
-        if (countDown < 6 && countDown > -1) playCountDownSound();
+        if (_countDownNotifier.value < 6 && _countDownNotifier.value > -1) {
+          playCountDownSound();
+        }
       }
     });
   }
 
   void decreaseAdCount() {
     Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      if (!stopAdCount && lives != 0) {
+      if (!stopAdCount && _livesNotifier.value != 0) {
         if (currentAdCountDown > 0) {
           setState(() {
             currentAdCountDown -= 1;
@@ -254,34 +241,24 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     if ((currentQuestion - 1) % 15 == 0 &&
         currentQuestion != 0 &&
         currentQuestion != 1 &&
-        lives != 1 &&
-        lives != 0 &&
+        _livesNotifier.value != 1 &&
+        _livesNotifier.value != 0 &&
         advertisments.isNotEmpty) {
       currentAdMethod();
     }
     if (currentQuestion == questions.length - 1) {
       currentQuestion = 0;
     }
-    if (getQuestionMode() == 'guessTheTeam') {
-      setState(() {
-        chosenPlayers = [];
-        displayChosenPlayers = [];
-      });
-    }
-    if (hints.isNotEmpty || showHints()) {
-      setState(() {
-        hints = [];
-      });
+    if (_hintsNotifier.value.isNotEmpty || showHints()) {
+      _hintsNotifier.value = [];
     }
     setState(() {
       currentQuestion = currentQuestion + 1;
-      countDown = setCount();
+      _countDownNotifier.value = setCount();
     });
     if (questions[currentQuestion]['hints'] != null &&
         questions[currentQuestion]['hints'].length > 0) {
-      setState(() {
-        hints = [questions[currentQuestion]['hints'][0]];
-      });
+      _hintsNotifier.value = [questions[currentQuestion]['hints'][0]];
     }
   }
 
@@ -289,8 +266,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     if (isReversedWords()) {
       pointDefaultValue = 5;
     } else if (showHints()) {
-      int hintsSubtract =
-          questions[currentQuestion]['hints'].length - hints.length + 1;
+      int hintsSubtract = questions[currentQuestion]['hints'].length -
+          _hintsNotifier.value.length +
+          1;
       pointDefaultValue = hintsSubtract > 3 ? 10 : 5;
     } else if (questions[currentQuestion]['difficulty'] == 'hard') {
       pointDefaultValue = 3;
@@ -300,12 +278,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       pointDefaultValue = 1;
     }
     int newPoints = pointDefaultValue * pointValue * multiplyPoints;
-    int newCoins = newPoints ~/ 5; // Convert points to coins
-
-    setState(() {
-      points += newPoints;
-      coins += newCoins; // Add calculated coins
-    });
+    int newCoins = newPoints ~/ 5;
+    _pointsNotifier.value += newPoints;
+    _coinsNotifier.value += newCoins;
   }
 
   void playCountDownSound() async {
@@ -357,20 +332,17 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
 
   void wrongAnswerActions() {
     playWrongSound();
-    if (lives > 1 && !isPlayerSearch() && !isReversedWords()) {
+    if (_livesNotifier.value > 1 && !isPlayerSearch() && !isReversedWords()) {
       getToNextQuestion();
     }
-    if (points != 0 && !activateVar) {
-      setState(() {
-        points = points - 1;
-      });
+    if (_pointsNotifier.value != 0 && !activateVar) {
+      _pointsNotifier.value = _pointsNotifier.value - 1;
     }
-    if (lives != 0 && !activateVar) {
-      setState(() {
-        lives = lives - 1;
-      });
+    if (_livesNotifier.value != 0 && !activateVar) {
+      _livesNotifier.value = _livesNotifier.value - 1;
+      ;
     }
-    if (lives == 0) {
+    if (_livesNotifier.value == 0) {
       setState(() {
         pageLoading = true;
       });
@@ -382,10 +354,10 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void calculateCoins() {
-    if ((points / numberOfPointsToCoin).floor() != coins) {
-      setState(() {
-        coins = (points / numberOfPointsToCoin).floor();
-      });
+    if ((_pointsNotifier.value / numberOfPointsToCoin).floor() !=
+        _coinsNotifier.value) {
+      _coinsNotifier.value =
+          (_pointsNotifier.value / numberOfPointsToCoin).floor();
     }
   }
 
@@ -421,8 +393,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     if (isReversedWords()) {
       return 5;
     } else if (showHints()) {
-      int hintsSubtract =
-          questions[currentQuestion]['hints'].length - hints.length + 1;
+      int hintsSubtract = questions[currentQuestion]['hints'].length -
+          _hintsNotifier.value.length +
+          1;
       return hintsSubtract > 3 ? 10 : 5;
     } else if (questions[currentQuestion]['difficulty'] == 'hard') {
       return 3;
@@ -451,13 +424,13 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   void saveGame(navigate) {
     stopCount = true;
     _audioPlayer.stop();
-    if (points == 0 && navigate) {
+    if (_pointsNotifier.value == 0 && navigate) {
       _mainGame.stop();
       Navigator.pushReplacementNamed(context, '/rankings');
     } else {
       Map payload = {
-        'points': points,
-        'coins': coins,
+        'points': _pointsNotifier.value,
+        'coins': _coinsNotifier.value,
         'usedPerks': usedPerks,
         'eventId': widget.eventId
       };
@@ -590,20 +563,18 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     stoppageTimeActive = false;
     playMainGameSound();
     initializeHints();
+    _livesNotifier.value = 10;
+    _coinsNotifier.value = 0;
+    _pointsNotifier.value = 0;
     setState(() {
       currentQuestion = currentQuestion + 1;
-      lives = 10;
-      coins = 0;
-      points = 0;
       usedPerks = [];
     });
   }
 
   void livesAction() {
-    setState(() {
-      lives += 1;
-      stopCount = false;
-    });
+    _livesNotifier.value += 1;
+    stopCount = false;
     Future.delayed(const Duration(seconds: 5), () {
       stopCount = false;
     });
@@ -615,8 +586,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
 
   void finishTutorialAction() {
     playMainGameSound();
+    stopCount = false;
     setState(() {
-      stopCount = false;
       showTut = false;
     });
   }
@@ -658,17 +629,26 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
 
   skipAdMethod() {
     if (currentAdCountDown == 0) {
+      stopCount = false;
       setState(() {
         stopAdCount = true;
         showAd = false;
-        stopCount = false;
       });
     }
+  }
+
+  initializeNotifiers() {
+    _countDownNotifier = ValueNotifier(20);
+    _livesNotifier = ValueNotifier(10);
+    _pointsNotifier = ValueNotifier(0);
+    _coinsNotifier = ValueNotifier(0);
+    _hintsNotifier = ValueNotifier([]);
   }
 
   @override
   void initState() {
     super.initState();
+    initializeNotifiers();
     initialFetch();
     WidgetsBinding.instance.addObserver(this);
   }
@@ -678,13 +658,18 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     _timer?.cancel();
     _audioPlayer.dispose();
+    _countDownNotifier.dispose();
+    _livesNotifier.dispose();
+    _pointsNotifier.dispose();
+    _coinsNotifier.dispose();
+    _hintsNotifier.dispose();
+    _audioPlayer.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   void stopGame() {
-    setState(() {
-      stopCount = true;
-    });
+    stopCount = true;
     Future.delayed(const Duration(seconds: 5), () {
       getToNextQuestion();
     });
@@ -707,11 +692,12 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
 
   void addHintAction() {
     List questionHints = questions[currentQuestion]['hints'];
-    if (hints.length < questionHints.length) {
-      List updatedHints = [...hints, questionHints[hints.length]];
-      setState(() {
-        hints = updatedHints;
-      });
+    if (_hintsNotifier.value.length < questionHints.length) {
+      List updatedHints = [
+        ..._hintsNotifier.value,
+        questionHints[_hintsNotifier.value.length]
+      ];
+      _hintsNotifier.value = updatedHints;
     }
   }
 
@@ -751,7 +737,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
             : pageLoading ||
                     (questions.isNotEmpty && questions[currentQuestion] == null)
                 ? const PrimaryLoading()
-                : lives == 0
+                : _livesNotifier.value == 0
                     ? GameOver(playAgain: playAgain, exitGame: exitGame)
                     : Stack(
                         children: [
@@ -788,9 +774,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                           Stats(
                             usedPerks: usedPerks,
                             user: user,
-                            points: points,
-                            coins: coins,
-                            lives: lives,
+                            pointsNotifier: _pointsNotifier,
+                            coinsNotifier: _coinsNotifier,
+                            livesNotifier: _livesNotifier,
                             stopTime: stopTimeMethod,
                             penalty: penaltyMethod,
                             varMethod: varMethod,
@@ -802,16 +788,22 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                           FadeTransitionContainer(
                             body: Container(
                               margin: EdgeInsets.only(
-                                  top: hints.length > 3 ? 32 : 0),
+                                  top:
+                                      _hintsNotifier.value.length > 3 ? 32 : 0),
                               child: Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    TextWidget(
-                                      title: countDown.toString(),
-                                      fontSize: 26,
-                                      fontWeight: FontWeight.bold,
-                                      alwaysEnglish: true,
+                                    ValueListenableBuilder<int>(
+                                      valueListenable: _countDownNotifier,
+                                      builder: (context, countdown, _) {
+                                        return TextWidget(
+                                          title: countdown.toString(),
+                                          fontSize: 26,
+                                          fontWeight: FontWeight.bold,
+                                          alwaysEnglish: true,
+                                        );
+                                      },
                                     ),
                                     const SizedBox(
                                       height: 4,
@@ -835,16 +827,22 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                                     const SizedBox(
                                       height: 8,
                                     ),
-                                    PlayerSearch(
-                                      locale: locale,
-                                      isPlayerSearch: isPlayerSearch(),
-                                      questionHintsLength:
-                                          questions[currentQuestion]['hints']
-                                              .length,
-                                      hints: hints,
-                                      addHintAction: addHintAction,
-                                      skipAction: skipAction,
-                                      playerAction: choiceAction,
+                                    ValueListenableBuilder<List>(
+                                      valueListenable: _hintsNotifier,
+                                      builder: (context, hints, _) {
+                                        return PlayerSearch(
+                                          locale: locale,
+                                          isPlayerSearch: isPlayerSearch(),
+                                          questionHintsLength:
+                                              questions[currentQuestion]
+                                                      ['hints']
+                                                  .length,
+                                          hints: hints,
+                                          addHintAction: addHintAction,
+                                          skipAction: skipAction,
+                                          playerAction: choiceAction,
+                                        );
+                                      },
                                     ),
                                     MultipleChoices(
                                       locale: locale,

@@ -7,10 +7,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:in_zone_app/widgets/screens/questions/user_image.dart';
 
 class Stats extends StatelessWidget {
+  final ValueNotifier<int> pointsNotifier;
+  final ValueNotifier<int> coinsNotifier;
+  final ValueNotifier<int> livesNotifier;
   final Map user;
-  final int points;
-  final int coins;
-  final int lives;
   final Function stopTime;
   final Function penalty;
   final Function varMethod;
@@ -22,9 +22,9 @@ class Stats extends StatelessWidget {
   const Stats(
       {super.key,
       required this.user,
-      required this.points,
-      required this.coins,
-      required this.lives,
+      required this.pointsNotifier,
+      required this.coinsNotifier,
+      required this.livesNotifier,
       required this.stopTime,
       required this.penalty,
       required this.varMethod,
@@ -98,13 +98,18 @@ class Stats extends StatelessWidget {
                           color: Colors.black,
                           size: 28,
                         ),
-                        TextWidget(
-                          title: points.toString(),
-                          fontSize: 13,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                          alwaysEnglish: true,
-                        )
+                        ValueListenableBuilder<int>(
+                          valueListenable: pointsNotifier,
+                          builder: (context, points, _) {
+                            return TextWidget(
+                              title: points.toString(),
+                              fontSize: 13,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              alwaysEnglish: true,
+                            );
+                          },
+                        ),
                       ],
                     ),
                     const SizedBox(
@@ -118,15 +123,20 @@ class Stats extends StatelessWidget {
                           color: Colors.red,
                           size: 28,
                         ),
-                        TextWidget(
-                          title: lives > 1000
-                              ? AppLocalizations.of(context)!.unlimitedText
-                              : lives.toString(),
-                          fontSize: 13,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                          alwaysEnglish: true,
-                        )
+                        ValueListenableBuilder<int>(
+                          valueListenable: livesNotifier,
+                          builder: (context, lives, _) {
+                            return TextWidget(
+                              title: lives > 1000
+                                  ? AppLocalizations.of(context)!.unlimitedText
+                                  : lives.toString(),
+                              fontSize: 13,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              alwaysEnglish: true,
+                            );
+                          },
+                        ),
                       ],
                     ),
                     const SizedBox(
@@ -139,13 +149,18 @@ class Stats extends StatelessWidget {
                         const SizedBox(
                           height: 5,
                         ),
-                        TextWidget(
-                          title: coins.toString(),
-                          fontSize: 13,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                          alwaysEnglish: true,
-                        )
+                        ValueListenableBuilder<int>(
+                          valueListenable: coinsNotifier,
+                          builder: (context, coins, _) {
+                            return TextWidget(
+                              title: coins.toString(),
+                              fontSize: 13,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              alwaysEnglish: true,
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ],

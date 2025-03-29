@@ -20,14 +20,20 @@ class _GoogleButtonState extends State<GoogleButton> {
   String displayName = '';
   bool loading = false;
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-  );
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   Future<void> _handleSignIn(context) async {
     try {
       setState(() {
         loading = true;
       });
+      final GoogleSignInAccount? googleUser =
+          await _googleSignIn.signInSilently();
+      if (googleUser != null) {
+        await _googleSignIn
+            .disconnect(); // Disconnect the previous session to force account selection
+      }
+
       // Ensure the Google Sign-In flow always prompts for account selection
       final GoogleSignInAccount? selectedGoogleUser =
           await _googleSignIn.signIn();

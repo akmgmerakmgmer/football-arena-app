@@ -102,7 +102,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
         int intBuildNumber = int.parse(buildNumber);
         int intLowestBuildNumber =
             int.parse(data['system']['lowestBuildNumber']);
-        if (intBuildNumber < intLowestBuildNumber) {
+        if (intBuildNumber < 0) {
           ModalContainer.updateModal(context, const NeedUpdate(),
               AppLocalizations.of(context)!.update_app_text);
         }

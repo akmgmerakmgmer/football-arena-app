@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/utilities/text_style.dart';
 import 'package:provider/provider.dart';
 
 class TextWidget extends StatelessWidget {
@@ -38,21 +39,15 @@ class TextWidget extends StatelessWidget {
       textDirection: number ? TextDirection.ltr : null,
       textAlign: textAlign,
       softWrap: true, // Ensures text wraps instead of overflowing
-      style: TextStyle(
-        height: height,
-        fontSize: locale == 'ar' ? fontSize - 1 : fontSize,
-        fontWeight: fontWeight,
-        fontFamily: alwaysEnglish
-            ? 'Oswald'
-            : alwaysArabic
-                ? 'NotoKufiArabic'
-                : locale == 'ar'
-                    ? 'NotoKufiArabic'
-                    : 'Oswald',
-        color: color,
-        letterSpacing: locale == 'ar' ? 0 : letterSpacing,
-        decoration: textDecoration,
-      ),
+      style: getCustomTextStyle(
+          height: height,
+          fontSize: locale == 'ar' ? fontSize - 1 : fontSize,
+          fontWeight: fontWeight,
+          color: color,
+          letterSpacing: locale == 'ar' ? 0 : letterSpacing,
+          locale: locale,
+          alwaysEnglish: alwaysEnglish,
+          alwaysArabic: alwaysArabic),
     );
   }
 }
