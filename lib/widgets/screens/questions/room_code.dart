@@ -10,15 +10,16 @@ class RoomCode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
+        bottom: 0,
         child: SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: BlurBackgroundContainer(
-          whitenBackground: true,
-          padding: 16,
-          body: TextWidget(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              title: '${AppLocalizations.of(context)!.room_code} $code')),
-    ));
+          width: MediaQuery.of(context).size.width,
+          child: BlurBackgroundContainer(
+              whitenBackground: true,
+              padding: 16,
+              body: TextWidget(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  title: '${AppLocalizations.of(context)!.room_code} $code')),
+        ));
   }
 }

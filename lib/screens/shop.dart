@@ -46,10 +46,7 @@ class _ShopState extends State<Shop> {
         avatarsList.addAll(avatars['avatars']);
         Provider.of<LocaleProvider>(context, listen: false)
             .setAvatars(avatarsList);
-        setState(() {
-          numberOfPages =
-              (avatars['total_avatars'] / avatars['per_page']).ceil();
-        });
+        numberOfPages = (avatars['total_avatars'] / avatars['per_page']).ceil();
         // ignore: use_build_context_synchronously
       }).fetch(context);
     }
@@ -62,10 +59,8 @@ class _ShopState extends State<Shop> {
         themesList.addAll(themes['themes']);
         Provider.of<LocaleProvider>(context, listen: false)
             .setThemes(themesList);
-        setState(() {
-          themeNumberOfPages =
-              (themes['total_themes'] / themes['per_page']).ceil();
-        });
+        themeNumberOfPages =
+            (themes['total_themes'] / themes['per_page']).ceil();
         // ignore: use_build_context_synchronously
       }).fetch(context);
     }

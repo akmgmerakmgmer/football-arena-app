@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/utilities/generalMethods.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
 import 'package:in_zone_app/widgets/buttons/regular_button.dart';
 import 'package:in_zone_app/widgets/containers/image_background_container.dart';
@@ -17,6 +18,15 @@ class MainMenu extends StatelessWidget {
     return ImageBackgroundContainer(
         body: Column(
       children: [
+        // MainButton(
+        //   fontSize: defaultFontSize,
+        //   buttonText: 'Dynamic Method',
+        //   action: () {
+        //     GeneralMethods().dynamicMethod(context);
+        //   },
+        //   uppercase: true,
+        //   radius: 10,
+        // ),
         MainButton(
           fontSize: defaultFontSize,
           buttonText: AppLocalizations.of(context)!.start,

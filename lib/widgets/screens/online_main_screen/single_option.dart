@@ -5,7 +5,7 @@ import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/generalMethods.dart';
 import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
-import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
+import 'package:in_zone_app/widgets/general_widgets/asset_image_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +58,7 @@ class _SingleOptionState extends State<SingleOption> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CachedImage(
+              AssetImageWidget(
                 image: widget.option['image'],
                 radius: 100,
                 width: 50,

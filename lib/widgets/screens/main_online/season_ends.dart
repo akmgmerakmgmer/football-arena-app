@@ -17,7 +17,7 @@ class SeasonEnds extends StatelessWidget {
         body: Row(
           children: [
             TextWidget(
-              title: AppLocalizations.of(context)!.endsAt,
+              title: AppLocalizations.of(context)!.ends_on,
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),

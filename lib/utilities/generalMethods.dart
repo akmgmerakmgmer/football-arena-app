@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/my_I18n.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/screens/questions.dart';
+import 'package:in_zone_app/utilities/ad_methods.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
@@ -43,17 +44,20 @@ class GeneralMethods {
 
     bool showAd = getRandomNumber() == 1 ? true : false;
     if (showAd) {
-      socketMethods.joinRoom(context, localeProvider,
-          questionMode: mode,
-          hostRoom: hostRoom,
-          isCasual: isCasual,
-          code: code);
-      // AdMethods().showInterstitialAd(() {
-      //   Future.delayed(const Duration(seconds: 4), () {
-      //     socketMethods.joinRoom(context, localeProvider,
-      //         questionMode: mode, hostRoom: hostRoom, isCasual: isCasual);
-      //   });
-      // }, context);
+      // socketMethods.joinRoom(context, localeProvider,
+      //     questionMode: mode,
+      //     hostRoom: hostRoom,
+      //     isCasual: isCasual,
+      //     code: code);
+      AdMethods().showInterstitialAd(() {
+        Future.delayed(const Duration(seconds: 4), () {
+          socketMethods.joinRoom(context, localeProvider,
+              questionMode: mode,
+              hostRoom: hostRoom,
+              isCasual: isCasual,
+              code: code);
+        });
+      }, context);
     } else {
       socketMethods.joinRoom(context, localeProvider,
           questionMode: mode,
@@ -100,5 +104,9 @@ class GeneralMethods {
         }
       }
     }
+  }
+
+  dynamicMethod(BuildContext context) {
+    FetchApi('dynamic-question-method', (res) => {print(res)}).fetch(context);
   }
 }

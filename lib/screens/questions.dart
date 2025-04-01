@@ -369,7 +369,6 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     Digest sha256Result = sha256.convert(bytes);
 
     // Return the hash as a hexadecimal string
-    return input;
     return sha256Result.toString();
   }
 

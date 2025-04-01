@@ -310,7 +310,6 @@ class _QuestionsState extends State<MultiQuestions>
     Digest sha256Result = sha256.convert(bytes);
 
     // Return the hash as a hexadecimal string
-    return input;
     return sha256Result.toString();
   }
 
@@ -686,10 +685,11 @@ class _QuestionsState extends State<MultiQuestions>
   void leaveRoomWhenStateChanges() {
     SystemChannels.lifecycle.setMessageHandler((message) async {
       if (message == AppLifecycleState.inactive.toString()) {
-        leaveRoom();
       } else if (message == AppLifecycleState.paused.toString()) {
+        print('paused');
         leaveRoom();
       } else if (message == AppLifecycleState.detached.toString()) {
+        print('detached');
         leaveRoom();
       }
       return null;
@@ -724,7 +724,7 @@ class _QuestionsState extends State<MultiQuestions>
     _multiGameAudio.stop();
     _audioPlayer.stop();
     if (!playerTimeDoneCalled && !youWonState && !youDrewState) {
-      Navigator.pushReplacementNamed(context, '/');
+      Navigator.pushReplacementNamed(context, '/main-online-screen');
       Map room = Provider.of<LocaleProvider>(context, listen: false).room;
       for (var player in room['players']) {
         if (player['userId']['_id'] == userId) {
@@ -742,7 +742,7 @@ class _QuestionsState extends State<MultiQuestions>
       });
       loserUpdate();
     } else {
-      Navigator.pushReplacementNamed(context, '/');
+      Navigator.pushReplacementNamed(context, '/main-online-screen');
     }
   }
 

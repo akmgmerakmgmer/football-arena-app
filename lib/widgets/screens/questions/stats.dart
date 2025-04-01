@@ -61,13 +61,6 @@ class Stats extends StatelessWidget {
     }
   }
 
-  bool isPerkDisabled(perk) {
-    if (perk['quantity'] == 0 || usedPerks.contains(perk['id']['_id'])) {
-      return true;
-    }
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -179,7 +172,8 @@ class Stats extends StatelessWidget {
                                   SinglePerk(
                                     action: () => action(perk),
                                     image: perk['id']['image'],
-                                    disabled: isPerkDisabled(perk),
+                                    disabled: (perk['quantity'] == 0 ||
+                                        usedPerks.contains(perk['id']['_id'])),
                                   ),
                                   const SizedBox(
                                     width: 43,

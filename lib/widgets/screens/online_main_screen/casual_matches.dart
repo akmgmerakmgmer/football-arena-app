@@ -13,7 +13,7 @@ class CasualMatches extends StatelessWidget {
   Widget build(BuildContext context) {
     LocaleProvider localeProvider =
         Provider.of<LocaleProvider>(context, listen: false);
-    navigateToRankedMatches() {
+    enterCasualMatch() {
       if (GeneralMethods().isUserExists(context)) {
         ModalContainer.bottomSheetHostGame(context, localeProvider,
             isCasual: true);
@@ -25,7 +25,7 @@ class CasualMatches extends StatelessWidget {
     List rankedMatches = [
       {
         "image": "assets/images/casual_match.jpg",
-        "action": navigateToRankedMatches,
+        "action": enterCasualMatch,
       },
     ];
     return CarouselContainer(

@@ -58,7 +58,7 @@ class EventImage extends StatelessWidget {
                     bottom: true,
                     locale: locale,
                     title:
-                        '${AppLocalizations.of(context)!.endsAt} ${event['endDate']}'),
+                        '${AppLocalizations.of(context)!.ends_on} ${event['endDate']}'),
               )
             ],
           )),

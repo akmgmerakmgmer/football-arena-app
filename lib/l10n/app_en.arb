@@ -174,5 +174,6 @@
     "enter_code": "Enter the pass code of your friend's match",
     "join_match": "Join Match",
     "join_room_error": "Error in joining the match",
-    "code_empty": "Empty Code, Enter the code of your friend's match"
+    "code_empty": "Empty Code, Enter the code of your friend's match",
+    "ends_on": "Ends On"
 }

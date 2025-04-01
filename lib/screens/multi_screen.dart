@@ -50,7 +50,6 @@ class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
   void leavePageWhenStateChanges() {
     SystemChannels.lifecycle.setMessageHandler((message) async {
       if (message == AppLifecycleState.inactive.toString()) {
-        leaveRoomEarly();
       } else if (message == AppLifecycleState.paused.toString()) {
         leaveRoomEarly();
       } else if (message == AppLifecycleState.detached.toString()) {
@@ -80,7 +79,7 @@ class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
     };
     _socketMethods.leaveRoomEarly(
         data, widget.coinsPayed, context, localeProvider, user);
-    Navigator.pushReplacementNamed(context, '/');
+    Navigator.pushReplacementNamed(context, '/main-online-screen');
   }
 
   @override
