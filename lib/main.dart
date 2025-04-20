@@ -102,6 +102,7 @@ class _MyAppState extends State<MyApp> {
                 theme: ThemeData(
                   fontFamily: _locale == 'en' ? 'Oswald' : 'NotoKufiArabic',
                   primaryColor: const Color(0xFFF61A1A),
+                  // const Color.fromARGB(255, 251, 8, 49)
                   splashColor: const Color.fromARGB(255, 22, 22, 22),
                   primaryColorDark: const Color.fromARGB(255, 30, 30, 30),
                 ),

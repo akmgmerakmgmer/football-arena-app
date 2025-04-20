@@ -20,7 +20,7 @@ class ChangeLang extends StatelessWidget {
             ),
             TextWidget(
               title: locale == 'ar' ? 'English' : 'عربي',
-              fontSize: locale == 'ar' ? 14 : 16,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
               alwaysEnglish: locale == 'ar' ? true : false,
               alwaysArabic: locale == 'ar' ? false : true,

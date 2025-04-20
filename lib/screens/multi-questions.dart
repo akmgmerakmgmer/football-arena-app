@@ -18,6 +18,7 @@ import 'package:in_zone_app/widgets/general_widgets/waiting_for_other_players.da
 import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
 import 'package:in_zone_app/widgets/screens/event_details/prizes_content.dart';
 import 'package:in_zone_app/widgets/screens/questions/advertisment.dart';
+import 'package:in_zone_app/widgets/screens/questions/countdown.dart';
 import 'package:in_zone_app/widgets/screens/questions/multiple_choices.dart';
 import 'package:in_zone_app/widgets/screens/questions/player_search.dart';
 import 'package:in_zone_app/widgets/screens/questions/rank_change.dart';
@@ -52,7 +53,6 @@ class _QuestionsState extends State<MultiQuestions>
   List displayChosenPlayers = [];
   List hints = [];
   int defaultCountDown = 180;
-  int countDown = 180;
   int pointValue = 1;
   int pointDefaultValue = 0;
   int multiplyPoints = 1;
@@ -79,6 +79,7 @@ class _QuestionsState extends State<MultiQuestions>
   bool oneUserLeft = false;
   bool gameDoneLoading = false;
   bool multiGameSoundPlaying = false;
+  late ValueNotifier<int> _countDownNotifier;
 
   // Methods
   Future<void> getQuestions() async {
@@ -93,12 +94,14 @@ class _QuestionsState extends State<MultiQuestions>
     }
   }
 
+  initializeNotifiers() {
+    _countDownNotifier = ValueNotifier(defaultCountDown);
+  }
+
   void initializeCount() {
     if (mounted) {
       if (!countStarted) {
-        setState(() {
-          countDown = setCount();
-        });
+        _countDownNotifier.value = setCount();
         decreaseCount();
         decreaseAdCount();
         countStarted = true;
@@ -118,14 +121,14 @@ class _QuestionsState extends State<MultiQuestions>
     if (mounted) {
       _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
         if (!stopCount) {
-          if (countDown > 0) {
-            setState(() {
-              countDown = countDown - 1;
-            });
+          if (_countDownNotifier.value > 0) {
+            _countDownNotifier.value = _countDownNotifier.value - 1;
           } else {
             playerTimeDone();
           }
-          if (countDown < 6 && countDown > -1) playCountDownSound();
+          if (_countDownNotifier.value < 6 && _countDownNotifier.value > -1) {
+            playCountDownSound();
+          }
         }
       });
     }
@@ -510,7 +513,8 @@ class _QuestionsState extends State<MultiQuestions>
 
   void playerTimeDone() {
     if (mounted) {
-      if ((countDown == 0 || questionsFinished) && !playerTimeDoneCalled) {
+      if ((_countDownNotifier.value == 0 || questionsFinished) &&
+          !playerTimeDoneCalled) {
         setState(() {
           playerTimeDoneCalled = true;
           stopCount = true;
@@ -598,6 +602,7 @@ class _QuestionsState extends State<MultiQuestions>
 
   void youWon(room) {
     if (mounted) {
+      stopCount = true;
       _socketMethods.gameDone({'roomId': room['_id']});
       if (roomPlayers.length == 1 &&
           roomPlayers[0]['userId']['_id'].toString() == userId) {
@@ -656,6 +661,7 @@ class _QuestionsState extends State<MultiQuestions>
   void initState() {
     super.initState();
     if (mounted) {
+      initializeNotifiers();
       initialFetch();
       leaveRoomWhenStateChanges();
       playMultiGameSound();
@@ -827,12 +833,9 @@ class _QuestionsState extends State<MultiQuestions>
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    TextWidget(
-                                      title: countDown.toString(),
-                                      fontSize: 26,
-                                      fontWeight: FontWeight.bold,
-                                      alwaysEnglish: true,
-                                    ),
+                                    CountDown(
+                                        countDownNotifier: _countDownNotifier,
+                                        defaultCountDown: defaultCountDown),
                                     const SizedBox(
                                       height: 4,
                                     ),

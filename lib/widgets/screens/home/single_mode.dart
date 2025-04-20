@@ -137,7 +137,7 @@ class _SingleModeState extends State<SingleMode> {
                       constraints: const BoxConstraints(maxWidth: 200),
                       child: MainButton(
                           buttonText: AppLocalizations.of(context)!.playNow,
-                          fontSize: 12.5,
+                          fontSize: 13,
                           uppercase: true,
                           letterSpacing: 1.1,
                           padding: const EdgeInsets.all(10.0),

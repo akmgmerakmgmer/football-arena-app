@@ -4,11 +4,13 @@ class WhiteGlassBackground extends StatelessWidget {
   final EdgeInsets padding;
   final Widget body;
   final bool darkenBackground;
+  final double radius;
   const WhiteGlassBackground(
       {super.key,
       this.padding = const EdgeInsets.all(8),
       required this.body,
-      this.darkenBackground = false});
+      this.darkenBackground = false,
+      this.radius = 12});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class WhiteGlassBackground extends StatelessWidget {
                   ]
                 : null,
             border: Border.all(color: Colors.white.withOpacity(0.2)),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(radius),
             color: Colors.white.withOpacity(0.1)),
         child: body);
   }

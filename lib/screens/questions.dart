@@ -17,6 +17,7 @@ import 'package:in_zone_app/widgets/general_widgets/pause_and_play.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
 import 'package:in_zone_app/widgets/screens/questions/advertisment.dart';
+import 'package:in_zone_app/widgets/screens/questions/countdown.dart';
 import 'package:in_zone_app/widgets/screens/questions/game_over.dart';
 import 'package:in_zone_app/widgets/screens/questions/multiple_choices.dart';
 import 'package:in_zone_app/widgets/screens/questions/perks_illustrations.dart';
@@ -637,7 +638,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   initializeNotifiers() {
-    _countDownNotifier = ValueNotifier(20);
+    _countDownNotifier = ValueNotifier(defaultCountDown);
     _livesNotifier = ValueNotifier(10);
     _pointsNotifier = ValueNotifier(0);
     _coinsNotifier = ValueNotifier(0);
@@ -793,19 +794,11 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    ValueListenableBuilder<int>(
-                                      valueListenable: _countDownNotifier,
-                                      builder: (context, countdown, _) {
-                                        return TextWidget(
-                                          title: countdown.toString(),
-                                          fontSize: 26,
-                                          fontWeight: FontWeight.bold,
-                                          alwaysEnglish: true,
-                                        );
-                                      },
-                                    ),
+                                    CountDown(
+                                        countDownNotifier: _countDownNotifier,
+                                        defaultCountDown: defaultCountDown),
                                     const SizedBox(
-                                      height: 4,
+                                      height: 8,
                                     ),
                                     BlurBackgroundContainer(
                                       padding: 12,

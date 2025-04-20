@@ -91,7 +91,7 @@ class SingleUser extends StatelessWidget {
               ],
             ),
             const SizedBox(
-              width: 75,
+              width: 8,
             ),
             Row(
               children: [

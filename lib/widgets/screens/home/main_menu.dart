@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
-import 'package:in_zone_app/utilities/generalMethods.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
 import 'package:in_zone_app/widgets/buttons/regular_button.dart';
 import 'package:in_zone_app/widgets/containers/image_background_container.dart';
@@ -12,9 +11,10 @@ class MainMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double defaultFontSize = 16;
     LocaleProvider localeProvider =
         Provider.of<LocaleProvider>(context, listen: false);
+    double defaultFontSize = localeProvider.locale == 'en' ? 15 : 16;
+
     return ImageBackgroundContainer(
         body: Column(
       children: [

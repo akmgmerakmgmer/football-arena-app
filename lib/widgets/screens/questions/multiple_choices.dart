@@ -38,7 +38,7 @@ class MultipleChoices extends StatelessWidget {
                                       action(choice.value['value'], choice.key);
                                     },
                                     uppercase: true,
-                                    fontSize: 14,
+                                    fontSize: 13,
                                   ),
                                 )
                               : MainButton(
@@ -49,7 +49,7 @@ class MultipleChoices extends StatelessWidget {
                                     action(choice.value['value'], choice.key);
                                   },
                                   uppercase: true,
-                                  fontSize: 14,
+                                  fontSize: 13,
                                 ),
                           const SizedBox(
                             height: 20,

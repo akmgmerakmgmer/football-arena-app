@@ -91,7 +91,7 @@ class Challenge extends StatelessWidget {
                           buttonText: isPlayedToday(context)
                               ? AppLocalizations.of(context)!.alreadyPlayedOnce
                               : AppLocalizations.of(context)!.playNow,
-                          fontSize: 12.5,
+                          fontSize: 13,
                           uppercase: true,
                           letterSpacing: 1.1,
                           padding: const EdgeInsets.all(10.0),

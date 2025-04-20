@@ -36,7 +36,7 @@ class TrueOrFalse extends StatelessWidget {
                         action(choice.value['value'], choice.key);
                       },
                       uppercase: true,
-                      fontSize: 13.5,
+                      fontSize: 13,
                     ),
                   )
                   .toList(),
