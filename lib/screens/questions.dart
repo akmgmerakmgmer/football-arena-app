@@ -655,7 +655,6 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _timer?.cancel();
     _audioPlayer.dispose();
     _countDownNotifier.dispose();

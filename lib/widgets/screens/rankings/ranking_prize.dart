@@ -14,7 +14,7 @@ class RankingPrize extends StatelessWidget {
       children: [
         TextWidget(
           title: numberOfCoins.toString(),
-          fontSize: 16,
+          fontSize: 14,
           alwaysEnglish: true,
           fontWeight: FontWeight.bold,
         ),

@@ -4,10 +4,12 @@ import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 class CountDown extends StatelessWidget {
   final ValueNotifier<int> countDownNotifier;
   final int defaultCountDown;
+  final double defaultSize;
   const CountDown(
       {super.key,
       required this.countDownNotifier,
-      required this.defaultCountDown});
+      required this.defaultCountDown,
+      this.defaultSize = 50});
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +31,8 @@ class CountDown extends StatelessWidget {
               duration: const Duration(milliseconds: 300),
               builder: (context, animatedProgress, _) {
                 return SizedBox(
-                  width: 50,
-                  height: 50,
+                  width: defaultSize,
+                  height: defaultSize,
                   child: Material(
                     elevation: 2,
                     shape: const CircleBorder(),
@@ -39,8 +41,8 @@ class CountDown extends StatelessWidget {
                       alignment: Alignment.center,
                       children: [
                         SizedBox(
-                          width: 50,
-                          height: 50,
+                          width: defaultSize,
+                          height: defaultSize,
                           child: CircularProgressIndicator(
                             value: animatedProgress,
                             strokeWidth: 4,

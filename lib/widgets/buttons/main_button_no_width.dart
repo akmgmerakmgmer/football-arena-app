@@ -13,6 +13,7 @@ class MainButtonNoWidth extends StatelessWidget {
   final bool loading;
   final bool isWidget;
   final dynamic widget;
+  final EdgeInsets padding;
   const MainButtonNoWidth({
     super.key,
     required this.buttonText,
@@ -23,6 +24,7 @@ class MainButtonNoWidth extends StatelessWidget {
     this.radius = 0,
     this.loading = false,
     this.isWidget = false,
+    this.padding = const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
     this.widget,
   });
 
@@ -32,11 +34,10 @@ class MainButtonNoWidth extends StatelessWidget {
       onTap: () => action(),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          borderRadius: BorderRadius.all(Radius.circular(radius)),
-          boxShadow:  NeonBoxShadow().boxShadowNeon(context)
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.all(Radius.circular(radius)),
+            boxShadow: NeonBoxShadow().boxShadowNeon(context)),
+        padding: padding,
         child: loading
             ? const PrimaryLoading()
             : isWidget

@@ -46,6 +46,8 @@ class SingleUser extends StatelessWidget {
                   buttonText: rank,
                   action: () {},
                   radius: 100,
+                  fontSize: 14,
+                  padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 7.0),
                 ),
                 const SizedBox(
                   width: 15,
@@ -53,6 +55,8 @@ class SingleUser extends StatelessWidget {
                 UserImage(
                   image: item['selectedAvatar']['image'],
                   video: item['selectedAvatar']['video'],
+                  height: 60,
+                  width: 60,
                 ),
                 const SizedBox(
                   width: 8,
@@ -66,7 +70,7 @@ class SingleUser extends StatelessWidget {
                     UsernameText(
                       title: item['username'],
                       fontWeight: FontWeight.bold,
-                      fontSize: locale == 'ar' ? 17 : 19,
+                      fontSize: 16,
                     ),
                     const SizedBox(
                       width: 4,
@@ -75,7 +79,7 @@ class SingleUser extends StatelessWidget {
                         ? TextWidget(
                             title: '(${AppLocalizations.of(context)!.you})',
                             fontWeight: FontWeight.bold,
-                            fontSize: locale == 'ar' ? 17 : 19,
+                            fontSize: 16,
                           )
                         : Container(),
                     int.parse(rank) < 6

@@ -7,21 +7,19 @@ import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/screens/reversed_words.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/external_url.dart';
+import 'package:in_zone_app/utilities/online_methods.dart';
 import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
 import 'package:in_zone_app/widgets/containers/fade_transition.dart';
 import 'package:in_zone_app/widgets/containers/image_background_plain.dart';
-import 'package:in_zone_app/widgets/containers/modal_container.dart';
 import 'package:in_zone_app/widgets/containers/page_plain_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/waiting_for_other_players.dart';
 import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
-import 'package:in_zone_app/widgets/screens/event_details/prizes_content.dart';
 import 'package:in_zone_app/widgets/screens/questions/advertisment.dart';
 import 'package:in_zone_app/widgets/screens/questions/countdown.dart';
 import 'package:in_zone_app/widgets/screens/questions/multiple_choices.dart';
 import 'package:in_zone_app/widgets/screens/questions/player_search.dart';
-import 'package:in_zone_app/widgets/screens/questions/rank_change.dart';
 import 'package:in_zone_app/widgets/screens/questions/true_or_false.dart';
 import 'package:in_zone_app/widgets/screens/questions/two_players_stats.dart';
 import 'package:in_zone_app/widgets/screens/questions/you_drew_Image.dart';
@@ -79,6 +77,7 @@ class _QuestionsState extends State<MultiQuestions>
   bool oneUserLeft = false;
   bool gameDoneLoading = false;
   bool multiGameSoundPlaying = false;
+  bool matchResultCalculated = false;
   late ValueNotifier<int> _countDownNotifier;
 
   // Methods
@@ -511,6 +510,22 @@ class _QuestionsState extends State<MultiQuestions>
     getQuestions();
   }
 
+  checkIfTheOtherUserCheated() {
+    Map room = Provider.of<LocaleProvider>(context, listen: false).room;
+    if (room['players'].length > 1 && !matchResultCalculated) {
+      for (var player in room['players']) {
+        if (!player['timeDone'] &&
+            player['userId']['_id'].toString() != userId.toString()) {
+          OnlineMethods().winnerUpdate(userId, context);
+          setState(() {
+            oneUserLeft = true;
+            youWonState = true;
+          });
+        }
+      }
+    }
+  }
+
   void playerTimeDone() {
     if (mounted) {
       if ((_countDownNotifier.value == 0 || questionsFinished) &&
@@ -522,93 +537,28 @@ class _QuestionsState extends State<MultiQuestions>
         Map room = Provider.of<LocaleProvider>(context, listen: false).room;
         Map emittedData = {'userId': userId, 'roomId': room['_id']};
         _socketMethods.playerTimeDone(emittedData);
+        Future.delayed(const Duration(seconds: 15), () {
+          checkIfTheOtherUserCheated();
+        });
       }
     }
   }
 
-  void promotionMethod(prizes) {
-    Map user = Provider.of<LocaleProvider>(context, listen: false).user;
-    String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
-    ModalContainer.modal(context, RankChange(user: user, locale: locale),
-        AppLocalizations.of(context)!.you_have_been_promoted,
-        closeCallBack: () {
-      ModalContainer.modal(
-        context,
-        PrizesContent(prizes: prizes),
-        AppLocalizations.of(context)!.congratulations,
-      );
-    });
-  }
-
-  void demotionMethod() {
-    Map user = Provider.of<LocaleProvider>(context, listen: false).user;
-    String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
-    ModalContainer.modal(
-      context,
-      RankChange(user: user, locale: locale),
-      AppLocalizations.of(context)!.you_have_been_demoted,
-    );
-  }
-
-  Future<void> gameDoneMethod(api, winnerId) async {
-    Map room = Provider.of<LocaleProvider>(context, listen: false).room;
-
-    if (!room['isCasual'] && (room['code'] == '' || room['code'] == null)) {
+  void youWon(room) async {
+    if (mounted) {
+      _multiGameAudio.stop();
       setState(() {
         gameDoneLoading = true;
       });
-      Map payload = {
-        'userId': userId,
-        'winnerId': winnerId,
-        'players': room['players'],
-        'roomId': room['_id']
-      };
-      PutApi('$api/$userId', payload, (res) {
-        setState(() {
-          gameDoneLoading = false;
-        });
-        Provider.of<LocaleProvider>(context, listen: false)
-            .setUser(res['user']);
-        if (res['promoted'] != null && res['promoted']) {
-          promotionMethod(res['prizes']);
-        }
-
-        if (res['demoted'] != null && res['demoted']) {
-          demotionMethod();
-        }
-      }).put(context);
-    }
-  }
-
-  Future<void> winnerUpdate() async {
-    await gameDoneMethod('multi-game-winner', userId);
-  }
-
-  Future<void> loserUpdate() async {
-    String winnerId = '';
-    List players =
-        Provider.of<LocaleProvider>(context, listen: false).room['players'];
-    for (var player in players) {
-      if (player['userId']['_id'] != userId) {
-        winnerId = player['userId']['_id'];
-      }
-    }
-    await gameDoneMethod('multi-game-loser', winnerId);
-  }
-
-  Future<void> drawUpdate() async {
-    await gameDoneMethod('multi-game-draw', '');
-  }
-
-  void youWon(room) {
-    if (mounted) {
       stopCount = true;
+      matchResultCalculated = true;
       _socketMethods.gameDone({'roomId': room['_id']});
       if (roomPlayers.length == 1 &&
           roomPlayers[0]['userId']['_id'].toString() == userId) {
-        winnerUpdate();
+        await OnlineMethods().winnerUpdate(userId, context);
         setState(() {
           youWonState = true;
+          gameDoneLoading = false;
         });
         return;
       }
@@ -621,20 +571,25 @@ class _QuestionsState extends State<MultiQuestions>
           }
         }
         if (points > maxPoints) {
-          winnerUpdate();
+          await OnlineMethods().winnerUpdate(userId, context);
           setState(() {
             youWonState = true;
+            gameDoneLoading = false;
           });
           return;
         }
         if (points == maxPoints) {
           setState(() {
             youDrewState = true;
+            gameDoneLoading = false;
           });
-          drawUpdate();
+          await OnlineMethods().drawUpdate(context);
           return;
         }
-        loserUpdate();
+        await OnlineMethods().loserUpdate(userId, context);
+        setState(() {
+          gameDoneLoading = false;
+        });
       }
     }
   }
@@ -654,6 +609,7 @@ class _QuestionsState extends State<MultiQuestions>
       multiGameSoundPlaying = true;
     });
     _multiGameAudio.setVolume(0.8);
+    await _multiGameAudio.setReleaseMode(ReleaseMode.loop);
     _multiGameAudio.play(AssetSource('audio/multi_game.mp3'));
   }
 
@@ -671,9 +627,10 @@ class _QuestionsState extends State<MultiQuestions>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    _countDownNotifier.dispose();
     _timer?.cancel();
     _audioPlayer.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -692,10 +649,8 @@ class _QuestionsState extends State<MultiQuestions>
     SystemChannels.lifecycle.setMessageHandler((message) async {
       if (message == AppLifecycleState.inactive.toString()) {
       } else if (message == AppLifecycleState.paused.toString()) {
-        print('paused');
         leaveRoom();
       } else if (message == AppLifecycleState.detached.toString()) {
-        print('detached');
         leaveRoom();
       }
       return null;
@@ -746,7 +701,7 @@ class _QuestionsState extends State<MultiQuestions>
         'roomId': room['_id'],
         'fullRoom': room
       });
-      loserUpdate();
+      OnlineMethods().loserUpdate(userId, context);
     } else {
       Navigator.pushReplacementNamed(context, '/main-online-screen');
     }
@@ -834,8 +789,10 @@ class _QuestionsState extends State<MultiQuestions>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     CountDown(
-                                        countDownNotifier: _countDownNotifier,
-                                        defaultCountDown: defaultCountDown),
+                                      countDownNotifier: _countDownNotifier,
+                                      defaultCountDown: defaultCountDown,
+                                      defaultSize: 60,
+                                    ),
                                     const SizedBox(
                                       height: 4,
                                     ),
