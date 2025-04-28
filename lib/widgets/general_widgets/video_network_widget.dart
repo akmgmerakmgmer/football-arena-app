@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:in_zone_app/utilities/media_query_height.dart';
 import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
 import 'package:in_zone_app/widgets/general_widgets/pause_and_play.dart';
 import 'package:video_player/video_player.dart';
@@ -14,7 +15,7 @@ class NetworkVideoWidget extends StatefulWidget {
   const NetworkVideoWidget(
       {super.key,
       required this.videoUrl,
-      this.height = 300,
+      this.height = 0,
       this.radius = 15,
       this.width = 0,
       this.showPauseIcon = false,
@@ -81,6 +82,9 @@ class _NetworkVideoWidgetState extends State<NetworkVideoWidget>
     super.build(context); // Needed when using AutomaticKeepAliveClientMixin
     double width =
         widget.width != 0 ? widget.width : MediaQuery.of(context).size.width;
+    double height = widget.height != 0
+        ? widget.height
+        : MediaQueryHeight().avatarImageHeight(context);
     return VisibilityDetector(
       key: Key(widget.videoUrl.toString()),
       onVisibilityChanged: (visibilityInfo) {
@@ -92,7 +96,7 @@ class _NetworkVideoWidgetState extends State<NetworkVideoWidget>
           alignment: Alignment.center,
           children: [
             SizedBox(
-                height: widget.height,
+                height: height,
                 width: width,
                 child: _isInitialized
                     ? FittedBox(
@@ -105,7 +109,7 @@ class _NetworkVideoWidgetState extends State<NetworkVideoWidget>
                       )
                     : CachedImage(
                         image: widget.image,
-                        height: widget.height,
+                        height: height,
                         width: width,
                         radius: widget.radius,
                       )),

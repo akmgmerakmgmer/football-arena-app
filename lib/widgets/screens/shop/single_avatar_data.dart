@@ -26,10 +26,10 @@ class SingleAvatarData extends StatelessWidget {
             : Container(),
         SizedBox(
             width: width > 1280
-                ? width * 0.1
+                ? width * 0.16
                 : width > 1024
                     ? width * 0.2
-                    : width > 450
+                    : width > 600
                         ? width * 0.3
                         : width * 0.6,
             child: PurchaseButton(

@@ -14,7 +14,7 @@ class GridContainer extends StatelessWidget {
             ? numberOfGrids
             : MediaQuery.of(context).size.width > 1024
                 ? 3
-                : MediaQuery.of(context).size.width > 450
+                : MediaQuery.of(context).size.width > 600
                     ? 2
                     : 1,
         mainAxisSpacing: 15,

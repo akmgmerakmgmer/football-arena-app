@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
@@ -40,6 +41,7 @@ class MultiQuestions extends StatefulWidget {
 class _QuestionsState extends State<MultiQuestions>
     with WidgetsBindingObserver {
   // States
+  final Connectivity _connectivity = Connectivity();
   Timer? _timer;
   String userId = '';
   List questions = [];
@@ -78,6 +80,7 @@ class _QuestionsState extends State<MultiQuestions>
   bool gameDoneLoading = false;
   bool multiGameSoundPlaying = false;
   bool matchResultCalculated = false;
+  bool youCheated = true;
   late ValueNotifier<int> _countDownNotifier;
 
   // Methods
@@ -355,6 +358,7 @@ class _QuestionsState extends State<MultiQuestions>
   void penaltyMethod(id) {
     if (mounted) {
       if (!showPlayerSearch() &&
+          questions[currentQuestion]['questionMode'] != 'reversedWords' &&
           questions[currentQuestion]['questionMode'] != 'trueOrFalse') {
         int numberOfChoicesRemoved = 0;
         setState(() {
@@ -526,7 +530,7 @@ class _QuestionsState extends State<MultiQuestions>
     }
   }
 
-  void playerTimeDone() {
+  void playerTimeDone() async {
     if (mounted) {
       if ((_countDownNotifier.value == 0 || questionsFinished) &&
           !playerTimeDoneCalled) {
@@ -537,9 +541,20 @@ class _QuestionsState extends State<MultiQuestions>
         Map room = Provider.of<LocaleProvider>(context, listen: false).room;
         Map emittedData = {'userId': userId, 'roomId': room['_id']};
         _socketMethods.playerTimeDone(emittedData);
-        Future.delayed(const Duration(seconds: 15), () {
-          checkIfTheOtherUserCheated();
-        });
+        if (_countDownNotifier.value == 0 && !youCheated) {
+          Future.delayed(const Duration(seconds: 15), () {
+            checkIfTheOtherUserCheated();
+          });
+        } else {
+          setState(() {
+            gameDoneLoading = true;
+          });
+          await OnlineMethods().loserUpdate(userId, context);
+          setState(() {
+            oneUserLeft = true;
+            gameDoneLoading = false;
+          });
+        }
       }
     }
   }
@@ -613,10 +628,21 @@ class _QuestionsState extends State<MultiQuestions>
     _multiGameAudio.play(AssetSource('audio/multi_game.mp3'));
   }
 
+  checkConnection() {
+    _connectivity.onConnectivityChanged
+        .listen((List<ConnectivityResult> results) {
+      if (results.isNotEmpty &&
+          !results.contains(ConnectivityResult.none) == false) {
+        youCheated = true;
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     if (mounted) {
+      checkConnection();
       initializeNotifiers();
       initialFetch();
       leaveRoomWhenStateChanges();
@@ -710,7 +736,7 @@ class _QuestionsState extends State<MultiQuestions>
   @override
   Widget build(BuildContext context) {
     LocaleProvider localeProvider =
-        Provider.of<LocaleProvider>(context, listen: false);
+        Provider.of<LocaleProvider>(context, listen: true);
     String locale = localeProvider.locale;
     Map user = localeProvider.user;
     String code = localeProvider.room['code'];
