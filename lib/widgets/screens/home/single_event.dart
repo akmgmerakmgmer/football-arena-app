@@ -33,7 +33,7 @@ class _SingleEventState extends State<SingleEvent> {
 
   @override
   Widget build(BuildContext context) {
-    String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
+    String locale = Provider.of<LocaleProvider>(context, listen: true).locale;
     return GestureDetector(
       onTap: () {
         eventDetails(context);

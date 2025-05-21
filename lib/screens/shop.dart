@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/widgets/containers/pages_asset_background.dart';
 import 'package:in_zone_app/widgets/screens/shop/buy_avatars.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
@@ -119,8 +120,8 @@ class _ShopState extends State<Shop> {
     return PageContainerWithFooter(
         background: Theme.of(context).splashColor,
         scroll: _scrollController,
-        body: Container(
-          margin: const EdgeInsets.symmetric(vertical: 16),
+        body: PagesAssetBackground(
+          padding: const EdgeInsets.symmetric(vertical: 16),
           child: Column(
             children: [
               Wrap(

@@ -12,9 +12,9 @@ class UserResultsData extends StatelessWidget {
     final Map seasonResults = user['season_results'];
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Theme.of(context).primaryColorDark),
-      padding: const EdgeInsets.all(4),
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.white.withOpacity(0.1)),
+      padding: const EdgeInsets.symmetric(vertical: 4,horizontal: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

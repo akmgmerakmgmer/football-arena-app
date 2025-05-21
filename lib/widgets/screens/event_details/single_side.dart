@@ -19,7 +19,7 @@ class SingleSide extends StatelessWidget {
                   selected ? NeonBoxShadow().boxShadowNeon(context) : null,
               color: selected
                   ? Theme.of(context).primaryColor
-                  : Theme.of(context).primaryColorDark,
+                  : Colors.white.withOpacity(0.1),
               borderRadius: const BorderRadius.all(Radius.circular(10))),
           padding: const EdgeInsets.all(16),
           child: TextWidget(

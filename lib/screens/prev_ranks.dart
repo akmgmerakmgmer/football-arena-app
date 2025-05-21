@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
+import 'package:in_zone_app/widgets/containers/pages_asset_background.dart';
 import 'package:in_zone_app/widgets/containers/triple_grid_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/title_with_border.dart';
@@ -19,8 +20,8 @@ class PrevRanks extends StatelessWidget {
     List prevRanks = localeProvider.user['prev_seasons_ranks'];
     return PageContainerWithFooter(
         background: Theme.of(context).splashColor,
-        body: Container(
-          margin: const EdgeInsets.all(16),
+        body: PagesAssetBackground(
+          padding: const EdgeInsets.all(16),
           child: Column(
             children: [
               TitleWithBorder(

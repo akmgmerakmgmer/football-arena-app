@@ -25,8 +25,8 @@ class DropDownWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return show
         ? Column(
-          children: [
-            DropdownButtonHideUnderline(
+            children: [
+              DropdownButtonHideUnderline(
                 child: DropdownButtonFormField(
                     dropdownColor: Theme.of(context).splashColor,
                     value: initialValue,
@@ -34,33 +34,40 @@ class DropDownWidget extends StatelessWidget {
                       enabled: !loading,
                       fillColor: Theme.of(context).splashColor,
                       focusColor: Colors.grey,
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.grey.shade600, width: 2)),
                       border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey.shade600)),
+                          borderSide: BorderSide(
+                              color: Colors.grey.shade600, width: 2)),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey.shade600),
+                        borderSide:
+                            BorderSide(color: Colors.grey.shade600, width: 2),
                       ),
                     ),
                     items: items
                         .map((item) => DropdownMenuItem(
                             value: item['value'],
-                            child:
-                                Provider.of<LocaleProvider>(context, listen: false)
-                                            .locale ==
-                                        'ar'
-                                    ? TextWidget(
-                                        title: item['nameAr'],
-                                        fontSize: 15,
-                                      )
-                                    : TextWidget(
-                                        title: item['nameEn'],
-                                        fontSize: 15,
-                                      )))
+                            child: Provider.of<LocaleProvider>(context,
+                                            listen: false)
+                                        .locale ==
+                                    'ar'
+                                ? TextWidget(
+                                    title: item['nameAr'],
+                                    fontSize: 15,
+                                  )
+                                : TextWidget(
+                                    title: item['nameEn'],
+                                    fontSize: 15,
+                                  )))
                         .toList(),
                     onChanged: (value) => {callback(value)}),
               ),
-              const SizedBox(height: 12,)
-          ],
-        )
+              const SizedBox(
+                height: 12,
+              )
+            ],
+          )
         : Container();
   }
 }

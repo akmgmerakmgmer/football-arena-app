@@ -3,6 +3,7 @@ import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/auth.dart';
 import 'package:in_zone_app/widgets/buttons/default_button.dart';
 import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
+import 'package:in_zone_app/widgets/containers/pages_asset_background.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/title_with_border.dart';
 import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
@@ -26,8 +27,8 @@ class AccountProfile extends StatelessWidget with ChangeNotifier {
         background: Theme.of(context).splashColor,
         body: user.isEmpty
             ? const PrimaryLoading()
-            : Container(
-                margin: const EdgeInsets.all(16.0),
+            : PagesAssetBackground(
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

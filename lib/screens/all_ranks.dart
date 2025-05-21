@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
+import 'package:in_zone_app/widgets/containers/pages_asset_background.dart';
 import 'package:in_zone_app/widgets/containers/triple_grid_container.dart';
 import 'package:in_zone_app/widgets/screens/all_ranks/rank_loading.dart';
 import 'package:in_zone_app/widgets/screens/all_ranks/single_rank.dart';
@@ -43,8 +44,8 @@ class _AllRanksState extends State<AllRanks> {
         background: Theme.of(context).splashColor,
         body: loading
             ? const RankLoading()
-            : Container(
-                margin: const EdgeInsets.symmetric(vertical: 16,horizontal: 8),
+            : PagesAssetBackground(
+                padding: const EdgeInsets.symmetric(vertical: 16,horizontal: 8),
                 child: Column(
                   children: [
                     SingleRank(rank: goatRank, locale: locale,alwaysEnglish: true,),

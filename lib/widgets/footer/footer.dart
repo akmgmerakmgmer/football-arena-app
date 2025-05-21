@@ -12,7 +12,7 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HomeSectionContainers(
-        padding: 24.0,
+        padding: 12.0,
         backgroundColor: backgroundColor,
         children: [
           Row(

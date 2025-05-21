@@ -13,36 +13,36 @@ class BottomNavigation extends StatelessWidget {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     List navigationRoutes = [
       {
-        "text": AppLocalizations.of(context)!.navigationHome,
-        "icon": Icons.home,
-        "action": () {
-          Navigator.pushNamed(context, '/home');
-        },
-        "selected": currentPath == '/' || currentPath == '/home',
-      },
-      {
-        "text": AppLocalizations.of(context)!.navigationRankings,
-        "icon": Icons.view_list,
-        "action": () {
-          Navigator.pushNamed(context, '/rankings');
-        },
-        "selected": currentPath == '/rankings'
-      },
-      {
-        "text": AppLocalizations.of(context)!.play_online,
-        "icon": Icons.tap_and_play_sharp,
-        "action": () {
-          Navigator.pushNamed(context, '/main-online-screen');
-        },
-        "selected": currentPath == '/main-online-screen'
-      },
-      {
         "text": AppLocalizations.of(context)!.shop,
         "icon": Icons.shopping_bag,
         "action": () {
           Navigator.pushNamed(context, '/shop');
         },
         "selected": currentPath == '/shop'
+      },
+      {
+        "text": AppLocalizations.of(context)!.play_online,
+        "icon": Icons.emoji_events,
+        "action": () {
+          Navigator.pushNamed(context, '/main-online-screen');
+        },
+        "selected": currentPath == '/main-online-screen'
+      },
+      {
+        "text": AppLocalizations.of(context)!.events,
+        "icon": Icons.sports_soccer,
+        "action": () {
+          Navigator.pushNamed(context, '/play-alone');
+        },
+        "selected": currentPath == '/' || currentPath == '/play-alone',
+      },
+      {
+        "text": AppLocalizations.of(context)!.navigationRankings,
+        "icon": Icons.leaderboard,
+        "action": () {
+          Navigator.pushNamed(context, '/rankings');
+        },
+        "selected": currentPath == '/rankings'
       },
       user.isNotEmpty
           ? {

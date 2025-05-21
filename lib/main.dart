@@ -106,7 +106,7 @@ class _MyAppState extends State<MyApp> {
                   splashColor: const Color.fromARGB(255, 22, 22, 22),
                   primaryColorDark: const Color.fromARGB(255, 30, 30, 30),
                 ),
-                home: const Home()),
+                home: const PlayAlone()),
           )),
     );
   }

@@ -6,20 +6,22 @@ class SingleRankLoading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         LoadingCard(
           height: 60,
           width: 60,
           radius: 100,
+          bgColor: Colors.white.withOpacity(0.15),
         ),
-        SizedBox(
+        const SizedBox(
           height: 8,
         ),
         LoadingCard(
           height: 10,
           width: 100,
           radius: 4,
+          bgColor: Colors.white.withOpacity(0.15),
         )
       ],
     );

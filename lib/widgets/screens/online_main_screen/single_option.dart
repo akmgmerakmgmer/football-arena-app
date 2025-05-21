@@ -49,7 +49,7 @@ class _SingleOptionState extends State<SingleOption> {
       padding: const EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 16),
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-          color: Theme.of(context).splashColor,
+          color: Theme.of(context).splashColor.withOpacity(0.65),
           borderRadius: BorderRadius.circular(10)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,

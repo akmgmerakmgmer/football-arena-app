@@ -202,26 +202,6 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
         : [];
     return SafeArea(
       child: Scaffold(
-        // endDrawer: const DrawerWidget(),
-        // appBar: PreferredSize(
-        //   preferredSize: const Size.fromHeight(kToolbarHeight),
-        //   child: AppBar(
-        //     foregroundColor: Theme.of(context).splashColor,
-        //     iconTheme: IconThemeData(color: Colors.grey.shade400),
-        //     automaticallyImplyLeading: false,
-        //     title: GestureDetector(
-        //       onTap: () => {Navigator.pushNamed(context, '/')},
-        //       child: Image.asset(
-        //         'assets/images/logo.png',
-        //         fit: BoxFit.cover,
-        //         width: 55,
-        //       ),
-        //     ),
-        //     elevation: 0, // Remove AppBar shadow
-        //     backgroundColor: Theme.of(context).splashColor,
-        //   ),
-        // ),
-        // floatingActionButton: const FloatingButton(),
         body: loading
             ? const LogoLoading()
             : Column(
@@ -229,7 +209,6 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
                 children: [
                   Expanded(
                     child: SingleChildScrollView(
-                        // physics: const ScrollPhysics(parent:PageScrollPhysics() ),
                         child: Stack(
                       children: [
                         Container(

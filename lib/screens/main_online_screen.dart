@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
+import 'package:in_zone_app/widgets/containers/pages_asset_background.dart';
 import 'package:in_zone_app/widgets/screens/online_main_screen/casual_matches.dart';
 import 'package:in_zone_app/widgets/screens/online_main_screen/friend_matches.dart';
 import 'package:in_zone_app/widgets/screens/online_main_screen/ranked_matches.dart';
@@ -11,9 +12,9 @@ class MainOnlineScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageContainerWithFooter(
       background: Theme.of(context).splashColor,
-      body: Container(
-        padding: const EdgeInsets.only(right: 12.0, left: 12.0, top: 8.0),
-        child: const Column(
+      body: const PagesAssetBackground(
+        padding: EdgeInsets.only(right: 12.0, left: 12.0, top: 8.0),
+        child: Column(
           children: [
             RankedMatches(),
             SizedBox(

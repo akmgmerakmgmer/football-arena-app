@@ -34,7 +34,7 @@ class SingleUser extends StatelessWidget {
             borderRadius: const BorderRadius.all(Radius.circular(10)),
             color: isSameUser
                 ? Theme.of(context).primaryColor
-                : Colors.white.withOpacity(0.05)),
+                : Colors.white.withOpacity(0.1)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,

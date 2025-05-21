@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
+import 'package:in_zone_app/widgets/containers/pages_asset_background.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/header/header_with_desc.dart';
 import 'package:in_zone_app/widgets/screens/results/single_result.dart';
@@ -15,7 +16,7 @@ class Results extends StatelessWidget {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     return PageContainerWithFooter(
         background: Theme.of(context).splashColor,
-        body: Padding(
+        body: PagesAssetBackground(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

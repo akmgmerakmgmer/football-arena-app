@@ -14,7 +14,8 @@ class SocketMethods {
       bool coinsPayed = false,
       String code = '',
       bool hostRoom = false,
-      bool isCasual = false}) {
+      bool isCasual = false,
+      bool isOnline = false}) {
     Map user = localeProvider.user;
     if (user.isNotEmpty) {
       _socketClient?.emit('joinRoom', {
@@ -23,7 +24,8 @@ class SocketMethods {
         'hostRoom': hostRoom,
         'code': code,
         'isCasual': isCasual,
-        'questionMode': questionMode
+        'questionMode': questionMode,
+        'isOnline': isOnline
       });
     } else {
       if (context.mounted) {

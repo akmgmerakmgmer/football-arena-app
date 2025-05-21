@@ -4,7 +4,7 @@ import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/external_url.dart';
 import 'package:in_zone_app/utilities/game_data.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
-import 'package:in_zone_app/widgets/general_widgets/dialog_widget.dart';
+import 'package:in_zone_app/widgets/containers/pages_asset_background.dart';
 import 'package:in_zone_app/widgets/general_widgets/dialog_widget_blured.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -132,7 +132,7 @@ class ModalContainer {
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (ctx) => DialogWidget(
+        builder: (ctx) => DialogWidgetBlured(
             title: AppLocalizations.of(context)!.match_code,
             description: AppLocalizations.of(context)!.enter_code,
             widget: const CodeInputForm()));
@@ -156,9 +156,8 @@ void showModalBottomSheetContainer(BuildContext context, Widget body) {
           minChildSize: 1.0,
           maxChildSize: 1.0,
           builder: (context, scrollController) {
-            return Container(
+            return PagesAssetBackground(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              color: Colors.black, // Your modal background color
               child: Column(
                 children: [
                   Align(

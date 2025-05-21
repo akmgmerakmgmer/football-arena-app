@@ -34,7 +34,11 @@ class GeneralMethods {
   }
 
   joinGameWithAds(context, localeProvider,
-      {hostRoom = false, isCasual = false, code = '', mode = ''}) {
+      {hostRoom = false,
+      isCasual = false,
+      code = '',
+      mode = '',
+      isOnline = false}) {
     int getRandomNumber() {
       List coinsList = [1, 2];
       final random = Random(); // Create a Random instance
@@ -55,6 +59,7 @@ class GeneralMethods {
               questionMode: mode,
               hostRoom: hostRoom,
               isCasual: isCasual,
+              isOnline: isOnline,
               code: code);
         });
       }, context);
@@ -63,6 +68,7 @@ class GeneralMethods {
           questionMode: mode,
           hostRoom: hostRoom,
           isCasual: isCasual,
+          isOnline: isOnline,
           code: code);
     }
   }

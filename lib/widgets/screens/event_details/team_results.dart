@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/screens/questions.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
+import 'package:in_zone_app/widgets/containers/pages_asset_background.dart';
 import 'package:in_zone_app/widgets/screens/event_details/event_image.dart';
 import 'package:in_zone_app/widgets/screens/event_details/event_prizes.dart';
 import 'package:in_zone_app/widgets/screens/event_details/single_result.dart';
@@ -25,7 +26,7 @@ class TeamResults extends StatelessWidget {
       return false;
     }
 
-    return Container(
+    return PagesAssetBackground(
       padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,

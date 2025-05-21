@@ -883,7 +883,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                                   seconds: currentAdCountDown,
                                   skipAdMethod: skipAdMethod,
                                   image: advertisments[currentAd]['image'])
-                              : Container()
+                              : Container(),
                         ],
                       ),
       )),
