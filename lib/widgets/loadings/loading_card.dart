@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
+
+import 'package:in_zone_app/widgets/containers/blur_container.dart'; // Add this import for BackdropFilter
 
 class LoadingCard extends StatefulWidget {
   final double height;
@@ -50,16 +53,17 @@ class _LoadingCardState extends State<LoadingCard>
   @override
   Widget build(BuildContext context) {
     return ScaleTransition(
-      scale: _animation, // Apply the scaling animation
-      child: Container(
-        height: widget.height,
-        width: widget.width,
-        decoration: BoxDecoration(
-          color: widget.bgColor,
-          borderRadius: BorderRadius.circular(
-              widget.radius), // Ensures the borderRadius stays the same
-        ),
-      ),
-    );
+        scale: _animation, // Apply the scaling animation
+        child: BlurContainer(
+          radius: widget.radius,
+          child: Container(
+            height: widget.height,
+            width: widget.width,
+            decoration: BoxDecoration(
+              color: widget.bgColor.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(widget.radius),
+            ),
+          ),
+        ));
   }
 }

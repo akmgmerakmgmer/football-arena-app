@@ -14,16 +14,18 @@ class HeaderCoin extends StatelessWidget {
   final String locale;
   final LocaleProvider localeProvider;
   final Map user;
-  const HeaderCoin(
-      {super.key,
-      required this.locale,
-      required this.user,
-      required this.localeProvider});
+  const HeaderCoin({
+    super.key,
+    required this.locale,
+    required this.user,
+    required this.localeProvider,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final bool userExists = GeneralMethods().isUserExists(context);
     return Expanded(
-      child: GeneralMethods().isUserExists(context)
+      child: userExists
           ? GestureDetector(
               onTap: () {
                 if (AddRewardMethods()
@@ -36,19 +38,14 @@ class HeaderCoin extends StatelessWidget {
                   }, context);
                 }
               },
-              child: CoinAnimation(user: user)
+              child: CoinAnimation(user: user),
             )
           : GestureDetector(
-              onTap: () => Navigator.pushNamed(
-                context,
-                '/signup',
-              ),
+              onTap: () => Navigator.pushNamed(context, '/signup'),
               child: Column(
                 children: [
                   const NeonIcon(icon: Icons.login),
-                  SizedBox(
-                    height: locale == 'ar' ? 2 : 4,
-                  ),
+                  SizedBox(height: locale == 'ar' ? 2 : 4),
                   TextWidget(
                     title: AppLocalizations.of(context)!.login_word,
                     fontSize: 13,

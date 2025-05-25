@@ -25,7 +25,7 @@ class CarouselItem extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               height: MediaQueryHeight().largeImageHeight(context),
               width: allDataLength == 1
-                  ? MediaQuery.of(context).size.width - 16
+                  ? MediaQuery.of(context).size.width - 24
                   : MediaQuery.of(context).size.width - 60,
               decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(10)),

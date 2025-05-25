@@ -23,7 +23,6 @@ class _RankingsState extends State<Rankings> {
   int rank = 0;
   Map user = {};
   List rankedUsers = [];
-  final String search = '';
   String searchTime = 'daily';
   int searchMonth = 1;
   int searchYear = 2025;
@@ -60,84 +59,68 @@ class _RankingsState extends State<Rankings> {
     {"nameEn": "November", "nameAr": "نوفمبر", "value": 11},
     {"nameEn": "December", "nameAr": "ديسمبر", "value": 12}
   ];
-  List<Map> years = [
-    {
-      "nameAr": "2025",
-      "nameEn": "2025",
-      "value": 2025,
-    }
-  ];
+  List<Map> years = [];
   bool loading = false;
-  bool openMenu = false;
-  bool openWeeksMenu = false;
-  bool openYearsMenu = false;
-  bool openMonthsMenu = false;
   List dailyPrizes = [1000, 750, 500, 300, 200];
   List weeklyPrizes = [3000, 1500, 1000, 500, 250];
   List monthlyPrizes = [10000, 5000, 2500, 1500, 1000];
   List yearlyPrizes = [50000, 30000, 10000, 5000, 2500];
   List currentPrizes = [1000, 750, 500, 300, 200];
+
   Future<void> getRankings() async {
     setState(() {
       loading = true;
     });
-    bool isUserExists = Provider.of<LocaleProvider>(context, listen: false)
-        .user
-        .containsKey('username');
-    late String userId;
-    if (isUserExists) {
-      userId = Provider.of<LocaleProvider>(context, listen: false).user['_id'];
-    }
-    String url = isUserExists
-        ? 'get-user-rank/$userId?search=$search&searchByTime=$searchTime&week=$searchWeek&year=$searchYear&month=$searchMonth'
-        : 'get-rankings?search=$search&searchByTime=$searchTime&week=$searchWeek&year=$searchYear&month=$searchMonth';
-    await FetchApi(url, ((res) {
-      if (res['rank'] != null) {
-        setState(() {
-          rank = res['rank'];
-          setState(() {
-            user = res['user'];
-          });
-        });
-      }
+    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+    final userMap = localeProvider.user;
+    final isUserExists = userMap.containsKey('username');
+    final userId = isUserExists ? userMap['_id'] : '';
+    final url = isUserExists
+        ? 'get-user-rank/$userId?search=&searchByTime=$searchTime&week=$searchWeek&year=$searchYear&month=$searchMonth'
+        : 'get-rankings?search=&searchByTime=$searchTime&week=$searchWeek&year=$searchYear&month=$searchMonth';
+    await FetchApi(url, (res) {
       setState(() {
+        if (res['rank'] != null) {
+          rank = res['rank'];
+          user = res['user'];
+        }
         rankedUsers = res['rankedUsers'];
         loading = false;
       });
-    })).fetch(context);
+    }).fetch(context);
   }
 
   void getYears() {
-    DateTime currentDate = DateTime.now();
-    int currentYear = currentDate.year;
-    List years = [];
-    for (var i = 2015; i <= currentYear; i++) {
-      years.add({
+    final currentYear = DateTime.now().year;
+    final List<Map> yearsList = [];
+    for (var i = 2025; i <= currentYear; i++) {
+      yearsList.add({
         "nameAr": "$i",
         "nameEn": "$i",
         "value": i,
       });
     }
     setState(() {
-      years = years;
+      years = yearsList;
+      if (!years.any((y) => y['value'] == searchYear)) {
+        searchYear = currentYear;
+      }
     });
   }
 
   @override
   void initState() {
-    getRankings();
-    getYears();
     super.initState();
+    getYears();
+    getRankings();
   }
 
   @override
   Widget build(BuildContext context) {
-    String userId = Provider.of<LocaleProvider>(context, listen: false)
-            .user
-            .containsKey('username')
-        ? Provider.of<LocaleProvider>(context, listen: false).user['_id']
-        : '';
-    String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
+    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+    final userMap = localeProvider.user;
+    final userId = userMap.containsKey('username') ? userMap['_id'] : '';
+    final locale = localeProvider.locale;
 
     return PageContainerWithFooter(
       background: Theme.of(context).splashColor,
@@ -147,9 +130,7 @@ class _RankingsState extends State<Rankings> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             TitleWithBorder(title: AppLocalizations.of(context)!.tableRankings),
-            const SizedBox(
-              height: 12,
-            ),
+            const SizedBox(height: 12),
             DropDownWidget(
               items: searchByTime,
               initialValue: searchByTime[0]['value'],
@@ -160,8 +141,8 @@ class _RankingsState extends State<Rankings> {
                   if (searchTime == 'weekly') currentPrizes = weeklyPrizes;
                   if (searchTime == 'monthly') currentPrizes = monthlyPrizes;
                   if (searchTime == 'yearly') currentPrizes = yearlyPrizes;
-                  getRankings();
                 });
+                getRankings();
               },
               show: true,
             ),
@@ -171,19 +152,19 @@ class _RankingsState extends State<Rankings> {
               callback: (value) {
                 setState(() {
                   searchWeek = value;
-                  getRankings();
                 });
+                getRankings();
               },
               show: searchTime == 'weekly',
             ),
             DropDownWidget(
               items: years,
-              initialValue: years[0]['value'],
+              initialValue: years.isNotEmpty ? years[0]['value'] : null,
               callback: (value) {
                 setState(() {
                   searchYear = value;
-                  getRankings();
                 });
+                getRankings();
               },
               show: searchTime == 'yearly' || searchTime == 'monthly',
             ),
@@ -193,14 +174,12 @@ class _RankingsState extends State<Rankings> {
               callback: (value) {
                 setState(() {
                   searchMonth = value;
-                  getRankings();
                 });
+                getRankings();
               },
               show: searchTime == 'monthly',
             ),
-            const SizedBox(
-              height: 4,
-            ),
+            const SizedBox(height: 4),
             loading
                 ? const UserLoadingCard()
                 : rankedUsers.isNotEmpty
@@ -210,6 +189,28 @@ class _RankingsState extends State<Rankings> {
                               minWidth: MediaQuery.of(context).size.width),
                           child: Column(
                             children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextWidget(
+                                    title:
+                                        AppLocalizations.of(context)!.playerName,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Colors.white.withOpacity(0.9),
+                                  ),
+                                  TextWidget(
+                                    title: AppLocalizations.of(context)!.points,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Colors.white.withOpacity(0.9),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
                               Column(
                                 children: rankedUsers
                                     .asMap()
@@ -236,7 +237,7 @@ class _RankingsState extends State<Rankings> {
                                       item: user,
                                       numberOfCoins: 0,
                                     )
-                                  : Container()
+                                  : const SizedBox.shrink()
                             ],
                           ),
                         ),

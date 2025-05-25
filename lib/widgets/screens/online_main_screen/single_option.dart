@@ -5,6 +5,7 @@ import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/generalMethods.dart';
 import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
+import 'package:in_zone_app/widgets/containers/blur_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/asset_image_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -45,7 +46,8 @@ class _SingleOptionState extends State<SingleOption> {
   Widget build(BuildContext context) {
     LocaleProvider localeProvider =
         Provider.of<LocaleProvider>(context, listen: true);
-    return Container(
+    return BlurContainer(
+        child: Container(
       padding: const EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 16),
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
@@ -106,13 +108,14 @@ class _SingleOptionState extends State<SingleOption> {
                       setState(() {
                         loading = true;
                       }),
-                      GeneralMethods().joinGameWithAds(
-                          context, localeProvider, mode:widget.option['mode'],
-                          hostRoom: widget.hostRoom, isCasual: widget.isCasual)
+                      GeneralMethods().joinGameWithAds(context, localeProvider,
+                          mode: widget.option['mode'],
+                          hostRoom: widget.hostRoom,
+                          isCasual: widget.isCasual)
                     }),
           ),
         ],
       ),
-    );
+    ));
   }
 }

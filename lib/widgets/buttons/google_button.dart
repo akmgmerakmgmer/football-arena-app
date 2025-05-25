@@ -7,6 +7,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 // ignore: must_be_immutable
 class GoogleButton extends StatefulWidget {
@@ -20,37 +22,88 @@ class _GoogleButtonState extends State<GoogleButton> {
   String displayName = '';
   bool loading = false;
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/user.birthday.read',
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'https://www.googleapis.com/auth/user.phonenumbers.read',
+    ],
+  );
+
+  Future<Map<String, String?>> _getUserDetails(String accessToken) async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://people.googleapis.com/v1/people/me?personFields=birthdays,phoneNumbers'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      String? birthdate;
+      String? phoneNumber;
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        
+        // Extract birthdate
+        if (data['birthdays'] != null && data['birthdays'].isNotEmpty) {
+          final birthday = data['birthdays'][0]['date'];
+          birthdate = '${birthday['year']}-${birthday['month']}-${birthday['day']}';
+        }
+
+        // Extract phone number
+        if (data['phoneNumbers'] != null && data['phoneNumbers'].isNotEmpty) {
+          phoneNumber = data['phoneNumbers'][0]['value'];
+        }
+      }
+
+      return {
+        'birthdate': birthdate,
+        'phoneNumber': phoneNumber,
+      };
+    } catch (e) {
+      return {
+        'birthdate': null,
+        'phoneNumber': null,
+      };
+    }
+  }
 
   Future<void> _handleSignIn(context) async {
     try {
       setState(() {
         loading = true;
       });
-      final GoogleSignInAccount? googleUser =
-          await _googleSignIn.signInSilently();
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signInSilently();
       if (googleUser != null) {
-        await _googleSignIn
-            .disconnect(); // Disconnect the previous session to force account selection
+        await _googleSignIn.disconnect();
       }
 
-      // Ensure the Google Sign-In flow always prompts for account selection
-      final GoogleSignInAccount? selectedGoogleUser =
-          await _googleSignIn.signIn();
+      final GoogleSignInAccount? selectedGoogleUser = await _googleSignIn.signIn();
       if (selectedGoogleUser == null) {
         setState(() {
           loading = false;
         });
-        return; // User canceled the sign-in
+        return;
       }
 
-      // Call your backend API for login
-      PostApi('email-login', {'email': selectedGoogleUser.email}, (res) async {
+      // Get the auth tokens
+      final GoogleSignInAuthentication googleAuth = await selectedGoogleUser.authentication;
+      
+      // Get user details using the access token
+      final Map<String, String?> userDetails = await _getUserDetails(googleAuth.accessToken ?? '');
+
+      // Call your backend API for login with email, birthdate, and phone number
+      PostApi('email-login', {
+        'email': selectedGoogleUser.email,
+        'birthdate': userDetails['birthdate'],
+        'phoneNumber': userDetails['phoneNumber'],
+      }, (res) async {
         SharedPreferences localStorage = await SharedPreferences.getInstance();
         localStorage.setString('token', res['accessToken']);
         String? token = localStorage.getString(('token'));
 
-        // Retrieve user details and navigate to the home screen
         await Auth().getUser(token, context);
         setState(() {
           loading = false;

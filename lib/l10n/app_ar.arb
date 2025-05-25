@@ -8,6 +8,7 @@
     "doesntHaveAccount": "ليس لديك حساب بعد؟",
     "register": "سجل الان",
     "username": "اسم المستخدم",
+    "playerName":"اسم اللاعب",
     "password": "كلمة السر",
     "number": "رقم التليفون",
     "username_not_correct": "اسم المستخدم ليس صحيح",

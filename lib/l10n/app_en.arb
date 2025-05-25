@@ -8,6 +8,7 @@
     "doesntHaveAccount": "Doesn't have an account yet?",
     "register": "Register now",
     "username": "Username",
+    "playerName":"Player Name",
     "password": "Password",
     "number": "Phone number",
     "username_not_correct": "Username is not correct",

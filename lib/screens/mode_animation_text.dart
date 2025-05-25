@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:in_zone_app/utilities/neon_box_shadow.dart';
 import 'package:in_zone_app/widgets/general_widgets/neon_white_text.dart';
 
 class ModeAnimationText extends StatefulWidget {
@@ -138,7 +139,7 @@ class _ModeAnimationTextState extends State<ModeAnimationText>
           letterWidgets.add(AnimatedOpacity(
               opacity: _visible[characterCounter] ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 600),
-              child: NeonWhiteText(word: word[letterIndex], fontSize: fontSize)));
+              child: NeonWhiteText(word: word[letterIndex], fontSize: fontSize,shadow: NeonBoxShadow().redNeon(context),)));
           characterCounter++;
         }
       }

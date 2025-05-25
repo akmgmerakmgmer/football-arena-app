@@ -35,7 +35,7 @@ class SingleAvatarLoadingCard extends StatelessWidget {
                           width: width,
                           radius: radius,
                           scaleEnd: 1.02,
-                          bgColor: Theme.of(context).primaryColorDark.withOpacity(0.9),
+                          bgColor: Colors.white.withOpacity(0.1),
                         ),
                         Positioned(
                             bottom: 15,

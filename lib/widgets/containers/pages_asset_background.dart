@@ -7,7 +7,7 @@ class PagesAssetBackground extends StatelessWidget {
   const PagesAssetBackground(
       {super.key,
       required this.child,
-      this.background = 'images/page_background_3.jpg',
+      this.background = 'assets/images/page_background_3.jpg',
       this.padding = const EdgeInsets.all(16)});
 
   @override

@@ -142,14 +142,17 @@ class ModalContainer {
 void showModalBottomSheetContainer(BuildContext context, Widget body) {
   showModalBottomSheet(
     context: context,
-    isScrollControlled: true, // Allows full height
-    backgroundColor: Colors.transparent, // Transparent background for margin
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
     ),
     builder: (context) {
+      final mediaQuery = MediaQuery.of(context);
+      final double topPadding = mediaQuery.padding.top + 16; // Add extra space from top
+
       return ClipRRect(
-        borderRadius: BorderRadius.circular(16), // Optional rounded corners
+        borderRadius: BorderRadius.circular(16),
         child: DraggableScrollableSheet(
           expand: true,
           initialChildSize: 1.0,
@@ -160,9 +163,9 @@ void showModalBottomSheetContainer(BuildContext context, Widget body) {
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: Column(
                 children: [
+                  SizedBox(height: topPadding), // Add space from top
                   Align(
-                    alignment:
-                        Alignment.topLeft, // Position X button to the top-right
+                    alignment: Alignment.topLeft,
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.1),
@@ -170,16 +173,12 @@ void showModalBottomSheetContainer(BuildContext context, Widget body) {
                       ),
                       child: IconButton(
                         icon: const Icon(Icons.close, color: Colors.white),
-                        onPressed: () =>
-                            Navigator.pop(context), // Close the modal
+                        onPressed: () => Navigator.pop(context),
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 6,
-                  ),
-                  Expanded(
-                      child: body), // Display your content below the button
+                  const SizedBox(height: 6),
+                  Expanded(child: body),
                 ],
               ),
             );

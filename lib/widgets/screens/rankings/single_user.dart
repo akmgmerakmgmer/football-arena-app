@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'dart:ui'; // Add this import for BackdropFilter
+import 'package:in_zone_app/utilities/neon_box_shadow.dart';
 import 'package:in_zone_app/widgets/buttons/main_button_no_width.dart';
+import 'package:in_zone_app/widgets/containers/blur_container.dart';
+import 'package:in_zone_app/widgets/general_widgets/neon_white_text.dart';
 import 'package:in_zone_app/widgets/general_widgets/username_text.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/screens/questions/user_image.dart';
 import 'package:in_zone_app/widgets/screens/rankings/ranking_prize.dart';
-import 'package:in_zone_app/widgets/screens/rankings/user_data.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SingleUser extends StatelessWidget {
@@ -23,102 +26,104 @@ class SingleUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Container(
-        constraints:
-            BoxConstraints(minWidth: MediaQuery.of(context).size.width),
-        padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 16.0),
-        margin: const EdgeInsets.only(bottom: 15),
-        decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            color: isSameUser
-                ? Theme.of(context).primaryColor
-                : Colors.white.withOpacity(0.1)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                MainButtonNoWidth(
-                  buttonText: rank,
-                  action: () {},
-                  radius: 100,
-                  fontSize: 14,
-                  padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 7.0),
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                UserImage(
-                  image: item['selectedAvatar']['image'],
-                  video: item['selectedAvatar']['video'],
-                  height: 60,
-                  width: 60,
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                // CachedImage(
-                //   image: item['rank']['image'],
-                //   width: 50,
-                // ),
-                Row(
-                  children: [
-                    UsernameText(
-                      title: item['username'],
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                    const SizedBox(
-                      width: 4,
-                    ),
-                    isSameUser
-                        ? TextWidget(
-                            title: '(${AppLocalizations.of(context)!.you})',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+    final int rankInt = int.tryParse(rank) ?? 0;
+    final int animationDelay = rankInt > 10
+        ? 10 * 200
+        : (rankInt - 1) * 200; // 200ms per user, rank starts from 1
+    List<Shadow> shadow = rankInt == 1
+        ? NeonBoxShadow().goldNeon(context)
+        : rankInt == 2
+            ? NeonBoxShadow().silverNeon(context)
+            : rankInt == 3
+                ? NeonBoxShadow().bronzeNeon(context)
+                : NeonBoxShadow().whiteNeon(context);
+    return FutureBuilder(
+      future: Future.delayed(
+          Duration(milliseconds: animationDelay < 0 ? 0 : animationDelay)),
+      builder: (context, snapshot) {
+        final show = snapshot.connectionState == ConnectionState.done;
+        return AnimatedOpacity(
+          opacity: show ? 1.0 : 0.0,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeOut,
+          child: AnimatedSlide(
+              offset: show ? Offset.zero : const Offset(-1.0, 0.0),
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeOut,
+              child: BlurContainer(
+                child: Container(
+                  constraints: BoxConstraints(
+                      minWidth: MediaQuery.of(context).size.width),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 12.0),
+                  margin: const EdgeInsets.only(bottom: 15),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    color: isSameUser
+                        ? Theme.of(context).primaryColor.withOpacity(0.8)
+                        : Colors.white.withOpacity(0.15),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          NeonWhiteText(
+                            word: rank,
+                            fontSize: 18,
+                            shadow: shadow,
+                          ),
+                          const SizedBox(width: 15),
+                          UserImage(
+                            image: item['selectedAvatar']['image'],
+                            video: item['selectedAvatar']['video'],
+                            height: 60,
+                            width: 60,
+                          ),
+                          const SizedBox(width: 8),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  UsernameText(
+                                    title: item['username'],
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  if (isSameUser)
+                                    TextWidget(
+                                      title:
+                                          '(${AppLocalizations.of(context)!.you})',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                ],
+                              ),
+                              if (rankInt < 6) const SizedBox(height: 6),
+                              if (rankInt < 6)
+                                RankingPrize(numberOfCoins: numberOfCoins),
+                            ],
                           )
-                        : Container(),
-                    int.parse(rank) < 6
-                        ? const SizedBox(
-                            width: 4,
-                          )
-                        : Container(),
-                    int.parse(rank) < 6
-                        ? RankingPrize(numberOfCoins: numberOfCoins)
-                        : Container(),
-                  ],
-                )
-              ],
-            ),
-            const SizedBox(
-              width: 8,
-            ),
-            Row(
-              children: [
-                UserData(
-                    title: AppLocalizations.of(context)!.points,
-                    stat: item['points']),
-                const SizedBox(
-                  width: 10,
+                        ],
+                      ),
+                      MainButtonNoWidth(
+                        buttonText: item['points'].toString(),
+                        fontSize: 16,
+                        action: () {},
+                        radius: 100,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0, vertical: 7.0),
+                      )
+                    ],
+                  ),
                 ),
-                UserData(
-                    title: AppLocalizations.of(context)!.coins,
-                    stat: item['coins']),
-                const SizedBox(
-                  width: 10,
-                ),
-                UserData(
-                    title: AppLocalizations.of(context)!.gamesPlayed,
-                    stat: item['games_played'])
-              ],
-            )
-          ],
-        ),
-      ),
+              )),
+        );
+      },
     );
   }
 }

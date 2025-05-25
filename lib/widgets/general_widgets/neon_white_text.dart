@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:in_zone_app/utilities/neon_box_shadow.dart';
 
 class NeonWhiteText extends StatelessWidget {
   final String word;
   final double fontSize;
-  const NeonWhiteText({super.key, required this.word, required this.fontSize});
+  final List<Shadow> shadow;
+  const NeonWhiteText(
+      {super.key,
+      required this.word,
+      required this.fontSize,
+      required this.shadow});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +22,7 @@ class NeonWhiteText extends StatelessWidget {
           fontWeight: FontWeight.bold,
           color: Colors.white,
           letterSpacing: 2,
-          shadows: NeonBoxShadow().whiteNeon(context),
+          shadows: shadow,
         ),
       ),
     );

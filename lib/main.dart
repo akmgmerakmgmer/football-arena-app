@@ -44,9 +44,16 @@ class _MyAppState extends State<MyApp> {
   void getLocale() async {
     SharedPreferences locale = await SharedPreferences.getInstance();
     if (locale.getString('locale') == null) {
+      // Get the device locale
+      final deviceLocale =
+          WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+      final isArabic = deviceLocale == 'ar';
+
       setState(() {
-        _locale = const Locale('ar');
+        _locale = Locale(isArabic ? 'ar' : 'en');
       });
+      // Save the locale preference
+      locale.setString('locale', isArabic ? 'ar' : 'en');
     } else {
       setState(() {
         _locale = Locale(locale.getString('locale') as String);
@@ -74,7 +81,7 @@ class _MyAppState extends State<MyApp> {
                   '/questions': (context) => const Questions(),
                   '/rankings': (context) => const Rankings(),
                   '/challenges': (context) => const Challenges(),
-                  '/profile': (context) => AccountProfile(),
+                  '/profile': (context) => const AccountProfile(),
                   '/events': (context) => const EventDetails(),
                   '/best-offers': (context) => const BestOffers(),
                   '/shop': (context) => const Shop(),

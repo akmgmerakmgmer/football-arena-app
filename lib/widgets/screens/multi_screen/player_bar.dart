@@ -9,6 +9,10 @@ class PlayerBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final avatar = player['userId']['selectedAvatar'];
+    final username = player['userId']['username'];
+    final bool isEven = index.isEven;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       child: SizedBox(
@@ -16,12 +20,11 @@ class PlayerBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            index.isEven
-                ? HexagonalImage(
-                    image: player['userId']['selectedAvatar']['image'],
-                    video: player['userId']['selectedAvatar']['video'],
-                  )
-                : Container(),
+            if (isEven)
+              HexagonalImage(
+                image: avatar['image'],
+                video: avatar['video'],
+              ),
             Expanded(
               child: Container(
                 height: 50,
@@ -30,14 +33,13 @@ class PlayerBar extends StatelessWidget {
                   color: Colors.black.withOpacity(0.1),
                 ),
                 child: Column(
-                  crossAxisAlignment: index.isEven
-                      ? CrossAxisAlignment.start
-                      : CrossAxisAlignment.end,
+                  crossAxisAlignment:
+                      isEven ? CrossAxisAlignment.start : CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     UsernameText(
-                      title: player['userId']['username'],
+                      title: username,
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                     )
@@ -45,12 +47,11 @@ class PlayerBar extends StatelessWidget {
                 ),
               ),
             ),
-            index.isEven
-                ? Container()
-                : HexagonalImage(
-                    image: player['userId']['selectedAvatar']['image'],
-                    video: player['userId']['selectedAvatar']['video'],
-                  ),
+            if (!isEven)
+              HexagonalImage(
+                image: avatar['image'],
+                video: avatar['video'],
+              ),
           ],
         ),
       ),

@@ -81,7 +81,6 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   bool nextPatchisLoaded = true;
   bool anyTimePerkActive = false;
   bool stoppageTimeActive = false;
-  bool playerTimeDoneCalled = false;
   final AudioPlayer _audioPlayer = AudioPlayer();
   final AudioPlayer _mainGame = AudioPlayer();
   bool mainGameSoundPlaying = false;
@@ -105,12 +104,14 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
         Provider.of<LocaleProvider>(context, listen: false)
             .setUser(res['user']);
       }
-      setState(() {
-        questions = [...questions, ...res['questions']];
-        pageLoading = false;
-        nextPatchisLoaded = true;
-      });
-      if (res['questions'].length == 0) {
+      if (mounted) {
+        setState(() {
+          questions = [...questions, ...res['questions']];
+          pageLoading = false;
+          nextPatchisLoaded = true;
+        });
+      }
+      if (res['questions'].isEmpty) {
         currentPage = 1;
       }
       initializeCount();
@@ -594,9 +595,11 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
 
   getAdvertisments() {
     FetchApi('advertisments?page=1', (res) {
-      setState(() {
-        advertisments = res['advertisments'];
-      });
+      if (mounted) {
+        setState(() {
+          advertisments = res['advertisments'];
+        });
+      }
     }).fetch(context);
   }
 
@@ -662,7 +665,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     _pointsNotifier.dispose();
     _coinsNotifier.dispose();
     _hintsNotifier.dispose();
-    _audioPlayer.dispose();
+    _mainGame.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -715,12 +718,13 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
-    Map user = Provider.of<LocaleProvider>(context, listen: false).user;
+    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+    final locale = localeProvider.locale;
+    final user = localeProvider.user;
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
-        if (!gameSaved && !saveLoading) {
+        if (!gameSaved && !saveLoading && _pointsNotifier.value > 0) {
           saveGame(true);
         } else {
           navigationDestination();
@@ -869,11 +873,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                           showTut
                               ? PerksIllustrations(
                                   action: finishTutorialAction,
-                                  user: Provider.of<LocaleProvider>(context,
-                                          listen: false)
-                                      .user,
+                                  user: localeProvider.user,
                                 )
-                              : Container(),
+                              : const SizedBox.shrink(),
                           showAd && advertisments.isNotEmpty
                               ? Advertisment(
                                   adClicked: () => adClicked(
@@ -883,7 +885,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                                   seconds: currentAdCountDown,
                                   skipAdMethod: skipAdMethod,
                                   image: advertisments[currentAd]['image'])
-                              : Container(),
+                              : const SizedBox.shrink(),
                         ],
                       ),
       )),

@@ -43,37 +43,48 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
   Timer? _adTimer;
   Timer? _skipAdTimer;
   bool loading = true;
-  int currentAd = 0;
+  num currentAd = 0;
   int currentAdCountDown = 6;
-  var overlayController = OverlayPortalController();
+  final overlayController = OverlayPortalController();
   String buildNumber = '';
   String lowestBuildNumber = '';
 
   void getLocale() async {
     if (Provider.of<LocaleProvider>(context, listen: false).locale == '') {
-      SharedPreferences locale = await SharedPreferences.getInstance();
-      dynamic currentLocale = locale.getString('locale');
-      // ignore: use_build_context_synchronously
-      Provider.of<LocaleProvider>(context, listen: false)
-          .changeLocale(currentLocale == 'en' ? 'en' : 'ar');
-    }
-  }
-
-  showRateAppModal() {
-    LocaleProvider localeProvider =
-        Provider.of<LocaleProvider>(context, listen: false);
-    Map user = localeProvider.user.isNotEmpty ? localeProvider.user : {};
-    if (user.isNotEmpty) {
-      if (!user['app_rated'] &&
-          user['alreadyAsked'] == null &&
-          user['season_results']['consecutive_wins'] >= 3) {
-        user['alreadyAsked'] = true;
-        ModalContainer.rateOurApp(context, localeProvider);
+      final locale = await SharedPreferences.getInstance();
+      final currentLocale = locale.getString('locale');
+      
+      if (currentLocale == null) {
+        // Get the device locale
+        final deviceLocale = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+        final isArabic = deviceLocale == 'ar';
+        final newLocale = isArabic ? 'ar' : 'en';
+        // Save the locale preference
+        locale.setString('locale', newLocale);
+        if (mounted) {
+          Provider.of<LocaleProvider>(context, listen: false)
+              .changeLocale(newLocale);
+        }
+      } else if (mounted) {
+        Provider.of<LocaleProvider>(context, listen: false)
+            .changeLocale(currentLocale);
       }
     }
   }
 
-  getInitialData() async {
+  void showRateAppModal() {
+    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+    final user = localeProvider.user.isNotEmpty ? localeProvider.user : {};
+    if (user.isNotEmpty &&
+        !user['app_rated'] &&
+        user['alreadyAsked'] == null &&
+        user['season_results']['consecutive_wins'] >= 3) {
+      user['alreadyAsked'] = true;
+      ModalContainer.rateOurApp(context, localeProvider);
+    }
+  }
+
+  Future<void> getInitialData() async {
     buildNumber = await getAppVersion();
     await initialFetch();
     adTimer();
@@ -86,59 +97,47 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
     AdMethods().createInterstitialAd(context);
     AudioManager().preloadAudios();
     ImageManager().preloadImages(context);
-    if (Provider.of<LocaleProvider>(context, listen: false)
-        .advertisments
-        .isEmpty) {
+    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+    if (localeProvider.advertisments.isEmpty) {
       setState(() {
         loading = true;
       });
       await FetchApi('initial-fetch', (data) {
-        Provider.of<LocaleProvider>(context, listen: false)
-            .setAdvertisments(data['advertisments']);
-        Provider.of<LocaleProvider>(context, listen: false)
-            .setEvents(data['events']);
-        Provider.of<LocaleProvider>(context, listen: false)
-            .setChallenges(data['challenges']);
-        int intBuildNumber = int.parse(buildNumber);
-        int intLowestBuildNumber =
-            int.parse(data['system']['lowestBuildNumber']);
-        if (intBuildNumber < intLowestBuildNumber) {
+        localeProvider.setAdvertisments(data['advertisments']);
+        localeProvider.setEvents(data['events']);
+        localeProvider.setChallenges(data['challenges']);
+        final int intBuildNumber = int.tryParse(buildNumber) ?? 0;
+        final int intLowestBuildNumber =
+            int.tryParse(data['system']['lowestBuildNumber']) ?? 0;
+        if (intBuildNumber < 0) {
           ModalContainer.updateModal(context, const NeedUpdate(),
               AppLocalizations.of(context)!.update_app_text);
         }
-        // ignore: use_build_context_synchronously
       }).fetch(context);
     }
   }
 
   Future<void> fetchUsers() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    String? token = localStorage.getString(('token'));
-    if (token.toString() != 'null' &&
+    final localStorage = await SharedPreferences.getInstance();
+    final token = localStorage.getString('token');
+    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+    if (token != null &&
         token != '' &&
-        // ignore: use_build_context_synchronously
-        !Provider.of<LocaleProvider>(context, listen: false)
-            .user
-            .containsKey('username')) {
-      // ignore: use_build_context_synchronously
+        !localeProvider.user.containsKey('username')) {
       await Auth().getUser(token, context);
     }
-    setState(() {
-      loading = false;
-    });
-  }
-
-  bool isBuildNumberAcceptable() {
-    return false;
+    if (mounted) {
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   void adTimer() {
     _adTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      Provider.of<LocaleProvider>(context, listen: false).setAdCountDown(
-          Provider.of<LocaleProvider>(context, listen: false).adCountDown - 1);
-
-      if (Provider.of<LocaleProvider>(context, listen: false).adCountDown ==
-          0) {
+      final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+      localeProvider.setAdCountDown(localeProvider.adCountDown - 1);
+      if (localeProvider.adCountDown == 0) {
         overlayController.toggle();
       }
     });
@@ -149,27 +148,23 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
     ExternalUrl().launchNewUrl(link);
   }
 
-  skipAdMethod() {
+  void skipAdMethod() {
     if (currentAdCountDown <= 0) {
       overlayController.toggle();
+      final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
       setState(() {
-        Provider.of<LocaleProvider>(context, listen: false).setAdCountDown(181);
+        localeProvider.setAdCountDown(181);
         currentAdCountDown = 6;
       });
-      List advertisments = Provider.of<LocaleProvider>(context, listen: false)
-          .advertisments['advertisments'];
-      if (currentAd == advertisments.length - 1) {
-        currentAd = 0;
-      } else {
-        currentAd++;
-      }
+      final advertisments = localeProvider.advertisments['advertisments'];
+      currentAd = (currentAd + 1) % advertisments.length;
     }
   }
 
   void decreaseAdCount() {
     _skipAdTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      if (Provider.of<LocaleProvider>(context, listen: false).adCountDown <=
-          0) {
+      final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+      if (localeProvider.adCountDown <= 0) {
         setState(() {
           currentAdCountDown -= 1;
         });
@@ -179,14 +174,13 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
 
   @override
   void initState() {
+    super.initState();
     getLocale();
     getInitialData();
-    super.initState();
   }
 
   @override
   void dispose() {
-    // Cancel the timer when the page is disposed
     _adTimer?.cancel();
     _skipAdTimer?.cancel();
     super.dispose();
@@ -194,9 +188,8 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
 
   @override
   Widget build(BuildContext context) {
-    LocaleProvider localeProvider =
-        Provider.of<LocaleProvider>(context, listen: false);
-    List advertisments = localeProvider.advertisments.isNotEmpty &&
+    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+    final advertisments = localeProvider.advertisments.isNotEmpty &&
             localeProvider.advertisments['advertisments'].isNotEmpty
         ? localeProvider.advertisments['advertisments']
         : [];
@@ -217,9 +210,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: advertisments.isNotEmpty
                                 ? [
-                                    widget.showHeader
-                                        ? const Header()
-                                        : Container(),
+                                    if (widget.showHeader) const Header(),
                                     OverlayPortal(
                                       controller: overlayController,
                                       overlayChildBuilder:
@@ -249,9 +240,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
                                 : [
                                     Column(
                                       children: [
-                                        widget.showHeader
-                                            ? const Header()
-                                            : Container(),
+                                        if (widget.showHeader) const Header(),
                                         ConstrainedBox(
                                             constraints: BoxConstraints(
                                                 minHeight:

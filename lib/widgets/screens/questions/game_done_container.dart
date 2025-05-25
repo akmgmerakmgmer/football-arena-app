@@ -4,8 +4,9 @@ import 'package:in_zone_app/widgets/buttons/save_exit_button.dart';
 import 'package:in_zone_app/widgets/containers/modal_container.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:in_zone_app/utilities/generalMethods.dart';
 
-class GameDoneContainer extends StatelessWidget {
+class GameDoneContainer extends StatefulWidget {
   final String image;
   final bool isCasual;
   final String code;
@@ -16,21 +17,30 @@ class GameDoneContainer extends StatelessWidget {
       required this.code});
 
   @override
+  State<GameDoneContainer> createState() => _GameDoneContainerState();
+}
+
+class _GameDoneContainerState extends State<GameDoneContainer> {
+  bool loading = false;
+  @override
   Widget build(BuildContext context) {
     LocaleProvider localeProvider =
         Provider.of<LocaleProvider>(context, listen: false);
-    playAgain() {
-      if (isCasual) {
+    playAgain() async {
+      if (widget.isCasual) {
         return ModalContainer.bottomSheetHostGame(context, localeProvider,
             isCasual: true);
       } else {
-        ModalContainer.choosePlayOptionModal(context, localeProvider, '',
-            isOnline: true);
+        setState(() {
+          loading = true;
+        });
+        await GeneralMethods()
+            .joinGameWithAds(context, localeProvider, isOnline: true);
       }
     }
 
     exit() {
-      if (isCasual || code != '') {
+      if (widget.isCasual || widget.code != '') {
         Navigator.pushReplacementNamed(context, '/main-online-screen');
       } else {
         Navigator.pushReplacementNamed(context, '/main-online');
@@ -43,7 +53,7 @@ class GameDoneContainer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Image.asset(
-            image,
+            widget.image,
             width: 200,
             fit: BoxFit.cover,
           ),
@@ -53,16 +63,17 @@ class GameDoneContainer extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              code == ''
+              widget.code == ''
                   ? SaveExitButton(
                       buttonText: AppLocalizations.of(context)!.playAgain,
                       action: () => playAgain(),
                       icon: Icons.restart_alt,
                       radius: 10,
                       fontSize: 16,
+                      loading: loading,
                     )
                   : Container(),
-              code == ''
+              widget.code == ''
                   ? const SizedBox(
                       width: 15,
                     )

@@ -19,9 +19,19 @@ class _PagePlainContainerState extends State<PagePlainContainer> {
     if (Provider.of<LocaleProvider>(context, listen: false).locale == '') {
       SharedPreferences locale = await SharedPreferences.getInstance();
       dynamic currentLocale = locale.getString('locale');
+      
+      if (currentLocale == null) {
+        // Get the device locale
+        final deviceLocale = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+        final isArabic = deviceLocale == 'ar';
+        currentLocale = isArabic ? 'ar' : 'en';
+        // Save the locale preference
+        locale.setString('locale', currentLocale);
+      }
+      
       // ignore: use_build_context_synchronously
       Provider.of<LocaleProvider>(context, listen: false)
-          .changeLocale(currentLocale == 'ar' ? 'ar' : 'en');
+          .changeLocale(currentLocale);
     }
   }
 
