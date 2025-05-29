@@ -7,7 +7,9 @@ import 'package:in_zone_app/widgets/screens/home/shiny_icon.dart';
 
 class EventPrizes extends StatelessWidget {
   final List prizes;
-  const EventPrizes({super.key, required this.prizes});
+  final bool isSinglePlayer;
+  const EventPrizes(
+      {super.key, required this.prizes, this.isSinglePlayer = false});
 
   @override
   Widget build(BuildContext context) {
@@ -21,18 +23,22 @@ class EventPrizes extends StatelessWidget {
         const SizedBox(
           width: 4,
         ),
-        GestureDetector(
-            onTap: () {
-              ModalContainer.modal(context, PrizesContent(prizes: prizes),
-                  AppLocalizations.of(context)!.prizes);
-            },
-            child:
-                const ShinyIcon(size: 14, icon: Icons.question_mark_rounded)),
+        isSinglePlayer
+            ? Container()
+            : GestureDetector(
+                onTap: () {
+                  ModalContainer.modal(context, PrizesContent(prizes: prizes),
+                      AppLocalizations.of(context)!.prizes);
+                },
+                child: const ShinyIcon(
+                    size: 14, icon: Icons.question_mark_rounded)),
         const SizedBox(
           width: 4,
         ),
         TextWidget(
-          title: '(${AppLocalizations.of(context)!.winningTeam})',
+          title: isSinglePlayer
+              ? '(${AppLocalizations.of(context)!.winningPlayers})'
+              : '(${AppLocalizations.of(context)!.winningTeam})',
           fontSize: 12.5,
           fontWeight: FontWeight.w600,
           color: Colors.white70,

@@ -28,7 +28,9 @@ class _ChooseTeamState extends State<ChooseTeam> {
   bool buttonLoading = false;
   String selectedValue = '';
 
-  chooseValue() {
+  void teamEvent() {}
+
+  enterEvent() {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     if (user.containsKey('username')) {
       if (user['coins'] < widget.event['price']) {
@@ -40,23 +42,25 @@ class _ChooseTeamState extends State<ChooseTeam> {
           Navigator.pushNamed(context, '/shop');
         });
       } else {
-        if (selectedValue != '') {
-          setState(() {
-            buttonLoading = true;
-          });
-          Map eventPayload = {
-            'eventId': widget.event['_id'],
-            'sideId': selectedValue,
-            'endDate': widget.event['endDate'],
-            'price': widget.event['price']
-          };
-          PutApi('add-event/${user['_id']}', eventPayload, (res) {
-            Provider.of<LocaleProvider>(context, listen: false).setUser(res);
-            setState(() {
-              buttonLoading = false;
-            });
-          }).put(context);
+        setState(() {
+          buttonLoading = true;
+        });
+        Map eventPayload = {
+          'eventId': widget.event['_id'],
+          'endDate': widget.event['endDate'],
+          'price': widget.event['price']
+        };
+        if (widget.event['isSinglePlayer'] != true &&
+            widget.event['isMultiplayer'] != true &&
+            selectedValue != '') {
+          eventPayload['sideId'] = selectedValue;
         }
+        PutApi('add-event/${user['_id']}', eventPayload, (res) {
+          Provider.of<LocaleProvider>(context, listen: false).setUser(res);
+          setState(() {
+            buttonLoading = false;
+          });
+        }).put(context);
       }
     } else {
       Navigator.pushNamed(context, '/signup');
@@ -78,37 +82,47 @@ class _ChooseTeamState extends State<ChooseTeam> {
           const SizedBox(
             height: 16,
           ),
-          EventPrizes(prizes: widget.event['prizes']),
-          Container(
-              margin: const EdgeInsets.only(
-                  top: 16, left: 16, right: 16, bottom: 12),
-              child: TextWidget(
-                title: AppLocalizations.of(context)!.chooseYourTeam,
-                fontSize: 17,
-                fontWeight: FontWeight.w600,
-              )),
-          Column(
-            children: widget.event['sides']
-                .map<Widget>((side) => GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedValue = side['_id'];
-                        });
-                      },
-                      child: SingleSide(
-                          selected: side['_id'] == selectedValue,
-                          title: widget.locale == 'ar'
-                              ? '${AppLocalizations.of(context)!.team} ${side['nameAr']}'
-                              : '${AppLocalizations.of(context)!.team} ${side['nameEn']}'),
-                    ))
-                .toList(),
+          EventPrizes(
+              prizes: widget.event['prizes'],
+              isSinglePlayer: widget.event['isSinglePlayer']),
+          const SizedBox(
+            height: 4,
           ),
+          TextWidget(
+            title: widget.event['description'][widget.locale] ?? '',
+            fontWeight: FontWeight.w600,
+            color: Colors.white.withOpacity(0.85),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          widget.event['isSinglePlayer'] != true &&
+                  widget.event['isMultiplayer'] != true
+              ? Column(
+                  children: widget.event['sides']
+                      .map<Widget>((side) => GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedValue = side['_id'];
+                              });
+                            },
+                            child: SingleSide(
+                                selected: side['_id'] == selectedValue,
+                                title: widget.locale == 'ar'
+                                    ? '${AppLocalizations.of(context)!.team} ${side['nameAr']}'
+                                    : '${AppLocalizations.of(context)!.team} ${side['nameEn']}'),
+                          ))
+                      .toList(),
+                )
+              : Container(),
           const SizedBox(
             height: 8,
           ),
           PurchaseButton(
-              buttonText: AppLocalizations.of(context)!.choose,
-              action: chooseValue,
+              buttonText: widget.event['isSinglePlayer']
+                  ? AppLocalizations.of(context)!.enter_event
+                  : AppLocalizations.of(context)!.choose,
+              action: enterEvent,
               loading: buttonLoading,
               price: '${widget.event['price']}')
         ],

@@ -120,7 +120,6 @@ class _RankingsState extends State<Rankings> {
     final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
     final userMap = localeProvider.user;
     final userId = userMap.containsKey('username') ? userMap['_id'] : '';
-    final locale = localeProvider.locale;
 
     return PageContainerWithFooter(
       background: Theme.of(context).splashColor,
@@ -216,7 +215,6 @@ class _RankingsState extends State<Rankings> {
                                     .asMap()
                                     .entries
                                     .map((item) => SingleUser(
-                                          locale: locale,
                                           isSameUser:
                                               item.value['_id'] == userId,
                                           rank: '${item.key + 1}',
@@ -231,7 +229,6 @@ class _RankingsState extends State<Rankings> {
                                       rank > 10 &&
                                       userId != ''
                                   ? SingleUser(
-                                      locale: locale,
                                       isSameUser: user['_id'] == userId,
                                       rank: '$rank',
                                       item: user,

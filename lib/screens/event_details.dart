@@ -28,7 +28,7 @@ class _EventDetailsState extends State<EventDetails> {
     }).fetch(context);
   }
 
-  checkIfUserSelectedTeam() {
+  checkIfUserHasTheEvent() {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     List currentEvent = user['events']
         .where((userEvent) => userEvent['id'] == event['_id'])
@@ -52,7 +52,7 @@ class _EventDetailsState extends State<EventDetails> {
         background: Theme.of(context).splashColor,
         body: loading
             ? const EventDetailsLoading()
-            : checkIfUserSelectedTeam()
+            : checkIfUserHasTheEvent()
                 ? TeamResults(
                     event: event,
                     locale: locale,

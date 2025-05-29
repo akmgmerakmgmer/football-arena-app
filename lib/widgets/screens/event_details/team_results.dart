@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
-import 'package:in_zone_app/screens/questions.dart';
-import 'package:in_zone_app/widgets/buttons/main_button.dart';
 import 'package:in_zone_app/widgets/containers/pages_asset_background.dart';
+import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/screens/event_details/event_image.dart';
 import 'package:in_zone_app/widgets/screens/event_details/event_prizes.dart';
-import 'package:in_zone_app/widgets/screens/event_details/single_result.dart';
+import 'package:in_zone_app/widgets/screens/event_details/play_event_button.dart';
+import 'package:in_zone_app/widgets/screens/event_details/single_event_data.dart';
+import 'package:in_zone_app/widgets/screens/event_details/team_event_data.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TeamResults extends StatelessWidget {
   final Map event;
@@ -16,15 +16,7 @@ class TeamResults extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    checkThePlayerSide(side) {
-      Map user = Provider.of<LocaleProvider>(context, listen: false).user;
-      for (var userEvent in user['events']) {
-        if (userEvent['id'] == event['_id']) {
-          if (userEvent['yourSide'] == side['_id']) return true;
-        }
-      }
-      return false;
-    }
+    Map user = Provider.of<LocaleProvider>(context, listen: false).user;
 
     return PagesAssetBackground(
       padding: const EdgeInsets.all(16),
@@ -41,42 +33,23 @@ class TeamResults extends StatelessWidget {
           ),
           EventPrizes(
             prizes: event['prizes'],
+            isSinglePlayer: event['isSinglePlayer'] ?? false,
+          ),
+          const SizedBox(
+            height: 4,
+          ),
+          TextWidget(
+            title: event['description'][locale] ?? '',
+            fontWeight: FontWeight.w600,
+            color: Colors.white.withOpacity(0.85),
           ),
           const SizedBox(
             height: 12,
           ),
-          MainButton(
-            buttonText: AppLocalizations.of(context)!.playEventNow,
-            uppercase: true,
-            action: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  settings: const RouteSettings(name: '/questions'),
-                  builder: (context) => Questions(
-                    eventId: event['_id'],
-                    userId: Provider.of<LocaleProvider>(context, listen: false)
-                        .user['_id'],
-                  ),
-                ),
-              );
-            },
-            fontSize: 13,
-            radius: 10,
-          ),
-          Container(
-            margin:
-                const EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 12),
-            child: Column(
-              children: event['sides']
-                  .map<Widget>((side) => SingleResult(
-                      playerTeam: checkThePlayerSide(side),
-                      side: side,
-                      locale: locale,
-                      totalPoints: event['total_points']))
-                  .toList(),
-            ),
-          ),
+          PlayEventButton(event: event, user: user),
+          event['isSinglePlayer'] == true
+              ? SingleEventData(event: event, locale: locale)
+              : TeamEventData(event: event, currentUser: user, locale: locale)
         ],
       ),
     );

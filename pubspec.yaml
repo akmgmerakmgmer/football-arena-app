@@ -149,6 +149,7 @@ flutter:
     - assets/audio/countdown.mp3
     - assets/audio/main_game.mp3
     - assets/audio/multi_game.mp3
+    - assets/audio/rush_audio.mp3
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
