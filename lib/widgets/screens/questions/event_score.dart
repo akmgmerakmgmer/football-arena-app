@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:in_zone_app/utilities/neon_box_shadow.dart';
+import 'package:in_zone_app/utilities/event_neon_shadows.dart';
 import 'package:in_zone_app/widgets/general_widgets/neon_white_text.dart';
 
 class EventScore extends StatefulWidget {
   final ValueNotifier<int> scoreNotifier;
   final double fontSize;
   final double? top;
-
+  final String eventName;
   const EventScore({
     super.key,
     required this.scoreNotifier,
     this.fontSize = 48,
     this.top = 22,
+    required this.eventName,
   });
 
   @override
@@ -30,7 +31,7 @@ class _EventScoreState extends State<EventScore> with TickerProviderStateMixin {
 
     _scaleController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 130), // Smoother, not too fast
+      duration: const Duration(milliseconds: 180), // Smoother, not too fast
     );
 
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.18)
@@ -56,6 +57,8 @@ class _EventScoreState extends State<EventScore> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    List<Shadow> shadows = EventNeonShadows.get(widget.eventName, context);
+
     return Positioned(
       top: widget.top,
       left: 0,
@@ -72,7 +75,7 @@ class _EventScoreState extends State<EventScore> with TickerProviderStateMixin {
           child: NeonWhiteText(
             word: _displayedScore.toString(),
             fontSize: widget.fontSize,
-            shadow: NeonBoxShadow().redNeon(context),
+            shadow: shadows,
           ),
         ),
       ),

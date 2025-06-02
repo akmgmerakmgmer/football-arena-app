@@ -49,7 +49,8 @@ class RotateAnimatedTextWidget extends StatelessWidget {
                       letterSpacing: locale == 'ar' ? 0 : letterSpacing,
                       locale: locale,
                       alwaysEnglish: alwaysEnglish,
-                      alwaysArabic: alwaysArabic)),
+                      alwaysArabic: alwaysArabic,
+                      shadow: const []),),
             )
             .toList());
   }

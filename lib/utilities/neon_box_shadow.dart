@@ -80,6 +80,30 @@ class NeonBoxShadow {
     ];
   }
 
+  // Magenta neon
+  List<Shadow> magentaNeon(context) {
+    return const [
+      Shadow(blurRadius: 2, color: Colors.white, offset: Offset(0, 0)),
+      Shadow(blurRadius: 6, color: Color(0xFFFFB3C6), offset: Offset(0, 0)), // soft magenta-pink
+      Shadow(blurRadius: 12, color: Color(0xFFFF4DA6), offset: Offset(0, 0)), // lighter magenta-pink
+      Shadow(blurRadius: 20, color: Color(0xFFFF007F), offset: Offset(0, 0)), // main magenta (reddish)
+      Shadow(blurRadius: 32, color: Color(0xFFD50060), offset: Offset(0, 0)), // deep magenta-red
+      Shadow(blurRadius: 48, color: Color(0x80FF4DA6), offset: Offset(0, 0)), // outer magenta glow
+    ];
+  }
+
+  // Blue neon
+  List<Shadow> blueNeon(context) {
+    return const [
+      Shadow(blurRadius: 2, color: Colors.white, offset: Offset(0, 0)),
+      Shadow(blurRadius: 6, color: Color(0xFFB3E0FF), offset: Offset(0, 0)), // soft blue
+      Shadow(blurRadius: 12, color: Color(0xFF4DC3FF), offset: Offset(0, 0)), // lighter blue
+      Shadow(blurRadius: 20, color: Color(0xFF0099FF), offset: Offset(0, 0)), // main blue
+      Shadow(blurRadius: 32, color: Color(0xFF005CB2), offset: Offset(0, 0)), // deep blue
+      Shadow(blurRadius: 48, color: Color(0x804DC3FF), offset: Offset(0, 0)), // outer blue glow
+    ];
+  }
+
   // Gold neon - pure gold, only gold/yellow tones, no white or orange
   List<Shadow> goldNeon(context) {
     return const [

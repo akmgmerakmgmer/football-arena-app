@@ -13,10 +13,12 @@ import 'package:in_zone_app/widgets/containers/fade_transition.dart';
 import 'package:in_zone_app/widgets/containers/image_background_plain.dart';
 import 'package:in_zone_app/widgets/containers/modal_container.dart';
 import 'package:in_zone_app/widgets/containers/page_plain_container.dart';
+import 'package:in_zone_app/widgets/general_widgets/buzzer_button.dart';
 import 'package:in_zone_app/widgets/general_widgets/pause_and_play.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
 import 'package:in_zone_app/widgets/screens/questions/advertisment.dart';
+import 'package:in_zone_app/widgets/screens/questions/bank_and_current_score.dart';
 import 'package:in_zone_app/widgets/screens/questions/countdown.dart';
 import 'package:in_zone_app/widgets/screens/questions/event_score.dart';
 import 'package:in_zone_app/widgets/screens/questions/game_over.dart';
@@ -41,18 +43,19 @@ class Questions extends StatefulWidget {
   final int price;
   final String themePreview;
   final String eventTheme;
-  const Questions({
-    super.key,
-    this.mode = '',
-    this.questionMode = '',
-    this.userId = '',
-    this.name = '',
-    this.eventId = '',
-    this.price = 0,
-    this.themePreview = '',
-    this.eventName = '',
-    this.eventTheme = '',
-  });
+  final bool isSinglePlayerEvent;
+  const Questions(
+      {super.key,
+      this.mode = '',
+      this.questionMode = '',
+      this.userId = '',
+      this.name = '',
+      this.eventId = '',
+      this.price = 0,
+      this.themePreview = '',
+      this.eventName = '',
+      this.eventTheme = '',
+      this.isSinglePlayerEvent = false});
 
   @override
   State<Questions> createState() => _QuestionsState();
@@ -66,7 +69,6 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   bool pageLoading = false;
   int currentQuestion = 0;
   int defaultCountDown = 20;
-  int pointValue = 1;
   int pointDefaultValue = 0;
   int multiplyPoints = 1;
   bool activateVar = false;
@@ -86,12 +88,17 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   bool nextPatchisLoaded = true;
   bool anyTimePerkActive = false;
   bool stoppageTimeActive = false;
+  late bool isOneShot;
+  late bool isRush;
+  late bool isBank;
+  bool showBankBuzzer = false;
   final AudioPlayer _audioPlayer = AudioPlayer();
   final AudioPlayer _mainGame = AudioPlayer();
   bool mainGameSoundPlaying = false;
   late ValueNotifier<int> _countDownNotifier;
   late ValueNotifier<int> _livesNotifier;
   late ValueNotifier<int> _pointsNotifier;
+  late ValueNotifier<int> _bankScoreNotifier;
   late ValueNotifier<int> _coinsNotifier;
   late ValueNotifier<List> _hintsNotifier;
 
@@ -103,7 +110,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       });
     }
     await FetchApi(
-        'questions?page=$currentPage&search=${widget.mode}&userId=${widget.userId}&name=${widget.name}&questionMode=${widget.questionMode}&price=${widget.price}',
+        'questions?page=$currentPage&search=${widget.mode}&userId=${widget.userId}&name=${widget.name}&questionMode=${widget.questionMode}&price=${widget.price}&isSinglePlayerEvent=${widget.isSinglePlayerEvent}',
         (res) {
       if (res['user'] != null) {
         Provider.of<LocaleProvider>(context, listen: false)
@@ -147,7 +154,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
         if (_countDownNotifier.value > 0) {
           _countDownNotifier.value = _countDownNotifier.value - 1;
         } else {
-          if (widget.eventName.toLowerCase() == 'rush') {
+          if (isRush) {
             saveGame(true);
           } else {
             getToNextQuestion();
@@ -211,7 +218,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void getNextPatchOfQuestions() {
-    if (questions.length - currentQuestion <= 7 && nextPatchisLoaded) {
+    if (questions.length - currentQuestion <= 7 &&
+        nextPatchisLoaded &&
+        !isBank) {
       nextPatchisLoaded = false;
       currentPage++;
       getQuestions();
@@ -236,7 +245,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   int setCount() {
-    if (widget.eventName.toLowerCase() == 'rush') {
+    if (isRush) {
       defaultCountDown = 60;
     } else if (showHints()) {
       defaultCountDown = 45;
@@ -260,14 +269,18 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       currentAdMethod();
     }
     if (currentQuestion == questions.length - 1) {
-      currentQuestion = 0;
+      if (isBank) {
+        return saveGame(true);
+      } else {
+        currentQuestion = 0;
+      }
     }
     if (_hintsNotifier.value.isNotEmpty || showHints()) {
       _hintsNotifier.value = [];
     }
     setState(() {
       currentQuestion = currentQuestion + 1;
-      if (widget.eventName.toLowerCase() != 'rush') {
+      if (!widget.isSinglePlayerEvent) {
         _countDownNotifier.value = setCount();
       }
     });
@@ -277,8 +290,12 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     }
   }
 
+  void pointValue() {}
+
   void rightAnswerPoints() {
-    if (isReversedWords()) {
+    if (isOneShot || isBank) {
+      pointDefaultValue = 1;
+    } else if (isReversedWords()) {
       pointDefaultValue = 5;
     } else if (showHints()) {
       int hintsSubtract = questions[currentQuestion]['hints'].length -
@@ -292,10 +309,23 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     } else {
       pointDefaultValue = 1;
     }
-    int newPoints = pointDefaultValue * pointValue * multiplyPoints;
-    int newCoins = newPoints ~/ 5;
-    _pointsNotifier.value += newPoints;
-    _coinsNotifier.value += newCoins;
+    if (!widget.isSinglePlayerEvent) {
+      int newPoints = pointDefaultValue * multiplyPoints;
+      int newCoins = newPoints ~/ 5;
+      _coinsNotifier.value += newCoins;
+      _pointsNotifier.value += newPoints;
+    } else {
+      if (!isBank) {
+        int newPoints = pointDefaultValue * multiplyPoints;
+        _pointsNotifier.value += newPoints;
+      } else {
+        if (_bankScoreNotifier.value == 0) {
+          _bankScoreNotifier.value = 1;
+        } else {
+          _bankScoreNotifier.value = _bankScoreNotifier.value * 2;
+        }
+      }
+    }
   }
 
   void playCountDownSound() async {
@@ -314,8 +344,12 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   String chooseAudio() {
-    if (widget.eventName.toLowerCase() == 'rush') {
+    if (isRush) {
       return 'audio/rush_audio.mp3';
+    } else if (isOneShot) {
+      return 'audio/one_shot_audio.mp3';
+    } else if (isBank) {
+      return 'audio/bank_audio.mp3';
     } else {
       return 'audio/main_game.mp3';
     }
@@ -327,16 +361,62 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     });
     _mainGame.setVolume(0.45);
     _mainGame.play(AssetSource(chooseAudio()));
+    _mainGame.onPlayerComplete.listen((event) {
+      if (mainGameSoundPlaying) {
+        _mainGame.seek(Duration.zero);
+        _mainGame.resume();
+      }
+    });
+  }
+
+  void bankBuzzerAction() {
+    if (_bankScoreNotifier.value > 0) {
+      _pointsNotifier.value += _bankScoreNotifier.value;
+      _bankScoreNotifier.value = 0;
+    }
+    setState(() {
+      showBankBuzzer = false;
+    });
   }
 
   void rightAnswer() {
     playCorrectSound();
+    bankTrigger();
     rightAnswerPoints();
-    getToNextQuestion();
+    if (isBank) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        getToNextQuestion();
+      });
+    } else {
+      getToNextQuestion();
+    }
     getNextPatchOfQuestions();
   }
 
+  void bankTrigger() {
+    if (isBank) {
+      setState(() {
+        showBankBuzzer = true;
+      });
+    }
+  }
+
+  void bankWrongAnswer() {
+    playWrongSound();
+    if (_bankScoreNotifier.value > 0) {
+      _bankScoreNotifier.value = 0;
+    }
+  }
+
   void wrongAnswer(index) {
+    if (isBank) {
+      bankWrongAnswer();
+      getToNextQuestion();
+      return;
+    }
+    if (isOneShot) {
+      return saveGame(true);
+    }
     if (isReversedWords()) {
       return wrongAnswerActions();
     }
@@ -361,9 +441,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     if (_pointsNotifier.value != 0 && !activateVar) {
       _pointsNotifier.value = _pointsNotifier.value - 1;
     }
-    if (_livesNotifier.value != 0 &&
-        !activateVar &&
-        widget.eventName.toLowerCase() != 'rush') {
+    if (_livesNotifier.value != 0 && !activateVar && isRush) {
       _livesNotifier.value = _livesNotifier.value - 1;
     }
     if (_livesNotifier.value == 0) {
@@ -445,6 +523,12 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void saveGame(navigate) {
+    if (isBank) {
+      _pointsNotifier.value += _bankScoreNotifier.value;
+      setState(() {
+        pageLoading = true;
+      });
+    }
     stopCount = true;
     _audioPlayer.stop();
     if (_pointsNotifier.value == 0 && navigate) {
@@ -666,20 +750,30 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     _countDownNotifier = ValueNotifier(defaultCountDown);
     _livesNotifier = ValueNotifier(10);
     _pointsNotifier = ValueNotifier(0);
+    _bankScoreNotifier = ValueNotifier(0);
     _coinsNotifier = ValueNotifier(0);
     _hintsNotifier = ValueNotifier([]);
   }
 
+  void initializeEventValues() {
+    isOneShot = widget.eventName.toLowerCase() == 'one shot';
+    isRush = widget.eventName.toLowerCase() == 'rush';
+    isBank = widget.eventName.toLowerCase() == 'bank';
+  }
+
   isSinglePlayerEvent() {
-    if (widget.eventName.toLowerCase() == 'rush') {
+    if (widget.isSinglePlayerEvent) {
       playMainGameSound();
-      stopCount = false;
+      if (isRush) {
+        stopCount = false;
+      }
     }
   }
 
   @override
   void initState() {
     super.initState();
+    initializeEventValues();
     initializeNotifiers();
     initialFetch();
     isSinglePlayerEvent();
@@ -754,7 +848,10 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
-        if (!gameSaved && !saveLoading && _pointsNotifier.value > 0) {
+        if (!gameSaved &&
+            !saveLoading &&
+            _pointsNotifier.value > 0 &&
+            !widget.isSinglePlayerEvent) {
           saveGame(true);
         } else {
           navigationDestination();
@@ -776,20 +873,22 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                     ? GameOver(playAgain: playAgain, exitGame: exitGame)
                     : Stack(
                         children: [
-                          Positioned(
-                            bottom: 10,
-                            right: 10,
-                            child: SaveExitButton(
-                              buttonText:
-                                  AppLocalizations.of(context)!.saveAndClose,
-                              radius: 100,
-                              action: () => saveGame(true),
-                              letterSpacing: 0,
-                              fontSize: 13,
-                              icon: Icons.save_alt,
-                              loading: saveLoading,
-                            ),
-                          ),
+                          !widget.isSinglePlayerEvent
+                              ? Positioned(
+                                  bottom: 10,
+                                  right: 10,
+                                  child: SaveExitButton(
+                                    buttonText: AppLocalizations.of(context)!
+                                        .saveAndClose,
+                                    radius: 100,
+                                    action: () => saveGame(true),
+                                    letterSpacing: 0,
+                                    fontSize: 13,
+                                    icon: Icons.save_alt,
+                                    loading: saveLoading,
+                                  ),
+                                )
+                              : Container(),
                           Positioned(
                               bottom: 10,
                               left: 10,
@@ -806,8 +905,17 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                                       playMainGameSound();
                                     }
                                   })),
-                          widget.eventName.toLowerCase() == 'rush'
-                              ? EventScore(scoreNotifier: _pointsNotifier)
+                          widget.isSinglePlayerEvent
+                              ? isBank
+                                  ? BankAndCurrentScore(
+                                      bankScoreNotifier: _bankScoreNotifier,
+                                      currentScoreNotifier: _pointsNotifier,
+                                      eventName: widget.eventName,
+                                    )
+                                  : EventScore(
+                                      scoreNotifier: _pointsNotifier,
+                                      eventName: widget.eventName,
+                                    )
                               : Stats(
                                   usedPerks: usedPerks,
                                   user: user,
@@ -824,6 +932,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                                   locale: locale,
                                 ),
                           FadeTransitionContainer(
+                            isVisible: !showBankBuzzer,
                             body: Container(
                               margin: EdgeInsets.only(
                                   top:
@@ -832,7 +941,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    widget.eventName.toLowerCase() == 'rush'
+                                    widget.isSinglePlayerEvent
                                         ? Container()
                                         : CountDown(
                                             countDownNotifier:
@@ -850,8 +959,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                                         children: [
                                           TextWidget(
                                             title: locale == 'ar'
-                                                ? '${questions[currentQuestion]['question']['ar']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})'
-                                                : '${questions[currentQuestion]['question']['en']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})',
+                                                ? '${questions[currentQuestion]['question']['ar']} ${!isOneShot && !isBank ? '(${showPointsValue()} ${AppLocalizations.of(context)!.points})' : ''}'
+                                                : '${questions[currentQuestion]['question']['en']} ${!isOneShot && !isBank ? '(${showPointsValue()} ${AppLocalizations.of(context)!.points})' : ''}',
                                             fontSize: 16.5,
                                           ),
                                         ],
@@ -902,18 +1011,28 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                                             ? questions[currentQuestion]
                                                 ['reversedAnswer'][locale]
                                             : [],
-                                        deleteWord: deleteWord)
+                                        deleteWord: deleteWord),
                                   ],
                                 ),
                               ),
                             ),
                           ),
-                          showTut && !(widget.eventName.toLowerCase() == 'rush')
+                          showTut && !widget.isSinglePlayerEvent
                               ? PerksIllustrations(
                                   action: finishTutorialAction,
                                   user: localeProvider.user,
                                 )
                               : const SizedBox.shrink(),
+                          showBankBuzzer
+                              ? Center(
+                                  child: BuzzerButton(
+                                      hideBuzzer: () {
+                                        setState(() {
+                                          showBankBuzzer = false;
+                                        });
+                                      },
+                                      onPressed: bankBuzzerAction))
+                              : Container(),
                           showAd && advertisments.isNotEmpty
                               ? Advertisment(
                                   adClicked: () => adClicked(

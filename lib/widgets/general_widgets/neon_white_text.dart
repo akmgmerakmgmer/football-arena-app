@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 
 class NeonWhiteText extends StatelessWidget {
   final String word;
@@ -12,19 +13,13 @@ class NeonWhiteText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Text(
-        word,
-        style: TextStyle(
-          fontFamily: 'Oswald',
-          fontSize: fontSize,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-          letterSpacing: 2,
-          shadows: shadow,
-        ),
-      ),
+    return TextWidget(
+      title: word,
+      fontSize: fontSize,
+      fontWeight: FontWeight.bold,
+      color: Colors.white,
+      letterSpacing: 2,
+      shadow: shadow,
     );
   }
 }

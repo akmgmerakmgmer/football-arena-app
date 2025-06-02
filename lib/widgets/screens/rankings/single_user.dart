@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:in_zone_app/widgets/containers/blur_container.dart';
 import 'package:in_zone_app/widgets/screens/rankings/single_user_data.dart';
 
 class SingleUser extends StatelessWidget {
@@ -34,13 +33,12 @@ class SingleUser extends StatelessWidget {
               offset: show ? Offset.zero : const Offset(-1.0, 0.0),
               duration: const Duration(milliseconds: 500),
               curve: Curves.easeOut,
-              child: BlurContainer(
-                  child: SingleUserData(
+              child: SingleUserData(
                 item: item,
                 isSameUser: isSameUser,
                 rank: rank,
                 numberOfCoins: numberOfCoins,
-              )),
+              ),
             ));
       },
     );

@@ -10,20 +10,21 @@ TextStyle getCustomTextStyle({
   Color color = Colors.white,
   double letterSpacing = 0.0,
   TextDecoration textDecoration = TextDecoration.none,
+  required List<Shadow> shadow,
 }) {
   return TextStyle(
-    height: height,
-    fontSize: locale == 'ar' ? fontSize - 1 : fontSize,
-    fontWeight: fontWeight,
-    fontFamily: alwaysEnglish
-        ? 'Oswald'
-        : alwaysArabic
-            ? 'NotoKufiArabic'
-            : locale == 'ar'
-                ? 'NotoKufiArabic'
-                : 'Oswald',
-    color: color,
-    letterSpacing: locale == 'ar' ? 0 : letterSpacing,
-    decoration: textDecoration,
-  );
+      height: height,
+      fontSize: locale == 'ar' ? fontSize - 1 : fontSize,
+      fontWeight: fontWeight,
+      fontFamily: alwaysEnglish
+          ? 'Oswald'
+          : alwaysArabic
+              ? 'NotoKufiArabic'
+              : locale == 'ar'
+                  ? 'NotoKufiArabic'
+                  : 'Oswald',
+      color: color,
+      letterSpacing: locale == 'ar' ? 0 : letterSpacing,
+      decoration: textDecoration,
+      shadows: shadow);
 }

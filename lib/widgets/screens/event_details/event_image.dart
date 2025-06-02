@@ -27,7 +27,7 @@ class EventImage extends StatelessWidget {
               .largeImageHeight(context, mobileDefaultWidth: 200.00),
           width: numberOfImages == 1
               ? MediaQuery.of(context).size.width - 16
-              : MediaQuery.of(context).size.width - 30,
+              : MediaQuery.of(context).size.width - 48,
           decoration: BoxDecoration(
               image: DecorationImage(
                   image: CachedNetworkImageProvider(event['image']),

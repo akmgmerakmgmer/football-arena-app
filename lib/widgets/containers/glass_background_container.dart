@@ -18,7 +18,7 @@ class GlassBackgroundContainer extends StatelessWidget {
       padding: EdgeInsets.all(padding),
       margin: EdgeInsets.all(margin),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withOpacity(0.15),
         borderRadius: radius
             ? const BorderRadius.only(
                 bottomLeft: Radius.circular(10),

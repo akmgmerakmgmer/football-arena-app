@@ -26,6 +26,7 @@ class PlayEventButton extends StatelessWidget {
               eventName: event['eventName']['en'],
               userId: user['_id'],
               eventTheme: event['gameBackground'],
+              isSinglePlayerEvent:event['isSinglePlayer'] ?? false,
             ),
           ),
         );

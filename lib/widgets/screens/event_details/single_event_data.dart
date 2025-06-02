@@ -6,10 +6,12 @@ import 'package:in_zone_app/widgets/screens/rankings/single_user_data.dart';
 class SingleEventData extends StatelessWidget {
   final Map event;
   final String locale;
+  final String userId;
   const SingleEventData({
     super.key,
     required this.event,
     required this.locale,
+    required this.userId,
   });
 
   @override
@@ -35,7 +37,8 @@ class SingleEventData extends StatelessWidget {
               .asMap()
               .entries
               .map<Widget>((entry) => SingleUserData(
-                    isSameUser: false,
+                    isSameUser: entry.value['userId']['_id'].toString() ==
+                        userId.toString(),
                     rank: '${entry.key + 1}',
                     item: entry.value['userId'],
                     points: entry.value['points'] ?? 0,

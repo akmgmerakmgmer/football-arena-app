@@ -16,6 +16,7 @@ class TextWidget extends StatelessWidget {
   final bool uppercase;
   final bool alwaysEnglish;
   final bool alwaysArabic;
+  final List<Shadow> shadow;
   const TextWidget(
       {super.key,
       required this.title,
@@ -29,7 +30,8 @@ class TextWidget extends StatelessWidget {
       this.textDecoration = TextDecoration.none,
       this.uppercase = false,
       this.alwaysEnglish = false,
-      this.alwaysArabic = false});
+      this.alwaysArabic = false,
+      this.shadow = const []});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +49,8 @@ class TextWidget extends StatelessWidget {
           letterSpacing: locale == 'ar' ? 0 : letterSpacing,
           locale: locale,
           alwaysEnglish: alwaysEnglish,
-          alwaysArabic: alwaysArabic),
+          alwaysArabic: alwaysArabic,
+          shadow: shadow),
     );
   }
 }
