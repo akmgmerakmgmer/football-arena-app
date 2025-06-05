@@ -173,7 +173,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
             _countDownNotifier.value = defaultCountDown;
           }
         }
-        if (_countDownNotifier.value < 6 && _countDownNotifier.value > -1) {
+        if (_countDownNotifier.value < 6 &&
+            _countDownNotifier.value > -1 &&
+            !stopCount) {
           playCountDownSound();
         }
       }
@@ -360,13 +362,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       mainGameSoundPlaying = true;
     });
     _mainGame.setVolume(0.45);
+    await _mainGame.setReleaseMode(ReleaseMode.loop);
     _mainGame.play(AssetSource(chooseAudio()));
-    _mainGame.onPlayerComplete.listen((event) {
-      if (mainGameSoundPlaying) {
-        _mainGame.seek(Duration.zero);
-        _mainGame.resume();
-      }
-    });
   }
 
   void bankBuzzerAction() {
@@ -414,6 +411,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       getToNextQuestion();
       return;
     }
+    if (!isBank) {
+      getNextPatchOfQuestions();
+    }
     if (isOneShot) {
       return saveGame(true);
     }
@@ -441,7 +441,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     if (_pointsNotifier.value != 0 && !activateVar) {
       _pointsNotifier.value = _pointsNotifier.value - 1;
     }
-    if (_livesNotifier.value != 0 && !activateVar && isRush) {
+    if (_livesNotifier.value != 0 && !activateVar && !isRush) {
       _livesNotifier.value = _livesNotifier.value - 1;
     }
     if (_livesNotifier.value == 0) {
@@ -523,11 +523,13 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void saveGame(navigate) {
-    if (isBank) {
-      _pointsNotifier.value += _bankScoreNotifier.value;
+    if (widget.isSinglePlayerEvent) {
       setState(() {
         pageLoading = true;
       });
+    }
+    if (isBank) {
+      _pointsNotifier.value += _bankScoreNotifier.value;
     }
     stopCount = true;
     _audioPlayer.stop();
@@ -804,13 +806,11 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.inactive && gameSaved == false) {
+    if (state == AppLifecycleState.inactive) {
+    } else if (state == AppLifecycleState.paused && gameSaved == false) {
       saveGame(true);
       gameSaved = true;
-    } else if (state == AppLifecycleState.paused) {
-      saveGame(true);
-      gameSaved = true;
-    } else if (state == AppLifecycleState.detached) {
+    } else if (state == AppLifecycleState.detached && gameSaved == false) {
       saveGame(true);
       gameSaved = true;
     }
@@ -941,7 +941,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    widget.isSinglePlayerEvent
+                                    widget.isSinglePlayerEvent && !isRush
                                         ? Container()
                                         : CountDown(
                                             countDownNotifier:

@@ -29,7 +29,7 @@ class DialogWidgetBlured extends StatelessWidget {
         borderRadius:
             BorderRadius.circular(15), // Apply rounded corners to blur
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25), // Apply blur
+          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15), // Apply blur
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.05), // Semi-transparent overlay

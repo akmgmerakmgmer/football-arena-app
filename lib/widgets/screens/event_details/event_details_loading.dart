@@ -20,7 +20,7 @@ class EventDetailsLoading extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             radius: 10,
             bgColor: bgColor,
-            scaleEnd: 1.03,
+            scaleEnd: 1.015,
           ),
           const SizedBox(
             height: 16,
@@ -29,7 +29,7 @@ class EventDetailsLoading extends StatelessWidget {
               height: 20,
               width: MediaQuery.of(context).size.width * 0.3,
               bgColor: bgColor,
-              scaleEnd: 1.03),
+              scaleEnd: 1.04),
           const SizedBox(
             height: 8,
           ),
@@ -46,7 +46,7 @@ class EventDetailsLoading extends StatelessWidget {
               height: 20,
               width: MediaQuery.of(context).size.width * 0.3,
               bgColor: bgColor,
-              scaleEnd: 1.03),
+              scaleEnd: 1.04),
           const SizedBox(
             height: 8,
           ),
@@ -62,7 +62,7 @@ class EventDetailsLoading extends StatelessWidget {
               height: 20,
               width: MediaQuery.of(context).size.width * 0.3,
               bgColor: bgColor,
-              scaleEnd: 1.03),
+              scaleEnd: 1.04),
           const SizedBox(
             height: 8,
           ),
@@ -78,7 +78,7 @@ class EventDetailsLoading extends StatelessWidget {
               height: 20,
               width: MediaQuery.of(context).size.width * 0.3,
               bgColor: bgColor,
-              scaleEnd: 1.03),
+              scaleEnd: 1.04),
           const SizedBox(
             height: 8,
           ),

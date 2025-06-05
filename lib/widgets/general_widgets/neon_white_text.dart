@@ -5,21 +5,31 @@ class NeonWhiteText extends StatelessWidget {
   final String word;
   final double fontSize;
   final List<Shadow> shadow;
-  const NeonWhiteText(
-      {super.key,
-      required this.word,
-      required this.fontSize,
-      required this.shadow});
+  const NeonWhiteText({
+    super.key,
+    required this.word,
+    required this.fontSize,
+    required this.shadow,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return TextWidget(
-      title: word,
-      fontSize: fontSize,
-      fontWeight: FontWeight.bold,
-      color: Colors.white,
-      letterSpacing: 2,
-      shadow: shadow,
+    return AnimatedDefaultTextStyle(
+      duration: const Duration(milliseconds: 300),
+      style: TextStyle(
+        fontSize: fontSize,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+        letterSpacing: 2,
+        shadows: shadow,
+      ),
+      child: TextWidget(
+        title: word,
+        fontSize: fontSize,
+        fontWeight: FontWeight.bold,
+        letterSpacing: 2,
+        shadow: shadow,
+      ),
     );
   }
 }

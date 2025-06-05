@@ -1,78 +1,85 @@
 import 'package:flutter/material.dart';
-import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
+import 'package:in_zone_app/widgets/general_widgets/neon_white_text.dart';
+import 'package:in_zone_app/utilities/neon_box_shadow.dart';
+import 'dart:ui';
 
 class CountDown extends StatelessWidget {
   final ValueNotifier<int> countDownNotifier;
   final int defaultCountDown;
   final double defaultSize;
-  const CountDown(
-      {super.key,
-      required this.countDownNotifier,
-      required this.defaultCountDown,
-      this.defaultSize = 50});
+  const CountDown({
+    super.key,
+    required this.countDownNotifier,
+    required this.defaultCountDown,
+    this.defaultSize = 50,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<int>(
       valueListenable: countDownNotifier,
       builder: (context, countdown, _) {
-        int initialCountdown = defaultCountDown;
-        double progress = countdown / initialCountdown;
 
-        // Determine target color for transition
-        const Color targetColor = Colors.red;
+        // Determine color based on time remaining
+        Color neonColor;
+        List<Shadow> textShadow;
+        
+        if (countdown > 10) {
+          neonColor = Colors.white;
+          textShadow = NeonBoxShadow().whiteNeon(context);
+        } else if (countdown > 5) {
+          neonColor = Colors.yellow;
+          textShadow = NeonBoxShadow().goldNeon(context);
+        } else {
+          neonColor = Colors.red;
+          textShadow = NeonBoxShadow().redNeon(context);
+        }
 
-        return TweenAnimationBuilder<Color?>(
-          tween: ColorTween(end: targetColor),
-          duration: const Duration(milliseconds: 300),
-          builder: (context, animatedColor, _) {
-            return TweenAnimationBuilder<double>(
-              tween: Tween<double>(end: progress.clamp(0.0, 1.0)),
-              duration: const Duration(milliseconds: 300),
-              builder: (context, animatedProgress, _) {
-                return SizedBox(
-                  width: defaultSize,
-                  height: defaultSize,
-                  child: Material(
-                    elevation: 2,
-                    shape: const CircleBorder(),
-                    color: Colors.transparent,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        SizedBox(
-                          width: defaultSize,
-                          height: defaultSize,
-                          child: CircularProgressIndicator(
-                            value: animatedProgress,
-                            strokeWidth: 4,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(animatedColor!),
-                            backgroundColor: Colors.transparent,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 250),
-                            transitionBuilder: (child, animation) =>
-                                ScaleTransition(scale: animation, child: child),
-                            child: TextWidget(
-                              key: ValueKey(countdown),
-                              title: countdown.toString(),
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              alwaysEnglish: true,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: 10.0,
+              sigmaY: 10.0,
+            ),
+            child: Container(
+              width: 120,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: neonColor.withOpacity(0.5),
+                  width: 2,
+                ),
+                color: Colors.black.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: neonColor.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 4,
                   ),
-                );
-              },
-            );
-          },
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.timer,
+                    color: Colors.white,
+                    size: 24,
+                    shadows: textShadow,
+                  ),
+                  const SizedBox(width: 6),
+                  NeonWhiteText(
+                    word: countdown.toString(),
+                    fontSize: 24,
+                    shadow: textShadow,
+                  ),
+                ],
+              ),
+            ),
+          ),
         );
       },
     );

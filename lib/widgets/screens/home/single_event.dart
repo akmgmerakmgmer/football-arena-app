@@ -14,6 +14,23 @@ class SingleEvent extends StatefulWidget {
 }
 
 class _SingleEventState extends State<SingleEvent> {
+  late final bool _hasEnded;
+
+  @override
+  void initState() {
+    super.initState();
+    _hasEnded = _checkIfEventEnded();
+  }
+
+  bool _checkIfEventEnded() {
+    if (!widget.event.containsKey('endDate')) return false;
+    
+    final endDate = DateTime.parse(widget.event['endDate']);
+    final currentDate = DateTime.now();
+    
+    return currentDate.isAfter(endDate);
+  }
+
   eventDetails(context) {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     if (user.containsKey('username')) {
@@ -33,6 +50,10 @@ class _SingleEventState extends State<SingleEvent> {
 
   @override
   Widget build(BuildContext context) {
+    if (_hasEnded) {
+      return Container(); // Return empty container if event has ended
+    }
+
     String locale = Provider.of<LocaleProvider>(context, listen: true).locale;
     return GestureDetector(
       onTap: () {

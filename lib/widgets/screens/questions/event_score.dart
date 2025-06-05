@@ -5,14 +5,14 @@ import 'package:in_zone_app/widgets/general_widgets/neon_white_text.dart';
 class EventScore extends StatefulWidget {
   final ValueNotifier<int> scoreNotifier;
   final double fontSize;
-  final double? top;
   final String eventName;
+  final bool addMargin;
   const EventScore({
     super.key,
     required this.scoreNotifier,
     this.fontSize = 48,
-    this.top = 22,
     required this.eventName,
+    this.addMargin = true,
   });
 
   @override
@@ -31,7 +31,7 @@ class _EventScoreState extends State<EventScore> with TickerProviderStateMixin {
 
     _scaleController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 180), // Smoother, not too fast
+      duration: const Duration(milliseconds: 180),
     );
 
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.18)
@@ -59,26 +59,26 @@ class _EventScoreState extends State<EventScore> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     List<Shadow> shadows = EventNeonShadows.get(widget.eventName, context);
 
-    return Positioned(
-      top: widget.top,
-      left: 0,
-      right: 0,
-      child: Center(
-        child: AnimatedBuilder(
-          animation: _scaleAnimation,
-          builder: (context, child) {
-            return Transform.scale(
-              scale: _scaleAnimation.value,
-              child: child,
-            );
-          },
-          child: NeonWhiteText(
-            word: _displayedScore.toString(),
-            fontSize: widget.fontSize,
-            shadow: shadows,
+    return AnimatedBuilder(
+        animation: _scaleAnimation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: child,
+          );
+        },
+        child: Container(
+          margin: EdgeInsets.only(top: widget.addMargin ? 22 : 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              NeonWhiteText(
+                word: _displayedScore.toString(),
+                fontSize: widget.fontSize,
+                shadow: shadows,
+              ),
+            ],
           ),
-        ),
-      ),
-    );
+        ));
   }
 }
