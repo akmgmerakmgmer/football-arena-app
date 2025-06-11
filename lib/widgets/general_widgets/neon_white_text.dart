@@ -5,11 +5,13 @@ class NeonWhiteText extends StatelessWidget {
   final String word;
   final double fontSize;
   final List<Shadow> shadow;
+  final bool alwaysEnglish;
   const NeonWhiteText({
     super.key,
     required this.word,
     required this.fontSize,
     required this.shadow,
+    this.alwaysEnglish = false,
   });
 
   @override
@@ -29,6 +31,7 @@ class NeonWhiteText extends StatelessWidget {
         fontWeight: FontWeight.bold,
         letterSpacing: 2,
         shadow: shadow,
+        alwaysEnglish: alwaysEnglish,
       ),
     );
   }

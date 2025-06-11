@@ -13,7 +13,7 @@ class BankAndCurrentScore extends StatelessWidget {
     super.key,
     required this.bankScoreNotifier,
     required this.currentScoreNotifier,
-    this.fontSize = 32,
+    this.fontSize = 26,
     this.top = 22,
     required this.eventName,
   });
@@ -24,30 +24,25 @@ class BankAndCurrentScore extends StatelessWidget {
       top: top,
       left: 0,
       right: 0,
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                NeonTitleAndNumber(
-                    title: AppLocalizations.of(context)!.bank_score.toUpperCase(),
-                    number: bankScoreNotifier,
-                    shadow: NeonBoxShadow().blueNeon(context),
-                    fontSize: fontSize,
-                    eventName: eventName),
-                const SizedBox(width: 32),
-                NeonTitleAndNumber(
-                    title: AppLocalizations.of(context)!.current_score.toUpperCase(),
-                    number: currentScoreNotifier,
-                    shadow: NeonBoxShadow().blueNeon(context),
-                    fontSize: fontSize,
-                    eventName: eventName),
-              ],
-            ),
-          ],
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          NeonTitleAndNumber(
+            title: AppLocalizations.of(context)!.bank_score.toUpperCase(),
+            number: bankScoreNotifier,
+            shadow: NeonBoxShadow().blueNeon(context),
+            fontSize: fontSize,
+            eventName: eventName,
+          ),
+          const SizedBox(width: 32),
+          NeonTitleAndNumber(
+            title: AppLocalizations.of(context)!.current_score.toUpperCase(),
+            number: currentScoreNotifier,
+            shadow: NeonBoxShadow().blueNeon(context),
+            fontSize: fontSize,
+            eventName: eventName,
+          ),
+        ],
       ),
     );
   }

@@ -48,11 +48,6 @@ class GeneralMethods {
 
     bool showAd = getRandomNumber() == 1 ? true : false;
     if (showAd) {
-      // socketMethods.joinRoom(context, localeProvider,
-      //     questionMode: mode,
-      //     hostRoom: hostRoom,
-      //     isCasual: isCasual,
-      //     code: code);
       AdMethods().showInterstitialAd(() {
         Future.delayed(const Duration(seconds: 4), () {
           socketMethods.joinRoom(context, localeProvider,

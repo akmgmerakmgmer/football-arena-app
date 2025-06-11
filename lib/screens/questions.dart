@@ -91,6 +91,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   late bool isOneShot;
   late bool isRush;
   late bool isBank;
+  late bool isLightningRound;
   bool showBankBuzzer = false;
   final AudioPlayer _audioPlayer = AudioPlayer();
   final AudioPlayer _mainGame = AudioPlayer();
@@ -154,7 +155,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
         if (_countDownNotifier.value > 0) {
           _countDownNotifier.value = _countDownNotifier.value - 1;
         } else {
-          if (isRush) {
+          if (isRush || isLightningRound) {
             saveGame(true);
           } else {
             getToNextQuestion();
@@ -247,7 +248,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   int setCount() {
-    if (isRush) {
+    if (isLightningRound) {
+      defaultCountDown = 30;
+    } else if (isRush) {
       defaultCountDown = 60;
     } else if (showHints()) {
       defaultCountDown = 45;
@@ -352,6 +355,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       return 'audio/one_shot_audio.mp3';
     } else if (isBank) {
       return 'audio/bank_audio.mp3';
+    } else if (isLightningRound) {
+      return 'audio/lightning_round_audio.mp3';
     } else {
       return 'audio/main_game.mp3';
     }
@@ -379,6 +384,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   void rightAnswer() {
     playCorrectSound();
     bankTrigger();
+    lightningRoundTrigger(true);
     rightAnswerPoints();
     if (isBank) {
       Future.delayed(const Duration(milliseconds: 500), () {
@@ -398,6 +404,17 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     }
   }
 
+  void lightningRoundTrigger(rightAnswer) {
+    if (isLightningRound) {
+      if (rightAnswer) {
+        _countDownNotifier.value += 5;
+      }
+      if (!rightAnswer && _countDownNotifier.value > 6) {
+        _countDownNotifier.value -= 5;
+      }
+    }
+  }
+
   void bankWrongAnswer() {
     playWrongSound();
     if (_bankScoreNotifier.value > 0) {
@@ -406,6 +423,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   }
 
   void wrongAnswer(index) {
+    lightningRoundTrigger(false);
     if (isBank) {
       bankWrongAnswer();
       getToNextQuestion();
@@ -441,7 +459,11 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     if (_pointsNotifier.value != 0 && !activateVar) {
       _pointsNotifier.value = _pointsNotifier.value - 1;
     }
-    if (_livesNotifier.value != 0 && !activateVar && !isRush) {
+    if (_livesNotifier.value != 0 &&
+        !activateVar &&
+        !isRush &&
+        !isBank &&
+        !isLightningRound) {
       _livesNotifier.value = _livesNotifier.value - 1;
     }
     if (_livesNotifier.value == 0) {
@@ -761,12 +783,13 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     isOneShot = widget.eventName.toLowerCase() == 'one shot';
     isRush = widget.eventName.toLowerCase() == 'rush';
     isBank = widget.eventName.toLowerCase() == 'bank';
+    isLightningRound = widget.eventName.toLowerCase() == 'lightning round';
   }
 
-  isSinglePlayerEvent() {
+  void isSinglePlayerEvent() {
     if (widget.isSinglePlayerEvent) {
       playMainGameSound();
-      if (isRush) {
+      if (isRush || isLightningRound) {
         stopCount = false;
       }
     }
@@ -941,7 +964,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    widget.isSinglePlayerEvent && !isRush
+                                    widget.isSinglePlayerEvent &&
+                                            !isRush &&
+                                            !isLightningRound
                                         ? Container()
                                         : CountDown(
                                             countDownNotifier:

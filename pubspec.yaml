@@ -152,6 +152,7 @@ flutter:
     - assets/audio/rush_audio.mp3
     - assets/audio/one_shot_audio.mp3
     - assets/audio/bank_audio.mp3
+    - assets/audio/lightning_round_audio.mp3
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

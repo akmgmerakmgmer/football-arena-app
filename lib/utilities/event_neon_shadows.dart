@@ -8,6 +8,8 @@ class EventNeonShadows {
         return NeonBoxShadow().blueNeon(context);
       case 'one shot':
         return NeonBoxShadow().magentaNeon(context);
+      case 'lightning round':
+        return NeonBoxShadow().pinkRedNeon(context);
       default:
         return NeonBoxShadow().redNeon(context);
     }
