@@ -874,7 +874,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
         if (!gameSaved &&
             !saveLoading &&
             _pointsNotifier.value > 0 &&
-            !widget.isSinglePlayerEvent) {
+            !isRush &&
+            !isOneShot) {
           saveGame(true);
         } else {
           navigationDestination();
@@ -896,8 +897,9 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                     ? GameOver(playAgain: playAgain, exitGame: exitGame)
                     : Stack(
                         children: [
-                          !widget.isSinglePlayerEvent
-                              ? Positioned(
+                          isRush && isOneShot
+                              ? Container()
+                              : Positioned(
                                   bottom: 10,
                                   right: 10,
                                   child: SaveExitButton(
@@ -910,8 +912,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                                     icon: Icons.save_alt,
                                     loading: saveLoading,
                                   ),
-                                )
-                              : Container(),
+                                ),
                           Positioned(
                               bottom: 10,
                               left: 10,

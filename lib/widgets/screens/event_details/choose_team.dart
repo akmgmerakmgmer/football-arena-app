@@ -42,19 +42,28 @@ class _ChooseTeamState extends State<ChooseTeam> {
           Navigator.pushNamed(context, '/shop');
         });
       } else {
-        setState(() {
-          buttonLoading = true;
-        });
         Map eventPayload = {
           'eventId': widget.event['_id'],
           'endDate': widget.event['endDate'],
           'price': widget.event['price']
         };
         if (widget.event['isSinglePlayer'] != true &&
-            widget.event['isMultiplayer'] != true &&
-            selectedValue != '') {
-          eventPayload['sideId'] = selectedValue;
+            widget.event['isMultiplayer'] != true) {
+          if (selectedValue == '') {
+            return SnackbarMessage().snackbar(
+                context, AppLocalizations.of(context)!.chooseYourTeam,
+                label: AppLocalizations.of(context)!.chooseYourTeamFirst,
+                error: true, action: () {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              Navigator.pushNamed(context, '/shop');
+            });
+          } else {
+            eventPayload['sideId'] = selectedValue;
+          }
         }
+        setState(() {
+          buttonLoading = true;
+        });
         PutApi('add-event/${user['_id']}', eventPayload, (res) {
           Provider.of<LocaleProvider>(context, listen: false).setUser(res);
           setState(() {

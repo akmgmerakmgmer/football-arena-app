@@ -27,6 +27,11 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final RequestConfiguration configuration = RequestConfiguration(
+    tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
+    tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.yes,
+  );
+  MobileAds.instance.updateRequestConfiguration(configuration);
   MobileAds.instance.initialize();
   runApp(const MyApp());
 }

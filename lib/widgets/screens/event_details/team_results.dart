@@ -42,13 +42,17 @@ class TeamResults extends StatelessWidget {
             height: 12,
           ),
           PlayEventButton(event: event, user: user),
-          const SizedBox(
-            height: 24,
-          ),
-          BestScore(
-            score: userScore,
-            eventName: event['eventName']['en'].toLowerCase() ?? '',
-          ),
+          event['isSinglePlayer']
+              ? const SizedBox(
+                  height: 24,
+                )
+              : Container(),
+          event['isSinglePlayer']
+              ? BestScore(
+                  score: userScore,
+                  eventName: event['eventName']['en'].toLowerCase() ?? '',
+                )
+              : Container(),
           event['isSinglePlayer'] == true
               ? SingleEventData(
                   event: event,

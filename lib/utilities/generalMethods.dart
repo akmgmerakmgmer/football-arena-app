@@ -40,7 +40,7 @@ class GeneralMethods {
       mode = '',
       isOnline = false}) {
     int getRandomNumber() {
-      List coinsList = [1, 2];
+      List coinsList = [1, 2, 3];
       final random = Random(); // Create a Random instance
       int randomIndex = random.nextInt(coinsList.length); // Get a random index
       return coinsList[randomIndex]; // Return the coin at the random index
