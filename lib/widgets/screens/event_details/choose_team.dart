@@ -33,44 +33,72 @@ class _ChooseTeamState extends State<ChooseTeam> {
   enterEvent() {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     if (user.containsKey('username')) {
-      if (user['coins'] < widget.event['price']) {
-        return SnackbarMessage().snackbar(
-            context, AppLocalizations.of(context)!.not_enough_coins,
-            label: AppLocalizations.of(context)!.buy_coins,
-            error: true, action: () {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          Navigator.pushNamed(context, '/shop');
-        });
-      } else {
-        Map eventPayload = {
-          'eventId': widget.event['_id'],
-          'endDate': widget.event['endDate'],
-          'price': widget.event['price']
-        };
-        if (widget.event['isSinglePlayer'] != true &&
-            widget.event['isMultiplayer'] != true) {
-          if (selectedValue == '') {
-            return SnackbarMessage().snackbar(
-                context, AppLocalizations.of(context)!.chooseYourTeam,
-                label: AppLocalizations.of(context)!.chooseYourTeamFirst,
-                error: true, action: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              Navigator.pushNamed(context, '/shop');
-            });
-          } else {
-            eventPayload['sideId'] = selectedValue;
-          }
-        }
-        setState(() {
-          buttonLoading = true;
-        });
-        PutApi('add-event/${user['_id']}', eventPayload, (res) {
-          Provider.of<LocaleProvider>(context, listen: false).setUser(res);
-          setState(() {
-            buttonLoading = false;
+      // if (user['coins'] < widget.event['price']) {
+      //   return SnackbarMessage().snackbar(
+      //       context, AppLocalizations.of(context)!.not_enough_coins,
+      //       label: AppLocalizations.of(context)!.buy_coins,
+      //       error: true, action: () {
+      //     ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      //     Navigator.pushNamed(context, '/shop');
+      //   });
+      // } else {
+      //   Map eventPayload = {
+      //     'eventId': widget.event['_id'],
+      //     'endDate': widget.event['endDate'],
+      //     'price': widget.event['price']
+      //   };
+      //   if (widget.event['isSinglePlayer'] != true &&
+      //       widget.event['isMultiplayer'] != true) {
+      //     if (selectedValue == '') {
+      //       return SnackbarMessage().snackbar(
+      //           context, AppLocalizations.of(context)!.chooseYourTeam,
+      //           label: AppLocalizations.of(context)!.chooseYourTeamFirst,
+      //           error: true, action: () {
+      //         ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      //         Navigator.pushNamed(context, '/shop');
+      //       });
+      //     } else {
+      //       eventPayload['sideId'] = selectedValue;
+      //     }
+      //   }
+      //   setState(() {
+      //     buttonLoading = true;
+      //   });
+      //   PutApi('add-event/${user['_id']}', eventPayload, (res) {
+      //     Provider.of<LocaleProvider>(context, listen: false).setUser(res);
+      //     setState(() {
+      //       buttonLoading = false;
+      //     });
+      //   }).put(context);
+      // }
+      Map eventPayload = {
+        'eventId': widget.event['_id'],
+        'endDate': widget.event['endDate'],
+        'price': 0
+      };
+      if (widget.event['isSinglePlayer'] != true &&
+          widget.event['isMultiplayer'] != true) {
+        if (selectedValue == '') {
+          return SnackbarMessage().snackbar(
+              context, AppLocalizations.of(context)!.chooseYourTeam,
+              label: AppLocalizations.of(context)!.chooseYourTeamFirst,
+              error: true, action: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            Navigator.pushNamed(context, '/shop');
           });
-        }).put(context);
+        } else {
+          eventPayload['sideId'] = selectedValue;
+        }
       }
+      setState(() {
+        buttonLoading = true;
+      });
+      PutApi('add-event/${user['_id']}', eventPayload, (res) {
+        Provider.of<LocaleProvider>(context, listen: false).setUser(res);
+        setState(() {
+          buttonLoading = false;
+        });
+      }).put(context);
     } else {
       Navigator.pushNamed(context, '/signup');
     }
@@ -133,7 +161,7 @@ class _ChooseTeamState extends State<ChooseTeam> {
                   : AppLocalizations.of(context)!.choose,
               action: enterEvent,
               loading: buttonLoading,
-              price: '${widget.event['price']}')
+              price: '0')
         ],
       ),
     );

@@ -52,7 +52,7 @@ class _QuestionsState extends State<MultiQuestions>
   List chosenPlayers = [];
   List displayChosenPlayers = [];
   List hints = [];
-  int defaultCountDown = 180;
+  int defaultCountDown = 10;
   int pointValue = 1;
   int pointDefaultValue = 0;
   int multiplyPoints = 1;
@@ -80,7 +80,7 @@ class _QuestionsState extends State<MultiQuestions>
   bool gameDoneLoading = false;
   bool multiGameSoundPlaying = false;
   bool matchResultCalculated = false;
-  bool youCheated = true;
+  bool youCheated = false;
   late ValueNotifier<int> _countDownNotifier;
 
   // Methods
@@ -173,7 +173,7 @@ class _QuestionsState extends State<MultiQuestions>
   }
 
   int setCount() {
-    defaultCountDown = 180;
+    defaultCountDown = 10;
     return defaultCountDown;
   }
 
@@ -520,6 +520,7 @@ class _QuestionsState extends State<MultiQuestions>
       for (var player in room['players']) {
         if (!player['timeDone'] &&
             player['userId']['_id'].toString() != userId.toString()) {
+          _multiGameAudio.stop();
           OnlineMethods().winnerUpdate(userId, context);
           setState(() {
             oneUserLeft = true;
@@ -541,6 +542,7 @@ class _QuestionsState extends State<MultiQuestions>
         Map room = Provider.of<LocaleProvider>(context, listen: false).room;
         Map emittedData = {'userId': userId, 'roomId': room['_id']};
         _socketMethods.playerTimeDone(emittedData);
+        print(youCheated);
         if (_countDownNotifier.value == 0 && !youCheated) {
           Future.delayed(const Duration(seconds: 15), () {
             checkIfTheOtherUserCheated();
@@ -631,6 +633,7 @@ class _QuestionsState extends State<MultiQuestions>
   checkConnection() {
     _connectivity.onConnectivityChanged
         .listen((List<ConnectivityResult> results) {
+      print(results);
       if (results.isNotEmpty &&
           !results.contains(ConnectivityResult.none) == false) {
         youCheated = true;

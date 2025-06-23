@@ -47,6 +47,7 @@ dependencies:
   easy_debounce: ^2.0.3
   video_player: ^2.9.2
   visibility_detector: ^0.4.0+2
+  appsflyer_sdk: ^6.12.0
 
 
   # The following adds the Cupertino Icons font to your application.

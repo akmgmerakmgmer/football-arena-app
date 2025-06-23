@@ -1,15 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/screens/questions.dart';
 import 'package:in_zone_app/utilities/ad_methods.dart';
+import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class PlayEventButton extends StatelessWidget {
   final Map event;
   final Map user;
   const PlayEventButton({super.key, required this.event, required this.user});
 
+  bool checkIfUserHasTheEvent(BuildContext context) {
+    Map user = Provider.of<LocaleProvider>(context, listen: false).user;
+    List currentEvent = user['events']
+        .where((userEvent) => userEvent['id'] == event['_id'])
+        .toList();
+    if (currentEvent.isNotEmpty && currentEvent[0]['id'] == event['_id']) {
+      return true;
+    }
+    return false;
+  }
+
+  void addEventToUser(context) {
+    Map eventPayload = {
+      'eventId': event['_id'],
+      'endDate': event['endDate'],
+      'price': 0
+    };
+    PutApi('add-event/${user['_id']}', eventPayload, (res) {
+      Provider.of<LocaleProvider>(context, listen: false).setUser(res);
+    }).put(context);
+  }
+
   void joinGame(BuildContext context) {
+    if (!checkIfUserHasTheEvent(context)) {
+      addEventToUser(context);
+    }
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -42,7 +70,7 @@ class PlayEventButton extends StatelessWidget {
                 ? matchingEvent['gamesPlayed'] as int
                 : 0;
 
-        if (gamesPlayed % 3 == 0 && gamesPlayed != 0) {
+        if (gamesPlayed % 2 == 0 && gamesPlayed != 0) {
           AdMethods().showInterstitialAd(() {
             Future.delayed(const Duration(seconds: 4), () {
               joinGame(context);

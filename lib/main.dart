@@ -24,12 +24,26 @@ import 'package:provider/provider.dart';
 import 'providers/locale_provider.dart';
 import './my_I18n.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-
+import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+late AppsflyerSdk appsflyerSdk;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final RequestConfiguration configuration = RequestConfiguration(
     tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
     tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.yes,
+  );
+  AppsFlyerOptions options = AppsFlyerOptions(
+    afDevKey: "cWVdmyZBAK6bLpAJKq3CMG", // From Appsflyer dashboard
+    appId: "", // iOS App ID only – leave empty for Android
+    showDebug: true,
+  );
+
+  appsflyerSdk = AppsflyerSdk(options);
+
+  appsflyerSdk.initSdk(
+    registerConversionDataCallback: true,
+    registerOnAppOpenAttributionCallback: false,
+    registerOnDeepLinkingCallback: false,
   );
   MobileAds.instance.updateRequestConfiguration(configuration);
   MobileAds.instance.initialize();
@@ -55,10 +69,10 @@ class _MyAppState extends State<MyApp> {
       final isArabic = deviceLocale == 'ar';
 
       setState(() {
-        _locale = Locale(isArabic ? 'ar' : 'en');
+        _locale = Locale(isArabic ? 'ar' : 'ar');
       });
       // Save the locale preference
-      locale.setString('locale', isArabic ? 'ar' : 'en');
+      locale.setString('locale', isArabic ? 'ar' : 'ar');
     } else {
       setState(() {
         _locale = Locale(locale.getString('locale') as String);

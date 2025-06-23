@@ -57,29 +57,32 @@ class PurchaseButton extends StatelessWidget {
                     const SizedBox(
                       height: 5,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextWidget(
-                          title: price,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          alwaysEnglish: true,
-                        ),
-                        const SizedBox(
-                          width: 3,
-                        ),
-                        currency
-                            ? TextWidget(
-                                title: AppLocalizations.of(context)!.currency,
+                    int.parse(price) > 0
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextWidget(
+                                title: price,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                              )
-                            : const Coin(
-                                width: 20,
-                              )
-                      ],
-                    )
+                                alwaysEnglish: true,
+                              ),
+                              const SizedBox(
+                                width: 3,
+                              ),
+                              currency
+                                  ? TextWidget(
+                                      title: AppLocalizations.of(context)!
+                                          .currency,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    )
+                                  : const Coin(
+                                      width: 20,
+                                    )
+                            ],
+                          )
+                        : Container()
                   ],
                 ),
               )
