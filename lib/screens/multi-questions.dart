@@ -52,7 +52,7 @@ class _QuestionsState extends State<MultiQuestions>
   List chosenPlayers = [];
   List displayChosenPlayers = [];
   List hints = [];
-  int defaultCountDown = 10;
+  int defaultCountDown = 90;
   int pointValue = 1;
   int pointDefaultValue = 0;
   int multiplyPoints = 1;
@@ -173,7 +173,7 @@ class _QuestionsState extends State<MultiQuestions>
   }
 
   int setCount() {
-    defaultCountDown = 10;
+    defaultCountDown = 90;
     return defaultCountDown;
   }
 
@@ -478,7 +478,7 @@ class _QuestionsState extends State<MultiQuestions>
         if (!player['timeDone']) allTimeDone = false;
       }
       if (allTimeDone) {
-        youWon(room);
+        matchEndCalculation(room);
         setState(() {
           allPlayersTimeDone = allTimeDone;
         });
@@ -496,7 +496,7 @@ class _QuestionsState extends State<MultiQuestions>
         setState(() {
           oneUserLeft = true;
         });
-        youWon(room);
+        matchEndCalculation(room);
       }
     }
   }
@@ -542,7 +542,6 @@ class _QuestionsState extends State<MultiQuestions>
         Map room = Provider.of<LocaleProvider>(context, listen: false).room;
         Map emittedData = {'userId': userId, 'roomId': room['_id']};
         _socketMethods.playerTimeDone(emittedData);
-        print(youCheated);
         if (_countDownNotifier.value == 0 && !youCheated) {
           Future.delayed(const Duration(seconds: 15), () {
             checkIfTheOtherUserCheated();
@@ -561,7 +560,7 @@ class _QuestionsState extends State<MultiQuestions>
     }
   }
 
-  void youWon(room) async {
+  void matchEndCalculation(room) async {
     if (mounted) {
       _multiGameAudio.stop();
       setState(() {

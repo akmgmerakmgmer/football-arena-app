@@ -15,19 +15,21 @@ import 'package:in_zone_app/widgets/screens/online_main_screen/single_option.dar
 
 class ModalContainer {
   static modal(BuildContext context, Widget widget, String title,
-      {dynamic closeCallBack}) {
+      {dynamic closeCallBack, dynamic action, bool loading = false}) {
     // showAnimatedDialog(context, title: title, widget: widget);
     showDialog(
         context: context,
         barrierDismissible: false,
         builder: (ctx) => DialogWidgetBlured(
               title: title,
+              loading: loading,
               widget: SingleChildScrollView(child: widget),
               closeCallBack: () {
                 if (closeCallBack != null) {
                   closeCallBack();
                 }
               },
+              action: action
             ));
   }
 
@@ -149,7 +151,8 @@ void showModalBottomSheetContainer(BuildContext context, Widget body) {
     ),
     builder: (context) {
       final mediaQuery = MediaQuery.of(context);
-      final double topPadding = mediaQuery.padding.top + 16; // Add extra space from top
+      final double topPadding =
+          mediaQuery.padding.top + 16; // Add extra space from top
 
       return ClipRRect(
         borderRadius: BorderRadius.circular(16),

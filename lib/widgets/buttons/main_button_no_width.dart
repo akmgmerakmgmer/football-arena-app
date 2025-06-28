@@ -14,6 +14,7 @@ class MainButtonNoWidth extends StatelessWidget {
   final bool isWidget;
   final dynamic widget;
   final EdgeInsets padding;
+  final bool alwaysEnglish;
   const MainButtonNoWidth({
     super.key,
     required this.buttonText,
@@ -26,6 +27,7 @@ class MainButtonNoWidth extends StatelessWidget {
     this.isWidget = false,
     this.padding = const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
     this.widget,
+    this.alwaysEnglish = false,
   });
 
   @override
@@ -48,6 +50,7 @@ class MainButtonNoWidth extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontSize: fontSize,
                     letterSpacing: letterSpacing,
+                    alwaysEnglish: alwaysEnglish,
                   ),
       ),
     );

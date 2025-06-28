@@ -40,6 +40,9 @@ class SingleUsersAvatars extends StatelessWidget {
             isTheme: isTheme,
             video: video,
             showVideo: showVideo,
+            width: 220,
+            height: 280,
+            radius: 15,
           ),
           ProfileButton(
               isTheme: isTheme,

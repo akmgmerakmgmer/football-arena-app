@@ -12,14 +12,23 @@ class BottomNavigation extends StatelessWidget {
     String currentPath = ModalRoute.of(context)?.settings.name ?? '/';
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     List navigationRoutes = [
-      {
-        "text": AppLocalizations.of(context)!.shop,
-        "icon": Icons.shopping_bag,
-        "action": () {
-          Navigator.pushNamed(context, '/shop');
-        },
-        "selected": currentPath == '/shop'
-      },
+      user.isNotEmpty
+          ? {
+              "text": AppLocalizations.of(context)!.profile,
+              "icon": Icons.person,
+              "action": () {
+                Navigator.pushNamed(context, '/profile');
+              },
+              "selected": currentPath == '/profile'
+            }
+          : {
+              "text": AppLocalizations.of(context)!.login_word,
+              "icon": Icons.login,
+              "action": () {
+                Navigator.pushNamed(context, '/signup');
+              },
+              "selected": currentPath == '/signup' || currentPath == '/login'
+            },
       {
         "text": AppLocalizations.of(context)!.play_online,
         "icon": Icons.emoji_events,
@@ -44,23 +53,14 @@ class BottomNavigation extends StatelessWidget {
         },
         "selected": currentPath == '/rankings'
       },
-      user.isNotEmpty
-          ? {
-              "text": AppLocalizations.of(context)!.profile,
-              "icon": Icons.person,
-              "action": () {
-                Navigator.pushNamed(context, '/profile');
-              },
-              "selected": currentPath == '/profile'
-            }
-          : {
-              "text": AppLocalizations.of(context)!.login_word,
-              "icon": Icons.login,
-              "action": () {
-                Navigator.pushNamed(context, '/signup');
-              },
-              "selected": currentPath == '/signup' || currentPath == '/login'
-            },
+      {
+        "text": AppLocalizations.of(context)!.shop,
+        "icon": Icons.shopping_bag,
+        "action": () {
+          Navigator.pushNamed(context, '/shop');
+        },
+        "selected": currentPath == '/shop'
+      },
     ];
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
@@ -81,7 +81,7 @@ class BottomNavigation extends StatelessWidget {
                             boxShadow: route['selected']
                                 ? [
                                     BoxShadow(
-                                      color: Colors.red
+                                      color: Theme.of(context).primaryColor
                                           .withOpacity(0.1), // White glow color
                                       spreadRadius: 0, // Adjust for glow size
                                       blurRadius:
@@ -93,17 +93,17 @@ class BottomNavigation extends StatelessWidget {
                           child: Icon(
                             route['icon'],
                             color: route['selected']
-                                ? Colors.red
+                                ? Theme.of(context).primaryColor
                                 : Colors.grey.shade300,
-                            size: 28,
+                            size: 36,
                           ),
                         ),
                         TextWidget(
                           title: route['text'],
-                          fontSize: 14,
+                          fontSize: 15,
                           fontWeight: FontWeight.w600,
                           color: route['selected']
-                              ? Colors.red
+                              ? Theme.of(context).primaryColor
                               : Colors.grey.shade300,
                         )
                       ],

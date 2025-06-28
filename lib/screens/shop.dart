@@ -124,19 +124,28 @@ class _ShopState extends State<Shop> {
           padding: const EdgeInsets.symmetric(vertical: 16),
           child: Column(
             children: [
-              Wrap(
-                children: activeTabs
-                    .map((tab) => TabsButton(
-                        selected: activeTabIndex == tab['index'],
-                        action: () => tabAction(tab['index']),
-                        title:
-                            Provider.of<LocaleProvider>(context, listen: false)
-                                        .locale ==
-                                    'en'
-                                ? tab['nameEn']
-                                : tab['nameAr']))
-                    .toList(),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 0, horizontal: 0),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColorDark,
+                    borderRadius: BorderRadius.circular(100)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: activeTabs
+                      .map((tab) => TabsButton(
+                          selected: activeTabIndex == tab['index'],
+                          action: () => tabAction(tab['index']),
+                          title: Provider.of<LocaleProvider>(context,
+                                          listen: false)
+                                      .locale ==
+                                  'en'
+                              ? tab['nameEn']
+                              : tab['nameAr']))
+                      .toList(),
+                ),
               ),
+              const SizedBox(height: 16),
               activeTabIndex == 4
                   ? BuyCoins(
                       coins: shopItems.isEmpty ? [] : shopItems['coins'],

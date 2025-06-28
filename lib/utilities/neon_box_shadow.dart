@@ -83,7 +83,7 @@ class NeonBoxShadow {
           offset: Offset(0, 0)), // lighter red
       Shadow(
           blurRadius: 20,
-          color: Color(0xFFF61A1A),
+          color: Color(0xFFFF3C1A),
           offset: Offset(0, 0)), // main red
       Shadow(
           blurRadius: 32,

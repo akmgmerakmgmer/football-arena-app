@@ -70,16 +70,7 @@ class _ProfileFormState extends State<ProfileForm> {
         const SizedBox(
           height: 15,
         ),
-        Input(
-            callback: (value) {},
-            label: AppLocalizations.of(context)!.password,
-            value: widget.user['password'],
-            isPassword: true,
-            disabled: true,
-            icon: const Icon(Icons.lock_outlined)),
-        const SizedBox(
-          height: 15,
-        ),
+        
         Input(
             callback: (value) {
               payload['number'] = value;

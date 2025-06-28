@@ -84,12 +84,12 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
     }
   }
 
-  Future<void> getInitialData() async {
+  Future<void> getInitialData(context) async {
     buildNumber = await getAppVersion();
     await initialFetch();
     adTimer();
     decreaseAdCount();
-    await fetchUsers();
+    await fetchUsers(context);
     showRateAppModal();
   }
 
@@ -117,7 +117,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
     }
   }
 
-  Future<void> fetchUsers() async {
+  Future<void> fetchUsers(context) async {
     final localStorage = await SharedPreferences.getInstance();
     final token = localStorage.getString('token');
     final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
@@ -176,7 +176,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
   void initState() {
     super.initState();
     getLocale();
-    getInitialData();
+    getInitialData(context);
   }
 
   @override

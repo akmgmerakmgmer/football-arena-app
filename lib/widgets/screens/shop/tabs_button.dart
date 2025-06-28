@@ -17,21 +17,17 @@ class TabsButton extends StatelessWidget {
     return GestureDetector(
       onTap: () => action(),
       child: AnimatedContainer(
-        width: MediaQuery.of(context).size.width * 0.4,
+        width: MediaQuery.of(context).size.width * 0.25,
         alignment: Alignment.center,
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 16.0),
-        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
         decoration: BoxDecoration(
-            color: selected
-                ? Theme.of(context).primaryColor
-                : Theme.of(context).primaryColorDark,
             boxShadow: selected
                 ? NeonBoxShadow().boxShadowNeon(context)
                 : null,
-            borderRadius: const BorderRadius.all(Radius.circular(10))),
+            borderRadius: const BorderRadius.all(Radius.circular(100))),
         child:
-            TextWidget(title: title, fontWeight: FontWeight.w600, fontSize: 15),
+            TextWidget(title: title, fontWeight: FontWeight.w600, fontSize: 16),
       ),
     );
   }

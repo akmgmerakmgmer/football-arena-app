@@ -97,6 +97,7 @@ class SingleUserData extends StatelessWidget {
               fontSize: 16,
               action: () {},
               radius: 100,
+              alwaysEnglish: true,
               padding:
                   const EdgeInsets.symmetric(horizontal: 12.0, vertical: 7.0),
             )

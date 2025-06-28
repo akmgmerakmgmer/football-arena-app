@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:in_zone_app/widgets/buttons/main_button_no_width.dart';
+import 'package:in_zone_app/widgets/buttons/modal_button.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -9,12 +11,16 @@ class DialogWidgetBlured extends StatelessWidget {
   final String description;
   final Widget widget;
   final dynamic closeCallBack;
+  final dynamic action;
+  final bool loading;
   const DialogWidgetBlured(
       {super.key,
       required this.title,
       required this.widget,
       this.description = '',
-      this.closeCallBack});
+      this.closeCallBack,
+      this.action,
+      this.loading = false});
 
   @override
   Widget build(BuildContext context) {
@@ -65,33 +71,37 @@ class DialogWidgetBlured extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          if (closeCallBack != null) {
-                            closeCallBack();
-                          }
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 12),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.1),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
-                          ),
-                          child: TextWidget(
-                            title: AppLocalizations.of(context)!.close,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          ),
+                  Container(
+                    margin:
+                        const EdgeInsets.only(bottom: 16, left: 16, right: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        action != null
+                            ? MainButtonNoWidth(
+                                buttonText:
+                                    AppLocalizations.of(context)!.choose,
+                                action: () {
+                                  action();
+                                },
+                                fontSize: 14,
+                                radius: 10,
+                                letterSpacing: 1.1,
+                                loading: loading,
+                              )
+                            : Container(),
+                        const SizedBox(width: 8),
+                        ModalButton(
+                          title: AppLocalizations.of(context)!.close,
+                          color: Colors.white.withOpacity(0.1),
+                          action: () {
+                            Navigator.pop(context);
+                            if (closeCallBack != null) {
+                              closeCallBack();
+                            }
+                          },
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ],

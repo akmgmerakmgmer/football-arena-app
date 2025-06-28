@@ -7,21 +7,27 @@ class ProfileImages extends StatelessWidget {
   final dynamic video;
   final bool isTheme;
   final bool showVideo;
+  final double height;
+  final double width;
+  final double radius;
   const ProfileImages(
       {super.key,
       required this.isSelected,
       required this.image,
       this.isTheme = false,
       this.video,
-      required this.showVideo});
+      required this.showVideo,
+      this.height = 115,
+      this.width = 115,
+      this.radius = 100});
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: const BorderRadius.all(Radius.circular(15)),
+      borderRadius: BorderRadius.all(Radius.circular(radius)),
       child: Container(
           decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(15)),
+              borderRadius: BorderRadius.all(Radius.circular(radius)),
               border: Border.all(
                   width: 3,
                   color: isSelected
@@ -29,9 +35,9 @@ class ProfileImages extends StatelessWidget {
                       : Colors.transparent)),
           child: UserImage(
             image: image,
-            width: 220,
-            height: isTheme ? 280 : 200,
-            radius: 15,
+            width: width,
+            height: height,
+            radius: radius,
             video: video,
             showVideo: showVideo,
           )),
