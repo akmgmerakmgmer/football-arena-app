@@ -38,7 +38,9 @@ class GeneralMethods {
       isCasual = false,
       code = '',
       mode = '',
-      isOnline = false}) {
+      isOnline = false,
+      numberOfPlayers = 2,
+      gameDuration = 90}) {
     int getRandomNumber() {
       List coinsList = [1, 2, 3];
       final random = Random(); // Create a Random instance
@@ -46,7 +48,7 @@ class GeneralMethods {
       return coinsList[randomIndex]; // Return the coin at the random index
     }
 
-    bool showAd = getRandomNumber() == 1 ? true : false;
+    bool showAd = getRandomNumber() == 1 ? false : false;
     if (showAd) {
       AdMethods().showInterstitialAd(() {
         Future.delayed(const Duration(seconds: 4), () {
@@ -55,7 +57,9 @@ class GeneralMethods {
               hostRoom: hostRoom,
               isCasual: isCasual,
               isOnline: isOnline,
-              code: code);
+              code: code,
+              numberOfPlayers: numberOfPlayers,
+              gameDuration: gameDuration);
         });
       }, context);
     } else {
@@ -64,7 +68,9 @@ class GeneralMethods {
           hostRoom: hostRoom,
           isCasual: isCasual,
           isOnline: isOnline,
-          code: code);
+          code: code,
+          numberOfPlayers: numberOfPlayers,
+          gameDuration: gameDuration);
     }
   }
 

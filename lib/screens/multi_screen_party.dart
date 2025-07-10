@@ -4,23 +4,25 @@ import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/screens/multi-questions.dart';
 import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
+import 'package:in_zone_app/widgets/containers/grid_container.dart';
 import 'package:in_zone_app/widgets/containers/image_background_plain.dart';
 import 'package:in_zone_app/widgets/general_widgets/waiting_for_other_players.dart';
-import 'package:in_zone_app/widgets/screens/multi_screen/player_bar.dart';
-import 'package:in_zone_app/widgets/screens/questions/rank_flag.dart';
+import 'package:in_zone_app/widgets/screens/multi_screen/placeholder_avatar.dart';
+import 'package:in_zone_app/widgets/screens/multi_screen/player_party_avatar.dart';
 import 'package:in_zone_app/widgets/screens/questions/room_code.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
-class MultiScreen extends StatefulWidget {
+class MultiScreenParty extends StatefulWidget {
   final bool coinsPayed;
-  const MultiScreen({super.key, this.coinsPayed = false});
+  const MultiScreenParty({super.key, this.coinsPayed = false});
 
   @override
-  State<MultiScreen> createState() => _MultiScreenState();
+  State<MultiScreenParty> createState() => _MultiScreenState();
 }
 
-class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
+class _MultiScreenState extends State<MultiScreenParty>
+    with WidgetsBindingObserver {
   final SocketMethods _socketMethods = SocketMethods();
 
   @override
@@ -85,14 +87,9 @@ class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     LocaleProvider localeProvider =
-        Provider.of<LocaleProvider>(context, listen: false);
-    Map room = Provider.of<LocaleProvider>(context, listen: true).room;
+        Provider.of<LocaleProvider>(context, listen: true);
+    Map room = localeProvider.room;
     Map user = localeProvider.user;
-    String locale = localeProvider.locale;
-    bool willPromote = user['rank']['wins_to_promote'] ==
-        user['season_results']['consecutive_rank_wins'] + 1;
-    bool willDemote = user['rank']['loses_to_demote'] ==
-        user['season_results']['consecutive_rank_loses'] + 1;
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
@@ -110,53 +107,49 @@ class _MultiScreenState extends State<MultiScreen> with WidgetsBindingObserver {
             room['code'] != null && room['code'] != ''
                 ? RoomCode(code: room['code'])
                 : Container(),
-            (willPromote || willDemote) &&
-                    (room['code'] == '' || room['code'] == null) &&
-                    !room['isCasual']
-                ? RankFlag(
-                    promote: willPromote ? true : false,
-                    locale: locale,
-                  )
-                : Container(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: room['players']
-                      .asMap()
-                      .entries
-                      .map<Widget>(
-                        (player) => Column(
-                          children: [
-                            PlayerBar(
-                              index: player.key,
-                              player: player.value,
-                            ),
-                            // Show "VS." only if there are more players to be displayed
-                            player.key != room['players'].length - 1 ||
-                                    room['players'].length !=
-                                        room['numberOfPlayers']
-                                ? Image.asset(
-                                    'assets/images/vs.png',
-                                    width: 70,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Container(),
-                          ],
+            Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/vs.png',
+                    width: 70,
+                    fit: BoxFit.cover,
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        GridContainer(
+                          fixedGrids: true,
+                          widget: List.generate(
+                              room['numberOfPlayers'],
+                              (index) => index < room['players'].length
+                                  ? PlayerPartyAvatar(
+                                      player: room['players'][index],
+                                      user: user,
+                                    )
+                                  : const PlaceholderAvatar()),
+                          numberOfGrids: 3,
                         ),
-                      )
-                      .toList(),
-                ),
-                const SizedBox(height: 24),
-                // Show waiting message if not all players have joined
-                room['players'].length != room['numberOfPlayers']
-                    ? WaitingForOtherPlayers(
-                        title: AppLocalizations.of(context)!
-                            .waiting_for_other_players,
-                      )
-                    : Container(),
-              ],
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        room['players'].length != room['numberOfPlayers']
+                            ? WaitingForOtherPlayers(
+                                title: AppLocalizations.of(context)!
+                                    .waiting_for_players,
+                              )
+                            : Container()
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

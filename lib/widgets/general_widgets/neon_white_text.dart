@@ -6,13 +6,16 @@ class NeonWhiteText extends StatelessWidget {
   final double fontSize;
   final List<Shadow> shadow;
   final bool alwaysEnglish;
-  const NeonWhiteText({
-    super.key,
-    required this.word,
-    required this.fontSize,
-    required this.shadow,
-    this.alwaysEnglish = false,
-  });
+  final bool uppercase;
+  final double letterSpacing;
+  const NeonWhiteText(
+      {super.key,
+      required this.word,
+      required this.fontSize,
+      required this.shadow,
+      this.alwaysEnglish = false,
+      this.uppercase = false,
+      this.letterSpacing = 2});
 
   @override
   Widget build(BuildContext context) {
@@ -22,16 +25,17 @@ class NeonWhiteText extends StatelessWidget {
         fontSize: fontSize,
         fontWeight: FontWeight.bold,
         color: Colors.white,
-        letterSpacing: 2,
+        letterSpacing: letterSpacing,
         shadows: shadow,
       ),
       child: TextWidget(
         title: word,
         fontSize: fontSize,
         fontWeight: FontWeight.bold,
-        letterSpacing: 2,
+        letterSpacing: letterSpacing,
         shadow: shadow,
         alwaysEnglish: alwaysEnglish,
+        uppercase: uppercase,
       ),
     );
   }

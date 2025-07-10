@@ -143,7 +143,6 @@ class _RankingsState extends State<Rankings> {
                 });
                 getRankings();
               },
-              show: true,
             ),
             DropDownWidget(
               items: weeks,

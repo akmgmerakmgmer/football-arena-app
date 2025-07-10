@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
+import 'package:in_zone_app/widgets/general_widgets/asset_image_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +12,7 @@ class DropDownWidget extends StatelessWidget {
   final bool checkout;
   final dynamic initialValue;
   final bool show;
+  final String label;
   const DropDownWidget(
       {super.key,
       required this.items,
@@ -19,10 +21,12 @@ class DropDownWidget extends StatelessWidget {
       this.translation = true,
       this.checkout = false,
       this.initialValue,
-      required this.show});
+      this.show = true,
+      this.label = ''});
 
   @override
   Widget build(BuildContext context) {
+    String locale = Provider.of<LocaleProvider>(context, listen: false).locale;
     return show
         ? Column(
             children: [
@@ -31,6 +35,11 @@ class DropDownWidget extends StatelessWidget {
                     dropdownColor: Theme.of(context).splashColor,
                     value: initialValue,
                     decoration: InputDecoration(
+                      labelText: label,
+                      labelStyle: TextStyle(
+                          color: Colors.white,
+                          fontFamily:
+                              locale == 'en' ? 'Oswald' : 'NotoKufiArabic'),
                       enabled: !loading,
                       fillColor: Theme.of(context).splashColor,
                       focusColor: Colors.grey,
@@ -47,19 +56,46 @@ class DropDownWidget extends StatelessWidget {
                     ),
                     items: items
                         .map((item) => DropdownMenuItem(
-                            value: item['value'],
-                            child: Provider.of<LocaleProvider>(context,
-                                            listen: false)
-                                        .locale ==
-                                    'ar'
-                                ? TextWidget(
-                                    title: item['nameAr'],
-                                    fontSize: 15,
-                                  )
-                                : TextWidget(
-                                    title: item['nameEn'],
-                                    fontSize: 15,
-                                  )))
+                            value: (item is String || item is num)
+                                ? item
+                                : item['value'],
+                            child: Row(
+                              children: [
+                                item is Map &&
+                                        (item['image'] ?? '')
+                                            .toString()
+                                            .isNotEmpty
+                                    ? AssetImageWidget(
+                                        image: item['image'],
+                                        radius: 100,
+                                        width: 30,
+                                        height: 30,
+                                      )
+                                    : Container(),
+                                item is Map &&
+                                        (item['image'] ?? '')
+                                            .toString()
+                                            .isNotEmpty
+                                    ? const SizedBox(
+                                        width: 10,
+                                      )
+                                    : Container(),
+                                (item is String || item is num)
+                                    ? TextWidget(
+                                        title: item.toString(),
+                                        fontSize: 15,
+                                      )
+                                    : locale == 'ar'
+                                        ? TextWidget(
+                                            title: item['nameAr'] ?? item['ar'],
+                                            fontSize: 15,
+                                          )
+                                        : TextWidget(
+                                            title: item['nameEn'] ?? item['en'],
+                                            fontSize: 15,
+                                          )
+                              ],
+                            )))
                         .toList(),
                     onChanged: (value) => {callback(value)}),
               ),

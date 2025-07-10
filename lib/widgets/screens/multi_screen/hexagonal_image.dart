@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/containers/hexagon_painter.dart';
 import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
+import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/video_network_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HexagonalImage extends StatelessWidget {
   final String image;
   final dynamic video;
-  const HexagonalImage({super.key, required this.image, this.video});
+  final bool isWaiting;
+  final double width;
+  final double height;
+  const HexagonalImage(
+      {super.key,
+      required this.image,
+      this.video,
+      this.isWaiting = false,
+      this.height = 90,
+      this.width = 90});
 
   @override
   Widget build(BuildContext context) {
@@ -26,19 +37,27 @@ class HexagonalImage extends StatelessWidget {
           // Hexagonal Image
           ClipPath(
             clipper: HexagonPainter(),
-            child: video != null && video != ''
-                ? NetworkVideoWidget(
-                    videoUrl: Uri.parse(video),
-                    radius: 0,
-                    height: 90,
-                    width: 90,
-                    image: image,
+            child: isWaiting
+                ? SizedBox(
+                    width: width,
+                    height: height,
+                    child: TextWidget(
+                        title: AppLocalizations.of(context)!
+                            .waiting_for_other_players),
                   )
-                : CachedImage(
-                    image: image, // Replace with your image path
-                    width: 90,
-                    height: 90,
-                  ),
+                : video != null && video != ''
+                    ? NetworkVideoWidget(
+                        videoUrl: Uri.parse(video),
+                        radius: 0,
+                        height: height,
+                        width: width,
+                        image: image,
+                      )
+                    : CachedImage(
+                        image: image, // Replace with your image path
+                        width: width,
+                        height: height,
+                      ),
           ),
         ],
       ),

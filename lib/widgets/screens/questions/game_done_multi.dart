@@ -5,21 +5,16 @@ import 'package:in_zone_app/widgets/screens/questions/game_done_options.dart';
 import 'package:provider/provider.dart';
 import 'package:in_zone_app/utilities/generalMethods.dart';
 
-class GameDoneContainer extends StatefulWidget {
-  final String image;
+class GameDoneMulti extends StatefulWidget {
   final bool isCasual;
   final String code;
-  const GameDoneContainer(
-      {super.key,
-      required this.image,
-      required this.isCasual,
-      required this.code});
+  const GameDoneMulti({super.key, required this.isCasual, this.code = ''});
 
   @override
-  State<GameDoneContainer> createState() => _GameDoneContainerState();
+  State<GameDoneMulti> createState() => _GameDoneContainerState();
 }
 
-class _GameDoneContainerState extends State<GameDoneContainer> {
+class _GameDoneContainerState extends State<GameDoneMulti> {
   bool loading = false;
   @override
   Widget build(BuildContext context) {
@@ -46,26 +41,10 @@ class _GameDoneContainerState extends State<GameDoneContainer> {
       }
     }
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset(
-            widget.image,
-            width: 200,
-            fit: BoxFit.cover,
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          GameDoneOptions(
-              playAgain: playAgain,
-              exitGame: exit,
-              loading: loading,
-              showPlayAgain: widget.code == '')
-        ],
-      ),
-    );
+    return GameDoneOptions(
+        playAgain: playAgain,
+        exitGame: exit,
+        loading: loading,
+        showPlayAgain: widget.code == '');
   }
 }

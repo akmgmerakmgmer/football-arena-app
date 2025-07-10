@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OnlineMethods {
-  Future<void> gameDoneMethod(api, winnerId, context) async {
+  Future<void> gameDoneMethod(api, winnerId, usedPerks, context) async {
     Map room = Provider.of<LocaleProvider>(context, listen: false).room;
     String userId = Provider.of<LocaleProvider>(context, listen: false)
         .user['_id']
@@ -17,7 +17,8 @@ class OnlineMethods {
         'userId': userId,
         'winnerId': winnerId,
         'players': room['players'],
-        'roomId': room['_id']
+        'roomId': room['_id'],
+        'usedPerks': usedPerks
       };
       await PutApi('$api/$userId', payload, (res) {
         Provider.of<LocaleProvider>(context, listen: false)
@@ -57,11 +58,11 @@ class OnlineMethods {
     );
   }
 
-  Future<void> winnerUpdate(userId, context) async {
-    await gameDoneMethod('multi-game-winner', userId, context);
+  Future<void> winnerUpdate(userId, usedPerks, context) async {
+    await gameDoneMethod('multi-game-winner', userId, usedPerks, context);
   }
 
-  Future<void> loserUpdate(userId, context) async {
+  Future<void> loserUpdate(userId, usedPerks, context) async {
     String winnerId = '';
     List players =
         Provider.of<LocaleProvider>(context, listen: false).room['players'];
@@ -70,10 +71,12 @@ class OnlineMethods {
         winnerId = player['userId']['_id'];
       }
     }
-    await OnlineMethods().gameDoneMethod('multi-game-loser', winnerId, context);
+    await OnlineMethods()
+        .gameDoneMethod('multi-game-loser', winnerId, usedPerks, context);
   }
 
-  Future<void> drawUpdate(context) async {
-    await OnlineMethods().gameDoneMethod('multi-game-draw', '', context);
+  Future<void> drawUpdate(usedPerks, context) async {
+    await OnlineMethods()
+        .gameDoneMethod('multi-game-draw', '', usedPerks, context);
   }
 }

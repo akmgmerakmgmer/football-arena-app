@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/containers/blur_container.dart';
+import 'package:in_zone_app/widgets/general_widgets/neon_icon.dart';
 import 'package:in_zone_app/widgets/general_widgets/neon_white_text.dart';
 import 'package:in_zone_app/utilities/neon_box_shadow.dart';
 import 'dart:ui';
@@ -59,11 +60,11 @@ class CountDown extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.timer,
+                NeonIcon(
+                  icon: Icons.timer,
                   color: Colors.white,
                   size: 24,
-                  shadows: textShadow,
+                  shadow: textShadow,
                 ),
                 const SizedBox(width: 6),
                 NeonWhiteText(

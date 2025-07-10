@@ -63,6 +63,7 @@ class AccountProfile extends StatelessWidget {
                                   context,
                                   Wrap(
                                     runSpacing: 4,
+                                    spacing: 4,
                                     children: List<Widget>.from(
                                       user['avatars'].map<Widget>((avatar) =>
                                           GestureDetector(

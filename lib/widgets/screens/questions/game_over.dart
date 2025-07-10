@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:in_zone_app/widgets/buttons/save_exit_button.dart';
 import 'package:in_zone_app/widgets/containers/fade_transition.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/widgets/screens/questions/game_done_options.dart';
 
 class GameOver extends StatelessWidget {
   final Function playAgain;
@@ -22,26 +21,11 @@ class GameOver extends StatelessWidget {
           const SizedBox(
             height: 15,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SaveExitButton(
-                buttonText: AppLocalizations.of(context)!.playAgain,
-                action: () => playAgain(),
-                icon: Icons.restart_alt,
-                radius: 10,
-              ),
-              const SizedBox(
-                width: 15,
-              ),
-              SaveExitButton(
-                buttonText: AppLocalizations.of(context)!.exitGame,
-                action: () => exitGame(),
-                icon: Icons.exit_to_app,
-                radius: 10,
-              ),
-            ],
-          )
+          GameDoneOptions(
+              playAgain: playAgain,
+              exitGame: exitGame,
+              loading: false,
+              showPlayAgain: true)
         ],
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/screens/multi_screen.dart';
+import 'package:in_zone_app/screens/multi_screen_party.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/socket.dart';
 import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
@@ -15,7 +16,9 @@ class SocketMethods {
       String code = '',
       bool hostRoom = false,
       bool isCasual = false,
-      bool isOnline = false}) {
+      bool isOnline = false,
+      int numberOfPlayers = 2,
+      int gameDuration = 90}) {
     Map user = localeProvider.user;
     if (user.isNotEmpty) {
       _socketClient?.emit('joinRoom', {
@@ -25,7 +28,9 @@ class SocketMethods {
         'code': code,
         'isCasual': isCasual,
         'questionMode': questionMode,
-        'isOnline': isOnline
+        'isOnline': isOnline,
+        'numberOfPlayers': numberOfPlayers,
+        'gameDuration': gameDuration
       });
     } else {
       if (context.mounted) {
@@ -74,15 +79,27 @@ class SocketMethods {
       data['room']['players'].insert(0, myUser);
       localeProvider.setRoom(data['room']);
       if (context.mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            settings: const RouteSettings(name: '/multi-screen'),
-            builder: (context) => MultiScreen(
-              coinsPayed: data['coinsPayed'],
+        if (localeProvider.room['numberOfPlayers'] == 2) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              settings: const RouteSettings(name: '/multi-screen'),
+              builder: (context) => MultiScreen(
+                coinsPayed: data['coinsPayed'],
+              ),
             ),
-          ),
-        );
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              settings: const RouteSettings(name: '/multi-screen-party'),
+              builder: (context) => MultiScreenParty(
+                coinsPayed: data['coinsPayed'],
+              ),
+            ),
+          );
+        }
       }
     });
   }
@@ -112,29 +129,24 @@ class SocketMethods {
     });
   }
 
-  void timeDoneListener(LocaleProvider localeProvider, callback) {
-    _socketClient?.on('timeDoneListener', (data) {
-      Map room = localeProvider.room;
-      for (var player in room['players']) {
-        if (player['userId']['_id'] == data['userId']) {
-          player["timeDone"] = true;
-        }
-      }
-      localeProvider.setRoom(room);
-      callback(room);
-    });
-  }
 
   void leaveRoomEarlyListener(LocaleProvider localeProvider) {
-    _socketClient?.once('leaveRoomEarlyListener', (data) {
+    _socketClient?.on('leaveRoomEarlyListener', (data) {
       localeProvider.setRoom(data['room']);
     });
   }
 
   void leaveRoomListener(LocaleProvider localeProvider, callback) {
-    _socketClient?.once('leaveRoomListener', (data) {
+    _socketClient?.on('leaveRoomListener', (data) {
       localeProvider.setRoom(data['fullRoom']);
       callback(data['roomPlayers'], data['fullRoom']);
+    });
+  }
+
+
+  void countDownListener(callback) {
+    _socketClient?.on('gameCountdown', (countDownValue) {
+      callback(countDownValue);
     });
   }
 }

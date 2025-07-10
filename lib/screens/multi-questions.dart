@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/screens/reversed_words.dart';
-import 'package:in_zone_app/utilities/api_methods.dart';
-import 'package:in_zone_app/utilities/external_url.dart';
 import 'package:in_zone_app/utilities/online_methods.dart';
 import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
@@ -17,9 +14,10 @@ import 'package:in_zone_app/widgets/containers/page_plain_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/waiting_for_other_players.dart';
 import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
-import 'package:in_zone_app/widgets/screens/questions/advertisment.dart';
 import 'package:in_zone_app/widgets/screens/questions/countdown.dart';
+import 'package:in_zone_app/widgets/screens/questions/game_final_result.dart';
 import 'package:in_zone_app/widgets/screens/questions/multiple_choices.dart';
+import 'package:in_zone_app/widgets/screens/questions/multiple_players_positioning.dart';
 import 'package:in_zone_app/widgets/screens/questions/player_search.dart';
 import 'package:in_zone_app/widgets/screens/questions/true_or_false.dart';
 import 'package:in_zone_app/widgets/screens/questions/two_players_stats.dart';
@@ -41,7 +39,8 @@ class MultiQuestions extends StatefulWidget {
 class _QuestionsState extends State<MultiQuestions>
     with WidgetsBindingObserver {
   // States
-  final Connectivity _connectivity = Connectivity();
+  // final Connectivity _connectivity = Connectivity();
+  // bool youCheated = false;
   Timer? _timer;
   String userId = '';
   List questions = [];
@@ -58,7 +57,6 @@ class _QuestionsState extends State<MultiQuestions>
   int multiplyPoints = 1;
   bool activateVar = false;
   bool countStarted = false;
-  bool stopCount = false;
   List advertisments = [];
   bool showAd = false;
   int currentAd = -1;
@@ -67,10 +65,10 @@ class _QuestionsState extends State<MultiQuestions>
   List usedPerks = [];
   bool anyTimePerkActive = false;
   bool stoppageTimeActive = false;
-  bool playerTimeDoneCalled = false;
   final AudioPlayer _audioPlayer = AudioPlayer();
   final AudioPlayer _multiGameAudio = AudioPlayer();
   List roomPlayers = [];
+  int numberOfPlayers = 2;
   final SocketMethods _socketMethods = SocketMethods();
   bool questionsFinished = false;
   bool youWonState = false;
@@ -80,7 +78,6 @@ class _QuestionsState extends State<MultiQuestions>
   bool gameDoneLoading = false;
   bool multiGameSoundPlaying = false;
   bool matchResultCalculated = false;
-  bool youCheated = false;
   late ValueNotifier<int> _countDownNotifier;
 
   // Methods
@@ -91,7 +88,6 @@ class _QuestionsState extends State<MultiQuestions>
         questions = [...room['questions']];
       });
       getQuestionMode();
-      initializeCount();
       initializeHints();
     }
   }
@@ -100,52 +96,10 @@ class _QuestionsState extends State<MultiQuestions>
     _countDownNotifier = ValueNotifier(defaultCountDown);
   }
 
-  void initializeCount() {
-    if (mounted) {
-      if (!countStarted) {
-        _countDownNotifier.value = setCount();
-        decreaseCount();
-        decreaseAdCount();
-        countStarted = true;
-      }
-    }
-  }
-
   void initializeHints() {
     if (currentQuestion == 0 && hints.isEmpty && showHints() && mounted) {
       setState(() {
         hints = [questions[currentQuestion]['hints'][0]];
-      });
-    }
-  }
-
-  void decreaseCount() {
-    if (mounted) {
-      _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-        if (!stopCount) {
-          if (_countDownNotifier.value > 0) {
-            _countDownNotifier.value = _countDownNotifier.value - 1;
-          } else {
-            playerTimeDone();
-          }
-          if (_countDownNotifier.value < 6 && _countDownNotifier.value > -1) {
-            playCountDownSound();
-          }
-        }
-      });
-    }
-  }
-
-  void decreaseAdCount() {
-    if (mounted) {
-      Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-        if (!stopAdCount) {
-          if (currentAdCountDown > 0) {
-            setState(() {
-              currentAdCountDown -= 1;
-            });
-          }
-        }
       });
     }
   }
@@ -172,25 +126,13 @@ class _QuestionsState extends State<MultiQuestions>
     return false;
   }
 
-  int setCount() {
-    defaultCountDown = 90;
-    return defaultCountDown;
-  }
-
   void getToNextQuestion() {
     if (mounted) {
       if (currentQuestion == questions.length - 1) {
         setState(() {
           questionsFinished = true;
         });
-        playerTimeDone();
       } else {
-        if ((currentQuestion - 1) % 15 == 0 &&
-            currentQuestion != 0 &&
-            currentQuestion != 1 &&
-            advertisments.isNotEmpty) {
-          currentAdMethod();
-        }
         if (questionMode == 'guessTheTeam') {
           setState(() {
             chosenPlayers = [];
@@ -419,80 +361,12 @@ class _QuestionsState extends State<MultiQuestions>
     }
   }
 
-  void stoppageTimeMethod(id) {
-    if (mounted) {
-      setState(() {
-        usedPerks.add(id);
-      });
-      anyTimePerkActive = true;
-      stoppageTimeActive = true;
-      multiplyPoints = 2;
-      Timer.periodic(const Duration(seconds: 30), (Timer timer) {
-        multiplyPoints = 1;
-        anyTimePerkActive = false;
-        stoppageTimeActive = false;
-      });
-    }
-  }
-
-  void stopTimeMethod(id) {
-    if (mounted) {
-      if (!anyTimePerkActive) {
-        setState(() {
-          usedPerks.add(id);
-        });
-        stopCount = true;
-        anyTimePerkActive = true;
-        Timer.periodic(const Duration(seconds: 15), (Timer timer) {
-          stopCount = false;
-          anyTimePerkActive = false;
-        });
-      }
-    }
-  }
-
-  currentAdMethod() {
-    if (mounted) {
-      currentAd = currentAd + 1;
-      if (currentAd > advertisments.length - 1) {
-        currentAd = 0;
-      }
-      setState(() {
-        currentAdCountDown = 6;
-        showAd = true;
-        stopCount = true;
-        stopAdCount = false;
-      });
-    }
-  }
-
-  void adClicked(id, link) {
-    PutApi('ad-clicked/$id', {}, (res) {}).put(context);
-    ExternalUrl().launchNewUrl(link);
-  }
-
-  void timeDoneListenerMethod(room) {
-    if (mounted) {
-      bool allTimeDone = true;
-      for (var player in room['players']) {
-        if (!player['timeDone']) allTimeDone = false;
-      }
-      if (allTimeDone) {
-        matchEndCalculation(room);
-        setState(() {
-          allPlayersTimeDone = allTimeDone;
-        });
-        return;
-      }
-    }
-  }
-
   void leaveRoomListenerMethod(players, room) {
     _multiGameAudio.stop();
     _audioPlayer.stop();
     if (mounted) {
       roomPlayers = players;
-      if (roomPlayers.length == 1) {
+      if (roomPlayers.length == 1 && numberOfPlayers == 2) {
         setState(() {
           oneUserLeft = true;
         });
@@ -501,84 +375,56 @@ class _QuestionsState extends State<MultiQuestions>
     }
   }
 
+  changeCountDown(value) {
+    _countDownNotifier.value = value;
+    if (value == 0) {
+      setState(() {
+        gameDoneLoading = true;
+        allPlayersTimeDone = true;
+      });
+      Map room = Provider.of<LocaleProvider>(context, listen: false).room;
+      Future.delayed(const Duration(seconds: 1), () {
+        matchEndCalculation(room);
+      });
+    }
+    if (value < 6 && value > -1) {
+      playCountDownSound();
+    }
+  }
+
   void initialFetch() async {
-    userId = Provider.of<LocaleProvider>(context, listen: false)
-        .user['_id']
-        .toString();
+    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+    userId = localeProvider.user['_id'].toString();
     roomPlayers =
         Provider.of<LocaleProvider>(context, listen: false).room['players'];
-    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+    numberOfPlayers = Provider.of<LocaleProvider>(context, listen: false)
+        .room['numberOfPlayers'];
 
-    _socketMethods.timeDoneListener(localeProvider, timeDoneListenerMethod);
     _socketMethods.leaveRoomListener(localeProvider, leaveRoomListenerMethod);
+    _socketMethods.countDownListener(changeCountDown);
     getQuestions();
-  }
-
-  checkIfTheOtherUserCheated() {
-    Map room = Provider.of<LocaleProvider>(context, listen: false).room;
-    if (room['players'].length > 1 && !matchResultCalculated) {
-      for (var player in room['players']) {
-        if (!player['timeDone'] &&
-            player['userId']['_id'].toString() != userId.toString()) {
-          _multiGameAudio.stop();
-          OnlineMethods().winnerUpdate(userId, context);
-          setState(() {
-            oneUserLeft = true;
-            youWonState = true;
-          });
-        }
-      }
-    }
-  }
-
-  void playerTimeDone() async {
-    if (mounted) {
-      if ((_countDownNotifier.value == 0 || questionsFinished) &&
-          !playerTimeDoneCalled) {
-        setState(() {
-          playerTimeDoneCalled = true;
-          stopCount = true;
-        });
-        Map room = Provider.of<LocaleProvider>(context, listen: false).room;
-        Map emittedData = {'userId': userId, 'roomId': room['_id']};
-        _socketMethods.playerTimeDone(emittedData);
-        if (_countDownNotifier.value == 0 && !youCheated) {
-          Future.delayed(const Duration(seconds: 15), () {
-            checkIfTheOtherUserCheated();
-          });
-        } else {
-          setState(() {
-            gameDoneLoading = true;
-          });
-          await OnlineMethods().loserUpdate(userId, context);
-          setState(() {
-            oneUserLeft = true;
-            gameDoneLoading = false;
-          });
-        }
-      }
-    }
   }
 
   void matchEndCalculation(room) async {
     if (mounted) {
       _multiGameAudio.stop();
+      _audioPlayer.stop();
       setState(() {
         gameDoneLoading = true;
       });
-      stopCount = true;
       matchResultCalculated = true;
       _socketMethods.gameDone({'roomId': room['_id']});
       if (roomPlayers.length == 1 &&
-          roomPlayers[0]['userId']['_id'].toString() == userId) {
-        await OnlineMethods().winnerUpdate(userId, context);
+          roomPlayers[0]['userId']['_id'].toString() == userId &&
+          numberOfPlayers == 2) {
+        await OnlineMethods().winnerUpdate(userId, usedPerks, context);
         setState(() {
           youWonState = true;
           gameDoneLoading = false;
         });
         return;
       }
-      if (roomPlayers.length > 1) {
+      if (roomPlayers.length > 1 || numberOfPlayers > 2) {
         int maxPoints = 0;
         for (var player in room['players']) {
           if (player['points'] > maxPoints &&
@@ -587,7 +433,7 @@ class _QuestionsState extends State<MultiQuestions>
           }
         }
         if (points > maxPoints) {
-          await OnlineMethods().winnerUpdate(userId, context);
+          await OnlineMethods().winnerUpdate(userId, usedPerks, context);
           setState(() {
             youWonState = true;
             gameDoneLoading = false;
@@ -599,24 +445,14 @@ class _QuestionsState extends State<MultiQuestions>
             youDrewState = true;
             gameDoneLoading = false;
           });
-          await OnlineMethods().drawUpdate(context);
+          await OnlineMethods().drawUpdate(usedPerks, context);
           return;
         }
-        await OnlineMethods().loserUpdate(userId, context);
+        await OnlineMethods().loserUpdate(userId, usedPerks, context);
         setState(() {
           gameDoneLoading = false;
         });
       }
-    }
-  }
-
-  skipAdMethod() {
-    if (currentAdCountDown == 0 && mounted) {
-      setState(() {
-        stopAdCount = true;
-        showAd = false;
-        stopCount = false;
-      });
     }
   }
 
@@ -629,22 +465,20 @@ class _QuestionsState extends State<MultiQuestions>
     _multiGameAudio.play(AssetSource('audio/multi_game.mp3'));
   }
 
-  checkConnection() {
-    _connectivity.onConnectivityChanged
-        .listen((List<ConnectivityResult> results) {
-      print(results);
-      if (results.isNotEmpty &&
-          !results.contains(ConnectivityResult.none) == false) {
-        youCheated = true;
-      }
-    });
-  }
+  // checkConnection() {
+  //   _connectivity.onConnectivityChanged
+  //       .listen((List<ConnectivityResult> results) {
+  //     if (results.isNotEmpty &&
+  //         !results.contains(ConnectivityResult.none) == false) {
+  //       youCheated = true;
+  //     }
+  //   });
+  // }
 
   @override
   void initState() {
     super.initState();
     if (mounted) {
-      checkConnection();
       initializeNotifiers();
       initialFetch();
       leaveRoomWhenStateChanges();
@@ -662,23 +496,14 @@ class _QuestionsState extends State<MultiQuestions>
     super.dispose();
   }
 
-  void stopGame() {
-    if (mounted) {
-      setState(() {
-        stopCount = true;
-      });
-      Future.delayed(const Duration(seconds: 5), () {
-        getToNextQuestion();
-      });
-    }
-  }
-
   void leaveRoomWhenStateChanges() {
     SystemChannels.lifecycle.setMessageHandler((message) async {
       if (message == AppLifecycleState.inactive.toString()) {
-      } else if (message == AppLifecycleState.paused.toString()) {
+      } else if (message == AppLifecycleState.paused.toString() &&
+          numberOfPlayers == 2) {
         leaveRoom();
-      } else if (message == AppLifecycleState.detached.toString()) {
+      } else if (message == AppLifecycleState.detached.toString() &&
+          numberOfPlayers == 2) {
         leaveRoom();
       }
       return null;
@@ -712,7 +537,7 @@ class _QuestionsState extends State<MultiQuestions>
   void leaveRoom() {
     _multiGameAudio.stop();
     _audioPlayer.stop();
-    if (!playerTimeDoneCalled && !youWonState && !youDrewState) {
+    if (!youWonState && !youDrewState && numberOfPlayers == 2) {
       Navigator.pushReplacementNamed(context, '/main-online-screen');
       Map room = Provider.of<LocaleProvider>(context, listen: false).room;
       for (var player in room['players']) {
@@ -729,7 +554,7 @@ class _QuestionsState extends State<MultiQuestions>
         'roomId': room['_id'],
         'fullRoom': room
       });
-      OnlineMethods().loserUpdate(userId, context);
+      OnlineMethods().loserUpdate(userId, usedPerks, context);
     } else {
       Navigator.pushReplacementNamed(context, '/main-online-screen');
     }
@@ -753,155 +578,162 @@ class _QuestionsState extends State<MultiQuestions>
         image: user['selectedTheme'],
         body: gameDoneLoading
             ? const PrimaryLoading()
-            : allPlayersTimeDone || oneUserLeft
-                ? youDrewState
-                    ? YouDrewImage(
-                        locale: locale,
-                        isCasual: isCasual,
-                        code: code,
-                      )
-                    : youWonState
-                        ? YouWonImage(
+            : allPlayersTimeDone && numberOfPlayers > 2
+                ? GameFinalResult(players: roomPlayers)
+                : allPlayersTimeDone || oneUserLeft
+                    ? youDrewState
+                        ? YouDrewImage(
                             locale: locale,
                             isCasual: isCasual,
                             code: code,
                           )
-                        : YouLostImage(
-                            locale: locale,
-                            isCasual: isCasual,
-                            code: code,
+                        : youWonState
+                            ? YouWonImage(
+                                locale: locale,
+                                isCasual: isCasual,
+                                code: code,
+                              )
+                            : YouLostImage(
+                                locale: locale,
+                                isCasual: isCasual,
+                                code: code,
+                              )
+                    : questionsFinished
+                        ? WaitingForOtherPlayers(
+                            title: AppLocalizations.of(context)!
+                                .waiting_for_player_to_finish,
                           )
-                : playerTimeDoneCalled || questionsFinished
-                    ? WaitingForOtherPlayers(
-                        title: AppLocalizations.of(context)!
-                            .waiting_for_player_to_finish,
-                      )
-                    : Stack(
-                        children: [
-                          TwoPlayersStats(
-                            usedPerks: usedPerks,
-                            user: user,
-                            points: points,
-                            stopTime: stopTimeMethod,
-                            penalty: penaltyMethod,
-                            varMethod: varMethod,
-                            stoppageTime: stoppageTimeMethod,
-                            pointsMultiplicationMethod: multiplyPointsMethod,
-                            skipQuestion: skipQuestionMethod,
-                            locale: locale,
-                            localeProvider: localeProvider,
-                          ),
-                          // Positioned(
-                          //   left: 10,
-                          //   right: 10,
-                          //   child: PauseAndPlay(
-                          //       isPlaying: multiGameSoundPlaying,
-                          //       isSound: true,
-                          //       action: () {
-                          //         if (multiGameSoundPlaying) {
-                          //           _multiGameAudio.pause();
-                          //           setState(() {
-                          //             multiGameSoundPlaying = false;
-                          //           });
-                          //         } else {
-                          //           playMultiGameSound();
-                          //         }
-                          //       }),
-                          // ),
-                          FadeTransitionContainer(
-                            body: Container(
-                              margin: EdgeInsets.only(
-                                  top: hints.length > 3 ? 32 : 0),
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    CountDown(
-                                      countDownNotifier: _countDownNotifier,
-                                      defaultCountDown: defaultCountDown,
-                                      defaultSize: 60,
+                        : Stack(
+                            children: [
+                              numberOfPlayers > 2
+                                  ? Container()
+                                  : TwoPlayersStats(
+                                      usedPerks: usedPerks,
+                                      user: user,
+                                      points: points,
+                                      stopTime: () {},
+                                      penalty: penaltyMethod,
+                                      varMethod: varMethod,
+                                      stoppageTime: () {},
+                                      pointsMultiplicationMethod:
+                                          multiplyPointsMethod,
+                                      skipQuestion: skipQuestionMethod,
+                                      locale: locale,
+                                      localeProvider: localeProvider,
                                     ),
-                                    const SizedBox(
-                                      height: 4,
-                                    ),
-                                    BlurBackgroundContainer(
-                                      padding: 12,
-                                      margin: 10,
-                                      body: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          TextWidget(
-                                            title: locale == 'ar'
-                                                ? '${questions[currentQuestion]['question']['ar']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})'
-                                                : '${questions[currentQuestion]['question']['en']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})',
-                                            fontSize: 16.5,
+                              // Positioned(
+                              //   left: 10,
+                              //   right: 10,
+                              //   child: PauseAndPlay(
+                              //       isPlaying: multiGameSoundPlaying,
+                              //       isSound: true,
+                              //       action: () {
+                              //         if (multiGameSoundPlaying) {
+                              //           _multiGameAudio.pause();
+                              //           setState(() {
+                              //             multiGameSoundPlaying = false;
+                              //           });
+                              //         } else {
+                              //           playMultiGameSound();
+                              //         }
+                              //       }),
+                              // ),
+                              FadeTransitionContainer(
+                                body: Container(
+                                  padding: const EdgeInsets.all(0),
+                                  margin: EdgeInsets.only(
+                                      top: hints.length > 3 ? 32 : 0),
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        CountDown(
+                                          countDownNotifier: _countDownNotifier,
+                                          defaultCountDown: defaultCountDown,
+                                          defaultSize: 60,
+                                        ),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
+                                        BlurBackgroundContainer(
+                                          padding: 12,
+                                          margin: 10,
+                                          body: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              TextWidget(
+                                                title: locale == 'ar'
+                                                    ? '${questions[currentQuestion]['question']['ar']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})'
+                                                    : '${questions[currentQuestion]['question']['en']} (${showPointsValue()} ${AppLocalizations.of(context)!.points})',
+                                                fontSize: 16.5,
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
+                                        PlayerSearch(
+                                          locale: locale,
+                                          isPlayerSearch: questionMode ==
+                                                  'guessThePlayer' ||
+                                              questionMode ==
+                                                  'passwordChallenge',
+                                          questionHintsLength:
+                                              questions[currentQuestion]
+                                                      ['hints']
+                                                  .length,
+                                          hints: hints,
+                                          addHintAction: addHintAction,
+                                          skipAction: skipAction,
+                                          playerAction: choiceAction,
+                                        ),
+                                        MultipleChoices(
+                                          locale: locale,
+                                          choices: questions[currentQuestion]
+                                              ['choices'],
+                                          isMultipleChoices:
+                                              questionMode == 'multipleChoices',
+                                          action: choiceAction,
+                                        ),
+                                        TrueOrFalse(
+                                          locale: locale,
+                                          choices: questions[currentQuestion]
+                                              ['choices'],
+                                          isTrueOrFalse:
+                                              questionMode == 'trueOrFalse',
+                                          action: choiceAction,
+                                        ),
+                                        ReversedWords(
+                                            isReversedWords:
+                                                questionMode == 'reversedWords',
+                                            initiateAnswer: (answer) =>
+                                                choiceAction(answer, 0),
+                                            skipAction: skipAction,
+                                            reversedWord: questions[
+                                                            currentQuestion]
+                                                        ['reversedAnswer'] !=
+                                                    null
+                                                ? questions[currentQuestion]
+                                                    ['reversedAnswer'][locale]
+                                                : [],
+                                            deleteWord: deleteWord)
+                                      ],
                                     ),
-                                    const SizedBox(
-                                      height: 8,
-                                    ),
-                                    PlayerSearch(
-                                      locale: locale,
-                                      isPlayerSearch: questionMode ==
-                                              'guessThePlayer' ||
-                                          questionMode == 'passwordChallenge',
-                                      questionHintsLength:
-                                          questions[currentQuestion]['hints']
-                                              .length,
-                                      hints: hints,
-                                      addHintAction: addHintAction,
-                                      skipAction: skipAction,
-                                      playerAction: choiceAction,
-                                    ),
-                                    MultipleChoices(
-                                      locale: locale,
-                                      choices: questions[currentQuestion]
-                                          ['choices'],
-                                      isMultipleChoices:
-                                          questionMode == 'multipleChoices',
-                                      action: choiceAction,
-                                    ),
-                                    TrueOrFalse(
-                                      locale: locale,
-                                      choices: questions[currentQuestion]
-                                          ['choices'],
-                                      isTrueOrFalse:
-                                          questionMode == 'trueOrFalse',
-                                      action: choiceAction,
-                                    ),
-                                    ReversedWords(
-                                        isReversedWords:
-                                            questionMode == 'reversedWords',
-                                        initiateAnswer: (answer) =>
-                                            choiceAction(answer, 0),
-                                        skipAction: skipAction,
-                                        reversedWord: questions[currentQuestion]
-                                                    ['reversedAnswer'] !=
-                                                null
-                                            ? questions[currentQuestion]
-                                                ['reversedAnswer'][locale]
-                                            : [],
-                                        deleteWord: deleteWord)
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
+                              numberOfPlayers > 2
+                                  ? MultiplPlayersPositioning(
+                                      players: roomPlayers,
+                                      user: user,
+                                      localeProvider: localeProvider,
+                                    )
+                                  : Container(),
+                            ],
                           ),
-                          showAd && advertisments.isNotEmpty
-                              ? Advertisment(
-                                  adClicked: () => adClicked(
-                                      advertisments[currentAd]['_id'],
-                                      advertisments[currentAd]
-                                          ['directionLink']),
-                                  seconds: currentAdCountDown,
-                                  skipAdMethod: skipAdMethod,
-                                  image: advertisments[currentAd]['image'])
-                              : Container()
-                        ],
-                      ),
       )),
     );
   }

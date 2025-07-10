@@ -40,10 +40,10 @@ class _SingleModeState extends State<SingleMode> {
     String formattedDate = DateFormat('yyyy-MM-dd').format(now);
 
     List currentMode = user['questionModes']
-        .where((userMode) => userMode['modeName'] == widget.singleMode['mode'])
+        .where((userMode) => userMode['modeName'] == widget.singleMode['value'])
         .toList();
     if (currentMode.isNotEmpty &&
-        currentMode[0]['modeName'] == widget.singleMode['mode'] &&
+        currentMode[0]['modeName'] == widget.singleMode['value'] &&
         currentMode[0]['lastPlayedDate'] == formattedDate) {
       return true;
     }
@@ -60,18 +60,18 @@ class _SingleModeState extends State<SingleMode> {
 
     if (isPlayedToday(context)) {
       return ModalContainer.choosePlayOptionModal(
-          context, localeProvider, widget.singleMode['mode']);
+          context, localeProvider, widget.singleMode['value']);
     }
     if (widget.isOnline && context.mounted) {
       socketMethods.joinRoom(context, localeProvider,
-          questionMode: widget.singleMode['mode']);
+          questionMode: widget.singleMode['value']);
     } else {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           settings: const RouteSettings(name: '/questions'),
           builder: (context) => Questions(
-            questionMode: widget.singleMode['mode'],
+            questionMode: widget.singleMode['value'],
             userId:
                 Provider.of<LocaleProvider>(context, listen: false).user['_id'],
           ),

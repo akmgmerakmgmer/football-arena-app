@@ -1,6 +1,21 @@
 import 'package:flutter/material.dart';
 
 class NeonBoxShadow {
+  List<BoxShadow> customNeonShadow(Color color) {
+    return [
+      BoxShadow(
+        color: color.withOpacity(0.7),
+        blurRadius: 16,
+        spreadRadius: 2,
+      ),
+      BoxShadow(
+        color: color.withOpacity(0.4),
+        blurRadius: 32,
+        spreadRadius: 8,
+      ),
+    ];
+  }
+
   List<BoxShadow> boxShadowNeon(context) {
     return [
       BoxShadow(

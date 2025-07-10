@@ -10,6 +10,7 @@ import 'package:in_zone_app/screens/main_online.dart';
 import 'package:in_zone_app/screens/main_online_screen.dart';
 import 'package:in_zone_app/screens/multi-questions.dart';
 import 'package:in_zone_app/screens/multi_screen.dart';
+import 'package:in_zone_app/screens/multi_screen_party.dart';
 import 'package:in_zone_app/screens/play_alone.dart';
 import 'package:in_zone_app/screens/prev_ranks.dart';
 import 'package:in_zone_app/screens/questions.dart';
@@ -111,6 +112,7 @@ class _MyAppState extends State<MyApp> {
                   '/ranks': (context) => const AllRanks(),
                   '/prev-ranks': (context) => const PrevRanks(),
                   '/multi-screen': (context) => const MultiScreen(),
+                  '/multi-screen-party': (context) => const MultiScreenParty(),
                   '/multi-questions': (context) => const MultiQuestions()
                 },
                 title: 'InZone Football',

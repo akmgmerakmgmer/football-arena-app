@@ -80,7 +80,7 @@ class MainButton extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: borderRadius,
-          onTap: disabled ? null : () => action(),
+          onTap: disabled || loading ? null : () => action(),
           splashColor: Colors.white.withOpacity(0.2),
           highlightColor: Colors.white.withOpacity(0.1),
           child: Ink(

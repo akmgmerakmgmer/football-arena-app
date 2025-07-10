@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/external_url.dart';
-import 'package:in_zone_app/utilities/game_data.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
 import 'package:in_zone_app/widgets/containers/pages_asset_background.dart';
 import 'package:in_zone_app/widgets/general_widgets/dialog_widget_blured.dart';
@@ -11,7 +10,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:in_zone_app/widgets/screens/home/coins_button.dart';
 import 'package:in_zone_app/widgets/screens/home/video_ad_button.dart';
 import 'package:in_zone_app/widgets/screens/online_main_screen/code_input_form.dart';
-import 'package:in_zone_app/widgets/screens/online_main_screen/single_option.dart';
+import 'package:in_zone_app/widgets/screens/online_main_screen/room_data.dart';
 
 class ModalContainer {
   static modal(BuildContext context, Widget widget, String title,
@@ -21,16 +20,15 @@ class ModalContainer {
         context: context,
         barrierDismissible: false,
         builder: (ctx) => DialogWidgetBlured(
-              title: title,
-              loading: loading,
-              widget: SingleChildScrollView(child: widget),
-              closeCallBack: () {
-                if (closeCallBack != null) {
-                  closeCallBack();
-                }
-              },
-              action: action
-            ));
+            title: title,
+            loading: loading,
+            widget: SingleChildScrollView(child: widget),
+            closeCallBack: () {
+              if (closeCallBack != null) {
+                closeCallBack();
+              }
+            },
+            action: action));
   }
 
   static updateModal(BuildContext context, Widget widget, String title) {
@@ -113,21 +111,12 @@ class ModalContainer {
   static bottomSheetHostGame(
       BuildContext context, LocaleProvider localeProvider,
       {hostRoom = false, isCasual = false}) {
-    showModalBottomSheetContainer(
-        context,
-        SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: GameData.modes
-                  .map((option) => SingleOption(
-                        option: option,
-                        locale: localeProvider.locale,
-                        hostRoom: hostRoom,
-                        isCasual: isCasual,
-                      ))
-                  .toList(),
-            )));
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => DialogWidgetBlured(
+            title: AppLocalizations.of(context)!.choose_option_to_play,
+            widget: RoomData(isCasual: isCasual, hostRoom: hostRoom)));
   }
 
   static codeInputModal(BuildContext context, LocaleProvider localeProvider) {
