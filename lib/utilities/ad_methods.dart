@@ -70,6 +70,8 @@ class AdMethods {
       localeProvider.setInterstitialAd(null);
       createInterstitialAd(context);
       callback();
+    } else {
+      callback();
     }
   }
 }

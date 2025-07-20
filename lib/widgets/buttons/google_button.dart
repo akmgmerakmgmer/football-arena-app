@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/auth.dart';
-import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
+import 'package:in_zone_app/widgets/buttons/google_button_style.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:in_zone_app/widgets/loadings/primary_loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:in_zone_app/widgets/user_inputs/input.dart';
+import 'package:in_zone_app/widgets/general_widgets/dialog_widget_blured.dart';
 
 // ignore: must_be_immutable
 class GoogleButton extends StatefulWidget {
@@ -20,9 +20,12 @@ class _GoogleButtonState extends State<GoogleButton> {
   String displayName = '';
   bool loading = false;
 
+  DateTime? selectedDate;
+  String? birthdateError;
+
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  Future<void> _handleSignIn(context) async {
+  Future<void> _handleSignIn(context, String birthdate) async {
     try {
       setState(() {
         loading = true;
@@ -45,7 +48,10 @@ class _GoogleButtonState extends State<GoogleButton> {
       }
 
       // Call your backend API for login
-      PostApi('email-login', {'email': selectedGoogleUser.email}, (res) async {
+      PostApi('email-login', {
+        'email': selectedGoogleUser.email,
+        'birthdate': birthdate
+      }, (res) async {
         SharedPreferences localStorage = await SharedPreferences.getInstance();
         localStorage.setString('token', res['accessToken']);
         String? token = localStorage.getString(('token'));
@@ -65,60 +71,88 @@ class _GoogleButtonState extends State<GoogleButton> {
     }
   }
 
+  void _showBirthdateDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return DialogWidgetBlured(
+              title: AppLocalizations.of(context)!.birthDate,
+              widget: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      final DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: selectedDate ?? DateTime(2000, 1, 1),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime.now(),
+                        builder: (context, child) {
+                          return Theme(
+                            data: Theme.of(context).copyWith(
+                              colorScheme: ColorScheme.light(
+                                primary: Theme.of(context).primaryColor,
+                                onPrimary: Colors.white,
+                                onSurface: Colors.black,
+                              ),
+                              dialogBackgroundColor: Colors.white,
+                            ),
+                            child: child!,
+                          );
+                        },
+                      );
+                      if (picked != null) {
+                        setStateDialog(() {
+                          selectedDate = picked;
+                          birthdateError = null;
+                        });
+                      }
+                    },
+                    child: AbsorbPointer(
+                      child: Input(
+                        key: ValueKey(selectedDate),
+                        callback: (_) {},
+                        value: selectedDate != null
+                            ? '${selectedDate!.year}-${selectedDate!.month.toString().padLeft(2, '0')}-${selectedDate!.day.toString().padLeft(2, '0')}'
+                            : '',
+                        label: AppLocalizations.of(context)!.birthDate,
+                        error: birthdateError ?? '',
+                        loading: false,
+                        disabled: true,
+                        icon: const Icon(Icons.cake_outlined),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                      onTap: () {
+                        if (selectedDate == null) {
+                          setStateDialog(() {
+                            birthdateError =
+                                AppLocalizations.of(context)!.field_required;
+                          });
+                          return;
+                        }
+                        _handleSignIn(context,
+                            '${selectedDate!.year}-${selectedDate!.month.toString().padLeft(2, '0')}-${selectedDate!.day.toString().padLeft(2, '0')}');
+                      },
+                      child: GoogleButtonStyle(loading: loading)),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _handleSignIn(context),
-      child: Container(
-        padding: loading ? const EdgeInsets.all(12) : const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color:
-                    Colors.black.withOpacity(0.2), // Shadow color with opacity
-                blurRadius: 6, // Spread radius (similar to shadow-md)
-                offset:
-                    const Offset(0, 3), // Changes the position of the shadow
-              ),
-            ],
-            gradient: LinearGradient(
-              colors: [
-                Colors.white,
-                Colors.white,
-                Colors.white, // Start color
-                Colors.white.withOpacity(0.75), // End color
-              ],
-              begin: Alignment.topCenter, // Gradient starts here
-              end: Alignment.bottomCenter, // Gradient ends here
-            ),
-            borderRadius: const BorderRadius.all(Radius.circular(4))),
-        child: loading
-            ? PrimaryLoading(
-                color: Theme.of(context).primaryColor,
-                size: 14,
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                    SvgPicture.asset(
-                      'assets/images/icons8-google.svg',
-                      semanticsLabel:
-                          'Google Icon', // Optional, for screen readers
-                      width: 22, // Adjust width as needed
-                      height: 22, // Adjust height as needed
-                    ),
-                    const SizedBox(
-                      width: 4,
-                    ),
-                    TextWidget(
-                      title: AppLocalizations.of(context)!.continue_with_google,
-                      color: Colors.grey,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    )
-                  ]),
-      ),
-    );
+        onTap: () => _showBirthdateDialog(context),
+        child: GoogleButtonStyle(loading: loading));
   }
 }

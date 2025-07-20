@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/utilities/auth.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
@@ -17,14 +16,21 @@ class SignupForm extends StatefulWidget {
 
 class _SignupFormState extends State<SignupForm> {
   bool loading = false;
-  Map payload = {'username': '', 'password': '', 'number': ''};
-  Map errors = {'username': '', 'number': '', 'password': ''};
+  Map payload = {'username': '', 'password': '', 'number': '', 'birthdate': ''};
+  Map errors = {'username': '', 'number': '', 'password': '', 'birthdate': ''};
+  DateTime? selectedDate;
 
   Future<void> signupMethod() async {
     setState(() {
       loading = true;
-      errors = {'username': '', 'number': '', 'password': ''};
+      errors = {'username': '', 'number': '', 'password': '', 'birthdate': ''};
     });
+    // Ensure birthdate is in the payload as a string (e.g., yyyy-MM-dd)
+    if (selectedDate != null) {
+      payload['birthdate'] = selectedDate!.toIso8601String().split('T')[0];
+    } else {
+      payload['birthdate'] = '';
+    }
     PostApi('signup', payload,
         successMessage: AppLocalizations.of(context)!.user_created,
         (response) async {
@@ -65,6 +71,9 @@ class _SignupFormState extends State<SignupForm> {
       if (value.containsKey('password') &&
           value['password'] == 'password_min_length') {
         errors['password'] = AppLocalizations.of(context)!.password_min_length;
+      }
+      if (value.containsKey('birthdate') && value['birthdate'] == 'field_required') {
+        errors['birthdate'] = AppLocalizations.of(context)!.field_required;
       }
       setState(() {
         loading = false;
@@ -114,6 +123,54 @@ class _SignupFormState extends State<SignupForm> {
           loading: loading,
           type: TextInputType.number,
           icon: const Icon(Icons.phone_outlined),
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+        GestureDetector(
+          onTap: loading
+              ? null
+              : () async {
+                  final DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: selectedDate ?? DateTime(2000, 1, 1),
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime.now(),
+                    builder: (context, child) {
+                      return Theme(
+                        data: Theme.of(context).copyWith(
+                          colorScheme: ColorScheme.light(
+                            primary: Theme.of(context).primaryColor,
+                            onPrimary: Colors.white,
+                            onSurface: Colors.black,
+                          ),
+                          dialogBackgroundColor: Colors.white,
+                        ),
+                        child: child!,
+                      );
+                    },
+                  );
+                  if (picked != null && picked != selectedDate) {
+                    setState(() {
+                      selectedDate = picked;
+                      errors['birthdate'] = '';
+                    });
+                  }
+                },
+          child: AbsorbPointer(
+            child: Input(
+              key: ValueKey(selectedDate),
+              callback: (_) {},
+              value: selectedDate != null
+                  ? '${selectedDate!.year}-${selectedDate!.month.toString().padLeft(2, '0')}-${selectedDate!.day.toString().padLeft(2, '0')}'
+                  : '',
+              label: AppLocalizations.of(context)!.birthDate,
+              error: errors['birthdate'],
+              loading: loading,
+              disabled: true,
+              icon: const Icon(Icons.cake_outlined),
+            ),
+          ),
         ),
         const SizedBox(
           height: 15,

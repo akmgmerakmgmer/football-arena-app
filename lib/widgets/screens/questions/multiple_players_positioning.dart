@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
-import 'package:in_zone_app/widgets/containers/blur_container_with_border.dart';
+import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
 import 'package:in_zone_app/widgets/screens/questions/online_party_single_result.dart';
 
 class MultiplPlayersPositioning extends StatefulWidget {
@@ -94,9 +94,10 @@ class _MultiplPlayersPositioningState extends State<MultiplPlayersPositioning>
             duration: const Duration(milliseconds: 200),
             opacity: _expanded ? 1.0 : 0.0,
             child: Center(
-              child: BlurContainerWithBorder(
-                padding: const EdgeInsets.all(8),
-                child: Material(
+              child: BlurBackgroundContainer(
+                border: 10,
+                padding: 8,
+                body: Material(
                   color: Colors.transparent,
                   child: Wrap(
                     alignment: WrapAlignment.center,

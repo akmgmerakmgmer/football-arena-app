@@ -33,6 +33,23 @@ class GeneralMethods {
     return Provider.of<LocaleProvider>(context, listen: false).locale;
   }
 
+  bool isUserUnder13(Map user) {
+    if (user['birthdate'] != null) {
+      try {
+        DateTime birthdate = DateTime.parse(user['birthdate']);
+        int age = DateTime.now().year - birthdate.year;
+        if (DateTime.now().month < birthdate.month ||
+            (DateTime.now().month == birthdate.month && DateTime.now().day < birthdate.day)) {
+          age--;
+        }
+        return age < 13;
+      } catch (_) {
+        return false; // fallback: show ad if parsing fails
+      }
+    }
+    return false;
+  }
+
   joinGameWithAds(context, localeProvider,
       {hostRoom = false,
       isCasual = false,
@@ -48,8 +65,9 @@ class GeneralMethods {
       return coinsList[randomIndex]; // Return the coin at the random index
     }
 
-    bool showAd = getRandomNumber() == 1 ? false : false;
-    if (showAd) {
+    bool showAd = getRandomNumber() == 1 ? true : false;
+    bool isUnder13 = isUserUnder13(localeProvider.user);
+    if (showAd && !isUnder13) {
       AdMethods().showInterstitialAd(() {
         Future.delayed(const Duration(seconds: 4), () {
           socketMethods.joinRoom(context, localeProvider,

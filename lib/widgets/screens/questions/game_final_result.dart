@@ -41,7 +41,8 @@ class GameFinalResult extends StatelessWidget {
               const SizedBox(
                 height: 36,
               ),
-              Expanded(
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.5,
                 child: ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context)
                       .copyWith(scrollbars: false),

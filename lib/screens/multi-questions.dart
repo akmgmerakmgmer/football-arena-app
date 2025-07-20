@@ -93,7 +93,7 @@ class _QuestionsState extends State<MultiQuestions>
   }
 
   initializeNotifiers() {
-    _countDownNotifier = ValueNotifier(defaultCountDown);
+    _countDownNotifier = ValueNotifier(90);
   }
 
   void initializeHints() {
@@ -376,6 +376,7 @@ class _QuestionsState extends State<MultiQuestions>
   }
 
   changeCountDown(value) {
+    print(value);
     _countDownNotifier.value = value;
     if (value == 0) {
       setState(() {
@@ -489,7 +490,6 @@ class _QuestionsState extends State<MultiQuestions>
 
   @override
   void dispose() {
-    _countDownNotifier.dispose();
     _timer?.cancel();
     _audioPlayer.dispose();
     WidgetsBinding.instance.removeObserver(this);
@@ -621,23 +621,6 @@ class _QuestionsState extends State<MultiQuestions>
                                       locale: locale,
                                       localeProvider: localeProvider,
                                     ),
-                              // Positioned(
-                              //   left: 10,
-                              //   right: 10,
-                              //   child: PauseAndPlay(
-                              //       isPlaying: multiGameSoundPlaying,
-                              //       isSound: true,
-                              //       action: () {
-                              //         if (multiGameSoundPlaying) {
-                              //           _multiGameAudio.pause();
-                              //           setState(() {
-                              //             multiGameSoundPlaying = false;
-                              //           });
-                              //         } else {
-                              //           playMultiGameSound();
-                              //         }
-                              //       }),
-                              // ),
                               FadeTransitionContainer(
                                 body: Container(
                                   padding: const EdgeInsets.all(0),

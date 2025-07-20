@@ -15,7 +15,9 @@ class PlayEventButton extends StatelessWidget {
   bool checkIfUserHasTheEvent(BuildContext context) {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     List currentEvent = user['events']
-        .where((userEvent) => userEvent['id'] == event['_id'])
+        .where((userEvent) =>
+            userEvent['id'] == event['_id'] &&
+            userEvent['endDate'] == event['endDate'])
         .toList();
     if (currentEvent.isNotEmpty && currentEvent[0]['id'] == event['_id']) {
       return true;
