@@ -5,7 +5,7 @@ import 'package:in_zone_app/widgets/containers/modal_container.dart';
 import 'package:in_zone_app/widgets/screens/event_details/prizes_content.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 
 class Auth {
   Future<bool> getUser(token, context) async {

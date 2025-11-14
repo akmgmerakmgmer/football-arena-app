@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:in_zone_app/widgets/animations/pulse_animation.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
+import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/screens/event_details/event_image_background.dart';
-import 'package:in_zone_app/widgets/screens/home/event_data_background.dart';
-import 'package:in_zone_app/widgets/screens/home/shiny_icon.dart';
 
 class EventImage extends StatelessWidget {
   final int numberOfImages;
@@ -20,40 +18,66 @@ class EventImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        child: EventImageBackground(
-            numberOfImages: numberOfImages,
-            image: event['image'],
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    EventDataBackground(
-                        locale: locale, title: event['eventName'][locale]),
-                    showIcon
-                        ? Container(
-                            alignment: Alignment.bottomRight,
-                            margin: const EdgeInsets.all(4),
-                            child: const PulseAnimation(
-                                child: ShinyIcon(
-                                    size: 16,
-                                    icon: Icons.question_mark_rounded)),
-                          )
-                        : Container(),
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
+        child: Stack(
+          children: [
+            // Background image with gradient overlay
+            EventImageBackground(
+              numberOfImages: numberOfImages,
+              image: event['image'],
+              child: Container(),
+            ),
+            
+            // Content
+            Positioned.fill(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Bottom section - End date
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.6),
+                          borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.2),
+                          width: 1,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.access_time,
+                            color: Colors.white.withOpacity(0.9),
+                            size: 16,
+                          ),
+                          const SizedBox(width: 8),
+                          TextWidget(
+                            title: '${AppLocalizations.of(context)!.ends_on} ${event['endDate']}',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white.withOpacity(0.95),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ),
                   ],
                 ),
-                Container(
-                  alignment: Alignment.bottomRight,
-                  child: EventDataBackground(
-                      bottom: true,
-                      locale: locale,
-                      title:
-                          '${AppLocalizations.of(context)!.ends_on} ${event['endDate']}'),
-                )
-              ],
-            )));
+              ),
+          ],
+        ));
   }
 }

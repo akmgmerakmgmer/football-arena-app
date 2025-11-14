@@ -5,7 +5,7 @@ import 'package:in_zone_app/utilities/generalMethods.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/video_reward_ad.dart';
 import 'package:in_zone_app/widgets/header/neon_icon.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'package:in_zone_app/widgets/animations/pulse_animation.dart';
 
 class CoinGift extends StatelessWidget {

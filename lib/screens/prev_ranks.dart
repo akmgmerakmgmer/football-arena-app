@@ -7,7 +7,7 @@ import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/title_with_border.dart';
 import 'package:in_zone_app/widgets/screens/all_ranks/single_rank.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 
 class PrevRanks extends StatelessWidget {
   const PrevRanks({super.key});

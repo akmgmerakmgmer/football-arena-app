@@ -3,7 +3,7 @@ import 'package:in_zone_app/widgets/containers/double_grid_container.dart';
 import 'package:in_zone_app/widgets/containers/modal_container.dart';
 import 'package:in_zone_app/widgets/screens/event_details/prizes_content.dart';
 import 'package:in_zone_app/widgets/screens/main_online/rank_nav_links.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 
 class RankNavs extends StatelessWidget {
   final String locale;

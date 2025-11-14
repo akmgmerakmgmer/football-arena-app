@@ -4,7 +4,7 @@ import 'package:in_zone_app/utilities/auth.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/user_inputs/input.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignupForm extends StatefulWidget {

@@ -5,7 +5,7 @@ import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
 import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 
 class CodeInputForm extends StatefulWidget {
   const CodeInputForm({super.key});

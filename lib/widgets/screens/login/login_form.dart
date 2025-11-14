@@ -4,7 +4,7 @@ import 'package:in_zone_app/utilities/auth.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/user_inputs/input.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginForm extends StatefulWidget {
@@ -108,28 +108,62 @@ class _LoginFormState extends State<LoginForm> {
           icon: const Icon(Icons.lock_outlined),
         ),
         const SizedBox(
-          height: 15,
+          height: 18,
         ),
-        MainButton(
-          buttonText: AppLocalizations.of(context)!.login,
-          uppercase: true,
-          loading: loading,
-          action: loginMethod,
-          fontSize: 16,
-          radius: 100,
+        // Enhanced Login Button
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).primaryColor.withOpacity(0.4),
+                blurRadius: 12,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: MainButton(
+            buttonText: '🚀 ${AppLocalizations.of(context)!.login}',
+            uppercase: true,
+            loading: loading,
+            action: loginMethod,
+            fontSize: 16,
+            radius: 100,
+          ),
         ),
         const SizedBox(
-          height: 7,
+          height: 12,
         ),
-        GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(context, '/signup');
-          },
-          child: TextWidget(
-            title: AppLocalizations.of(context)!.doesntHaveAccount,
-            fontSize: 16,
+        Center(
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/signup');
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.3),
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('✨', style: TextStyle(fontSize: 14)),
+                  const SizedBox(width: 6),
+                  TextWidget(
+                    title: AppLocalizations.of(context)!.doesntHaveAccount,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ],
+              ),
+            ),
           ),
-        )
+        ),
       ],
     );
   }

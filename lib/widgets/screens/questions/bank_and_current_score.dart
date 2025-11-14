@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/utilities/neon_box_shadow.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'package:in_zone_app/widgets/screens/questions/neon_title_and_number.dart';
 
 class BankAndCurrentScore extends StatelessWidget {

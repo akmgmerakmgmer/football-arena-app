@@ -8,7 +8,7 @@ import 'package:in_zone_app/widgets/buttons/main_button.dart';
 import 'package:in_zone_app/widgets/containers/blur_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/asset_image_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class SingleOption extends StatefulWidget {

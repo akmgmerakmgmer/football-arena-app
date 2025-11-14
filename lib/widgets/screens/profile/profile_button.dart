@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 
 class ProfileButton extends StatefulWidget {
   final bool isSelected;

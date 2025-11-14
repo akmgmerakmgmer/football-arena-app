@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/screens/event_details.dart';
 import 'package:in_zone_app/widgets/screens/event_details/event_image.dart';
+import 'package:in_zone_app/widgets/animations/animated_button_wrapper.dart';
 import 'package:provider/provider.dart';
 
 class SingleEvent extends StatefulWidget {
@@ -55,8 +56,8 @@ class _SingleEventState extends State<SingleEvent> {
     }
 
     String locale = Provider.of<LocaleProvider>(context, listen: true).locale;
-    return GestureDetector(
-      onTap: () {
+    return AnimatedButtonWrapper(
+      onPressed: () {
         eventDetails(context);
       },
       child: Row(

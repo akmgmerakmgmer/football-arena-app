@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/utilities/event_neon_shadows.dart';
 import 'package:in_zone_app/widgets/general_widgets/neon_white_text.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 
 class BestScore extends StatelessWidget {
   final int score;

@@ -11,14 +11,23 @@ class SingleResult extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        WhiteGlassBackground(body: TextWidget(title: text)),
-        const SizedBox(
-          height: 8,
-        ),
         TextWidget(
           title: number.toString(),
           alwaysEnglish: true,
-        )
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        WhiteGlassBackground(
+          body: TextWidget(
+            title: text,
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ],
     );
   }

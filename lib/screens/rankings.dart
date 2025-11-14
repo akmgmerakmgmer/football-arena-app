@@ -9,7 +9,7 @@ import 'package:in_zone_app/widgets/general_widgets/title_with_border.dart';
 import 'package:in_zone_app/widgets/screens/rankings/single_user.dart';
 import 'package:in_zone_app/widgets/screens/rankings/user_loading_card.dart';
 import 'package:in_zone_app/widgets/user_inputs/dropdown_widget.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class Rankings extends StatefulWidget {

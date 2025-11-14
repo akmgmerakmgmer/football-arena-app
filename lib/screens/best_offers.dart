@@ -3,7 +3,7 @@ import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/widgets/containers/grid_container.dart';
 import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
 import 'package:in_zone_app/widgets/general_widgets/title_with_border.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'package:in_zone_app/widgets/screens/best_offers/single_offer.dart';
 import 'package:provider/provider.dart';
 

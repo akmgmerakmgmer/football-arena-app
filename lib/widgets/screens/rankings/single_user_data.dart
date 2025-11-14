@@ -5,7 +5,7 @@ import 'package:in_zone_app/widgets/general_widgets/neon_white_text.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/general_widgets/username_text.dart';
 import 'package:in_zone_app/widgets/screens/questions/user_image.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'package:in_zone_app/widgets/screens/rankings/ranking_prize.dart';
 import 'package:in_zone_app/widgets/containers/blur_container.dart';
 

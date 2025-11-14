@@ -25,7 +25,7 @@ import 'package:in_zone_app/widgets/screens/questions/you_drew_Image.dart';
 import 'package:in_zone_app/widgets/screens/questions/you_lost_image.dart';
 import 'package:in_zone_app/widgets/screens/questions/you_won_image.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'dart:convert'; // For utf8 encoding
 import 'package:crypto/crypto.dart'; // For SHA-256
 
@@ -376,7 +376,6 @@ class _QuestionsState extends State<MultiQuestions>
   }
 
   changeCountDown(value) {
-    print(value);
     _countDownNotifier.value = value;
     if (value == 0) {
       setState(() {
@@ -680,6 +679,7 @@ class _QuestionsState extends State<MultiQuestions>
                                           isMultipleChoices:
                                               questionMode == 'multipleChoices',
                                           action: choiceAction,
+                                          enableFeedback: false,
                                         ),
                                         TrueOrFalse(
                                           locale: locale,
@@ -688,6 +688,7 @@ class _QuestionsState extends State<MultiQuestions>
                                           isTrueOrFalse:
                                               questionMode == 'trueOrFalse',
                                           action: choiceAction,
+                                          enableFeedback: false,
                                         ),
                                         ReversedWords(
                                             isReversedWords:

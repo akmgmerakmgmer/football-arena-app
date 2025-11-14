@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/utilities/neon_box_shadow.dart';
 import 'package:in_zone_app/widgets/buttons/purchase_button.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'package:in_zone_app/widgets/general_widgets/ends_on.dart';
 import 'package:in_zone_app/widgets/general_widgets/neon_white_text.dart';
 

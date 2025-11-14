@@ -17,6 +17,8 @@ class TextWidget extends StatelessWidget {
   final bool alwaysEnglish;
   final bool alwaysArabic;
   final List<Shadow> shadow;
+  final int? maxLines;
+  final TextOverflow? overflow;
   const TextWidget(
       {super.key,
       required this.title,
@@ -31,7 +33,9 @@ class TextWidget extends StatelessWidget {
       this.uppercase = false,
       this.alwaysEnglish = false,
       this.alwaysArabic = false,
-      this.shadow = const []});
+      this.shadow = const [],
+      this.maxLines,
+      this.overflow});
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +45,8 @@ class TextWidget extends StatelessWidget {
       textDirection: number ? TextDirection.ltr : null,
       textAlign: textAlign,
       softWrap: true, // Ensures text wraps instead of overflowing
+      maxLines: maxLines,
+      overflow: overflow,
       style: getCustomTextStyle(
           height: height,
           fontSize: locale == 'ar' ? fontSize - 1 : fontSize,

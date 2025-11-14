@@ -1,13 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/screens/questions.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
-import 'package:in_zone_app/widgets/buttons/purchase_button.dart';
-import 'package:in_zone_app/widgets/containers/neon_container.dart';
+import 'package:in_zone_app/widgets/buttons/shop_button.dart';
+import 'package:in_zone_app/widgets/general_widgets/cached_image.dart';
+import 'package:in_zone_app/widgets/general_widgets/coin.dart';
 import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
+import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
 class SingleTheme extends StatefulWidget {
@@ -23,6 +23,8 @@ class SingleTheme extends StatefulWidget {
 
 class _SingleThemeState extends State<SingleTheme> {
   bool loading = false;
+  bool isHovered = false;
+
   Future<void> onClick() async {
     Map user = Provider.of<LocaleProvider>(context, listen: false).user;
     if (user.isEmpty) {
@@ -58,72 +60,169 @@ class _SingleThemeState extends State<SingleTheme> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    return Container(
-        height: 400,
-        margin: const EdgeInsets.symmetric(horizontal: 3),
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: CachedNetworkImageProvider(widget.theme['image']),
-            fit: BoxFit.cover,
-          ),
-          borderRadius: const BorderRadius.all(Radius.circular(15)),
-        ),
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            Positioned(
-                top: 8,
-                right: 4,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        settings: const RouteSettings(name: '/questions'),
-                        builder: (context) => Questions(
-                          themePreview: widget.theme['image'],
-                        ),
-                      ),
-                    );
-                  },
-                  child: const NeonContainer(
-                    widget: Icon(
-                      Icons.open_in_new,
-                      color: Colors.white,
-                      size: 20,
-                      textDirection: TextDirection.ltr,
-                    ),
-                    padding: EdgeInsets.all(4),
-                    radius: 100,
-                  ),
-                )),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                    width: width > 1280
-                        ? width * 0.1
-                        : width > 1024
-                            ? width * 0.2
-                            : width > 450
-                                ? width * 0.3
-                                : width * 0.6,
-                    child: PurchaseButton(
-                      price: widget.theme['price'].toString(),
-                      buttonText: AppLocalizations.of(context)!.buyNow,
-                      action: () {
-                        onClick();
-                      },
-                      loading: loading,
-                    )),
-                const SizedBox(
-                  height: 15,
-                )
+    return GestureDetector(
+      onTap: loading ? null : onClick,
+      onTapDown: (_) => setState(() => isHovered = true),
+      onTapUp: (_) => setState(() => isHovered = false),
+      onTapCancel: () => setState(() => isHovered = false),
+      child: AnimatedScale(
+        scale: isHovered ? 0.97 : 1.0,
+        duration: const Duration(milliseconds: 150),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Theme.of(context).primaryColor.withOpacity(0.3),
+                Colors.black.withOpacity(0.8),
               ],
             ),
-          ],
-        ));
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: Theme.of(context).primaryColor.withOpacity(0.4),
+              width: 2,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).primaryColor.withOpacity(0.3),
+                blurRadius: 15,
+                spreadRadius: 2,
+              ),
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Stack(
+              children: [
+                // Theme Image
+                Positioned.fill(
+                  child: CachedImage(
+                    image: widget.theme['image'],
+                  ),
+                ),
+                
+                // Gradient Overlay
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.8),
+                        ],
+                        stops: const [0.5, 1.0],
+                      ),
+                    ),
+                  ),
+                ),
+                
+                // Preview Button (Top Right)
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          settings: const RouteSettings(name: '/questions'),
+                          builder: (context) => Questions(
+                            themePreview: widget.theme['image'],
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Theme.of(context).primaryColor.withOpacity(0.9),
+                            Theme.of(context).primaryColor.withOpacity(0.7),
+                          ],
+                        ),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.3),
+                          width: 2,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Theme.of(context).primaryColor.withOpacity(0.5),
+                            blurRadius: 10,
+                            spreadRadius: 1,
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.visibility,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
+                
+                // Bottom Section - Price & Buy
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Price Display
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.6),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextWidget(
+                                title: widget.theme['price'].toString(),
+                                alwaysEnglish: true,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                              const SizedBox(width: 6),
+                              const Coin(width: 20),
+                            ],
+                          ),
+                        ),
+                        
+                        const SizedBox(height: 8),
+                        
+                        // Buy Button
+                        ShopButton(
+                          buttonText: AppLocalizations.of(context)!.buyNow,
+                          action: onClick,
+                          loading: loading,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

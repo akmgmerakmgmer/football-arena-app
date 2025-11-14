@@ -7,12 +7,14 @@ class TrueOrFalse extends StatelessWidget {
   final List choices;
   final bool isTrueOrFalse;
   final Function action;
+  final bool enableFeedback;
   const TrueOrFalse(
       {super.key,
       required this.locale,
       required this.choices,
       required this.isTrueOrFalse,
-      required this.action});
+      required this.action,
+      this.enableFeedback = true});
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,7 @@ class TrueOrFalse extends StatelessWidget {
                       },
                       uppercase: true,
                       fontSize: 13,
+                      enableFeedback: enableFeedback,
                     ),
                   )
                   .toList(),

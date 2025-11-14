@@ -9,6 +9,7 @@ class PlayerBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(player);
     final avatar = player['userId']['selectedAvatar'];
     final username = player['userId']['username'];
     final bool isEven = index.isEven;

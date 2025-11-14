@@ -11,7 +11,7 @@ import 'package:in_zone_app/utilities/socket_methods.dart';
 import 'package:in_zone_app/widgets/general_widgets/snackbar_message.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 
 class GeneralMethods {
   final SocketMethods socketMethods = SocketMethods();
@@ -59,13 +59,13 @@ class GeneralMethods {
       numberOfPlayers = 2,
       gameDuration = 90}) {
     int getRandomNumber() {
-      List coinsList = [1, 2, 3];
+      List coinsList = [1, 2];
       final random = Random(); // Create a Random instance
       int randomIndex = random.nextInt(coinsList.length); // Get a random index
       return coinsList[randomIndex]; // Return the coin at the random index
     }
 
-    bool showAd = getRandomNumber() == 1 ? true : false;
+    bool showAd = getRandomNumber() == 1 ? false : false;
     bool isUnder13 = isUserUnder13(localeProvider.user);
     if (showAd && !isUnder13) {
       AdMethods().showInterstitialAd(() {

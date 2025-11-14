@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/containers/black_modal_container.dart';
 import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 
 class Advertisment extends StatelessWidget {
   final String image;

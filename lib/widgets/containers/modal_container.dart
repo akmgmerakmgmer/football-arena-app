@@ -6,7 +6,7 @@ import 'package:in_zone_app/widgets/buttons/main_button.dart';
 import 'package:in_zone_app/widgets/containers/pages_asset_background.dart';
 import 'package:in_zone_app/widgets/general_widgets/dialog_widget_blured.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'package:in_zone_app/widgets/screens/home/coins_button.dart';
 import 'package:in_zone_app/widgets/screens/home/video_ad_button.dart';
 import 'package:in_zone_app/widgets/screens/online_main_screen/code_input_form.dart';
@@ -136,7 +136,7 @@ void showModalBottomSheetContainer(BuildContext context, Widget body) {
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
     builder: (context) {
       final mediaQuery = MediaQuery.of(context);
@@ -144,34 +144,75 @@ void showModalBottomSheetContainer(BuildContext context, Widget body) {
           mediaQuery.padding.top + 16; // Add extra space from top
 
       return ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         child: DraggableScrollableSheet(
           expand: true,
           initialChildSize: 1.0,
           minChildSize: 1.0,
           maxChildSize: 1.0,
           builder: (context, scrollController) {
-            return PagesAssetBackground(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              child: Column(
-                children: [
-                  SizedBox(height: topPadding), // Add space from top
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: IconButton(
-                        icon: const Icon(Icons.close, color: Colors.white),
-                        onPressed: () => Navigator.pop(context),
+            return Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    const Color(0xFF1a237e).withOpacity(0.95),
+                    const Color(0xFF0d47a1).withOpacity(0.98),
+                    Colors.black.withOpacity(0.98),
+                  ],
+                ),
+                border: Border.all(
+                  color: Colors.cyan.withOpacity(0.3),
+                  width: 2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.cyan.withOpacity(0.2),
+                    blurRadius: 20,
+                    spreadRadius: 5,
+                  ),
+                ],
+              ),
+              child: PagesAssetBackground(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                child: Column(
+                  children: [
+                    SizedBox(height: topPadding), // Add space from top
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.red.withOpacity(0.6),
+                              Colors.red.withOpacity(0.4),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(
+                            color: Colors.red.withOpacity(0.5),
+                            width: 1.5,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.red.withOpacity(0.3),
+                              blurRadius: 8,
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.close_rounded,
+                              color: Colors.white),
+                          onPressed: () => Navigator.pop(context),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 6),
-                  Expanded(child: body),
-                ],
+                    const SizedBox(height: 6),
+                    Expanded(child: body),
+                  ],
+                ),
               ),
             );
           },

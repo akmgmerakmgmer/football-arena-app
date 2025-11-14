@@ -9,7 +9,14 @@ import 'package:in_zone_app/widgets/screens/shop/single_perk_shop.dart';
 class BuyPerks extends StatelessWidget {
   final List perks;
   final bool loading;
-  const BuyPerks({super.key, required this.perks, required this.loading});
+  final VoidCallback? onBuyMoreTap;
+  
+  const BuyPerks({
+    super.key,
+    required this.perks,
+    required this.loading,
+    this.onBuyMoreTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +25,8 @@ class BuyPerks extends StatelessWidget {
         padding: const EdgeInsets.only(right: 16.0, left: 16.0),
         child: Column(
           children: [
-            const UserCoins(),
-            const SizedBox(
-              height: 16,
-            ),
+            UserCoins(onBuyMoreTap: onBuyMoreTap),
+            const SizedBox(height: 16),
             loading
                 ? const ShopLoadingCards()
                 : GridContainer(

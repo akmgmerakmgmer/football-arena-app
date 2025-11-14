@@ -25,58 +25,87 @@ class SinglePlayerFinalResult extends StatelessWidget {
             : rankInt == 3
                 ? NeonBoxShadow().bronzeNeon(context)
                 : NeonBoxShadow().whiteNeon(context);
-    return Column(
-      children: [
-        BlurContainer(
-          child: Container(
-            constraints:
-                BoxConstraints(minWidth: MediaQuery.of(context).size.width),
-            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
-            decoration: BoxDecoration(
-                border:
-                    Border.all(color: Colors.white.withOpacity(0.2), width: 2),
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                color: Colors.white.withOpacity(0.15)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+    
+    return BlurContainer(
+      child: Container(
+        constraints:
+            BoxConstraints(minWidth: MediaQuery.of(context).size.width),
+        padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 16.0),
+        decoration: BoxDecoration(
+            border:
+                Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+            borderRadius: const BorderRadius.all(Radius.circular(12)),
+            color: Colors.white.withOpacity(0.1)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    NeonWhiteText(
+                // Rank badge
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.grey.shade700,
+                        Colors.grey.shade900,
+                      ],
+                    ),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.4),
+                      width: 2,
+                    ),
+                  ),
+                  child: Center(
+                    child: NeonWhiteText(
                       word: rank,
-                      fontSize: 24,
-                      shadow: shadow,
-                    ),
-                    const SizedBox(width: 15),
-                    UserImage(
-                      image: avatar['image'],
-                      video: avatar['video'],
-                      showVideo: true,
-                      height: 75,
-                      width: 75,
-                    ),
-                    const SizedBox(width: 8),
-                    UsernameText(
-                      title: username,
-                      fontWeight: FontWeight.bold,
                       fontSize: 18,
+                      shadow: shadow,
+                      letterSpacing: 0,
                     ),
-                  ],
+                  ),
                 ),
-                NeonWhiteText(
-                    word: points.toString(),
-                    fontSize: 28,
-                    shadow: NeonBoxShadow().whiteNeon(context))
+                const SizedBox(width: 16),
+                UserImage(
+                  image: avatar['image'],
+                  video: avatar['video'],
+                  showVideo: true,
+                  height: 65,
+                  width: 65,
+                ),
+                const SizedBox(width: 12),
+                UsernameText(
+                  title: username,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                ),
               ],
             ),
-          ),
+            // Points
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.3),
+                  width: 1.5,
+                ),
+              ),
+              child: NeonWhiteText(
+                word: points.toString(),
+                fontSize: 22,
+                shadow: NeonBoxShadow().whiteNeon(context),
+                letterSpacing: 0.5,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(
-          height: 12,
-        )
-      ],
+      ),
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/screens/single_hint.dart';
 import 'package:in_zone_app/widgets/buttons/hint_action_button.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 
 class Hints extends StatelessWidget {
   final List hints;

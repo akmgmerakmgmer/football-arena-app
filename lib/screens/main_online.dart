@@ -7,7 +7,7 @@ import 'package:in_zone_app/widgets/containers/page_container_with_footer.dart';
 import 'package:in_zone_app/widgets/containers/pages_asset_background.dart';
 import 'package:in_zone_app/widgets/screens/main_online/rank_image.dart';
 import 'package:in_zone_app/widgets/screens/main_online/rank_navs.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'package:in_zone_app/widgets/screens/main_online/user_results_data.dart';
 import 'package:provider/provider.dart';
 

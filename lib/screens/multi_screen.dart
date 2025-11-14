@@ -10,7 +10,7 @@ import 'package:in_zone_app/widgets/screens/multi_screen/player_bar.dart';
 import 'package:in_zone_app/widgets/screens/questions/rank_flag.dart';
 import 'package:in_zone_app/widgets/screens/questions/room_code.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 
 class MultiScreen extends StatefulWidget {
   final bool coinsPayed;

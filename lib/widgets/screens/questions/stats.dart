@@ -3,7 +3,7 @@ import 'package:in_zone_app/widgets/containers/glass_background_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/coin.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/screens/questions/single_perk.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'package:in_zone_app/widgets/screens/questions/user_image.dart';
 
 class Stats extends StatelessWidget {

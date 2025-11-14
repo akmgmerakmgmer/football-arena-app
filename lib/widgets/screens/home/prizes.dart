@@ -5,7 +5,7 @@ import 'package:in_zone_app/widgets/containers/home_section_containers.dart';
 import 'package:in_zone_app/widgets/general_widgets/descriptions.dart';
 import 'package:in_zone_app/widgets/general_widgets/titles.dart';
 import 'package:in_zone_app/widgets/screens/home/single_prize.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable

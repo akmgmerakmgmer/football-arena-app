@@ -3,7 +3,7 @@ import 'package:in_zone_app/widgets/buttons/main_button.dart';
 import 'package:in_zone_app/widgets/containers/home_section_containers.dart';
 import 'package:in_zone_app/widgets/general_widgets/descriptions.dart';
 import 'package:in_zone_app/widgets/general_widgets/titles.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 
 class AboutUs extends StatelessWidget {
   const AboutUs({super.key});

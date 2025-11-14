@@ -18,7 +18,7 @@ import 'package:in_zone_app/widgets/loadings/logo_loading.dart';
 import 'package:in_zone_app/widgets/screens/questions/advertisment.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 
 class PageContainerWithFooter extends StatefulWidget {
   final Widget body;
@@ -109,7 +109,7 @@ class _PageContainerWithFooterState extends State<PageContainerWithFooter> {
         final int intBuildNumber = int.tryParse(buildNumber) ?? 0;
         final int intLowestBuildNumber =
             int.tryParse(data['system']['lowestBuildNumber']) ?? 0;
-        if (intBuildNumber < intLowestBuildNumber) {
+        if (intBuildNumber < 0) {
           ModalContainer.updateModal(context, const NeedUpdate(),
               AppLocalizations.of(context)!.update_app_text);
         }

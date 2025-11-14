@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'package:in_zone_app/screens/hints.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/widgets/containers/fade_transition.dart';

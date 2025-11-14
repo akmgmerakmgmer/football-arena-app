@@ -6,7 +6,7 @@ import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
 import 'package:in_zone_app/widgets/header/header_with_desc.dart';
 import 'package:in_zone_app/widgets/screens/results/single_result.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 
 class Results extends StatelessWidget {
   const Results({super.key});

@@ -28,8 +28,12 @@ import 'package:in_zone_app/widgets/screens/questions/player_search.dart';
 import 'package:in_zone_app/widgets/screens/questions/stats.dart';
 import 'package:in_zone_app/widgets/screens/questions/theme_preview.dart';
 import 'package:in_zone_app/widgets/screens/questions/true_or_false.dart';
+import 'package:in_zone_app/widgets/screens/questions/answer_flash_animation.dart';
+import 'package:in_zone_app/widgets/screens/questions/session_stats_screen.dart';
+import 'package:in_zone_app/widgets/general_widgets/streak_counter.dart';
+import 'package:in_zone_app/widgets/general_widgets/speed_bonus_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'dart:convert'; // For utf8 encoding
 import 'package:crypto/crypto.dart'; // For SHA-256
 
@@ -102,6 +106,20 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
   late ValueNotifier<int> _bankScoreNotifier;
   late ValueNotifier<int> _coinsNotifier;
   late ValueNotifier<List> _hintsNotifier;
+  
+  // Engagement tracking variables
+  int currentStreak = 0;
+  int bestStreak = 0;
+  int totalCorrectAnswers = 0;
+  int totalWrongAnswers = 0;
+  int totalSpeedBonuses = 0;
+  List<double> answerSpeeds = [];
+  DateTime? questionStartTime;
+  bool showAnswerFlash = false;
+  bool isCorrectFlash = false;
+  bool showSessionStats = false;
+  OverlayEntry? speedBonusOverlay;
+  late ValueNotifier<int> _streakNotifier;
 
   // Methods
   Future<void> getQuestions() async {
@@ -162,6 +180,12 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
             if (_livesNotifier.value > 0) {
               playWrongSound();
               _livesNotifier.value = _livesNotifier.value - 1;
+              // Show session stats when lives reach 0
+              if (_livesNotifier.value == 0) {
+                setState(() {
+                  showSessionStats = true;
+                });
+              }
             }
             if (_pointsNotifier.value > 0) {
               _pointsNotifier.value = _pointsNotifier.value - 1;
@@ -288,6 +312,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
       if (!widget.isSinglePlayerEvent) {
         _countDownNotifier.value = setCount();
       }
+      // Start timing for speed bonus tracking
+      questionStartTime = DateTime.now();
     });
     if (questions[currentQuestion]['hints'] != null &&
         questions[currentQuestion]['hints'].length > 0) {
@@ -348,6 +374,20 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     _audioPlayer.play(AssetSource('audio/buzzer.mp3'));
   }
 
+  void showSpeedBonus(double bonusMultiplier) {
+    speedBonusOverlay?.remove();
+    speedBonusOverlay = OverlayEntry(
+      builder: (context) => SpeedBonusIndicator(
+        bonusMultiplier: bonusMultiplier,
+        onComplete: () {
+          speedBonusOverlay?.remove();
+          speedBonusOverlay = null;
+        },
+      ),
+    );
+    Overlay.of(context).insert(speedBonusOverlay!);
+  }
+
   String chooseAudio() {
     if (isRush) {
       return 'audio/rush_audio.mp3';
@@ -385,6 +425,41 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     playCorrectSound();
     bankTrigger();
     lightningRoundTrigger(true);
+    
+    // Track engagement metrics
+    totalCorrectAnswers++;
+    currentStreak++;
+    if (currentStreak > bestStreak) {
+      bestStreak = currentStreak;
+    }
+    _streakNotifier.value = currentStreak;
+    
+    // Track answer speed (speed bonus indicator disabled)
+    if (questionStartTime != null) {
+      final answerTime = DateTime.now().difference(questionStartTime!).inMilliseconds / 1000.0;
+      answerSpeeds.add(answerTime);
+      
+      if (answerTime < 5.0) {
+        totalSpeedBonuses++;
+        // Speed bonus indicator removed per user request
+        // final bonusMultiplier = answerTime < 3.0 ? 1.5 : 1.25;
+        // showSpeedBonus(bonusMultiplier);
+      }
+    }
+    
+    // Show answer flash animation
+    setState(() {
+      showAnswerFlash = true;
+      isCorrectFlash = true;
+    });
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) {
+        setState(() {
+          showAnswerFlash = false;
+        });
+      }
+    });
+    
     rightAnswerPoints();
     if (isBank) {
       Future.delayed(const Duration(milliseconds: 500), () {
@@ -424,6 +499,31 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
 
   void wrongAnswer(index) {
     lightningRoundTrigger(false);
+    
+    // Track engagement metrics
+    totalWrongAnswers++;
+    currentStreak = 0;
+    _streakNotifier.value = 0;
+    
+    // Track answer time
+    if (questionStartTime != null) {
+      final answerTime = DateTime.now().difference(questionStartTime!).inMilliseconds / 1000.0;
+      answerSpeeds.add(answerTime);
+    }
+    
+    // Show answer flash animation
+    setState(() {
+      showAnswerFlash = true;
+      isCorrectFlash = false;
+    });
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) {
+        setState(() {
+          showAnswerFlash = false;
+        });
+      }
+    });
+    
     if (isBank) {
       bankWrongAnswer();
       getToNextQuestion();
@@ -468,6 +568,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     }
     if (_livesNotifier.value == 0) {
       setState(() {
+        showSessionStats = true;
         pageLoading = true;
       });
       return saveGame(false);
@@ -777,6 +878,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     _bankScoreNotifier = ValueNotifier(0);
     _coinsNotifier = ValueNotifier(0);
     _hintsNotifier = ValueNotifier([]);
+    _streakNotifier = ValueNotifier(0);
   }
 
   void initializeEventValues() {
@@ -814,6 +916,8 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
     _pointsNotifier.dispose();
     _coinsNotifier.dispose();
     _hintsNotifier.dispose();
+    _streakNotifier.dispose();
+    speedBonusOverlay?.remove();
     _mainGame.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
@@ -894,7 +998,27 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                     (questions.isNotEmpty && questions[currentQuestion] == null)
                 ? const PrimaryLoading()
                 : _livesNotifier.value == 0
-                    ? GameOver(playAgain: playAgain, exitGame: exitGame)
+                    ? (showSessionStats 
+                        ? SessionStatsScreen(
+                            stats: SessionStats(
+                              totalQuestions: totalCorrectAnswers + totalWrongAnswers,
+                              correctAnswers: totalCorrectAnswers,
+                              wrongAnswers: totalWrongAnswers,
+                              bestStreak: bestStreak,
+                              averageSpeed: answerSpeeds.isEmpty 
+                                  ? 0.0 
+                                  : answerSpeeds.reduce((a, b) => a + b) / answerSpeeds.length,
+                              totalPoints: _pointsNotifier.value,
+                              speedBonuses: totalSpeedBonuses,
+                            ),
+                            onContinue: () {
+                              setState(() {
+                                showSessionStats = false;
+                              });
+                            },
+                            gameMode: widget.eventName.isEmpty ? 'Practice Mode' : widget.eventName,
+                          )
+                        : GameOver(playAgain: playAgain, exitGame: exitGame))
                     : Stack(
                         children: [
                           isRush && isOneShot
@@ -955,6 +1079,27 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                                   skipQuestion: skipQuestionMethod,
                                   locale: locale,
                                 ),
+                          // Streak counter
+                          Positioned(
+                            top: widget.isSinglePlayerEvent ? 80 : 180,
+                            right: 20,
+                            child: ValueListenableBuilder<int>(
+                              valueListenable: _streakNotifier,
+                              builder: (context, streak, child) {
+                                return StreakCounter(streak: streak);
+                              },
+                            ),
+                          ),
+                          // Answer flash animation
+                          if (showAnswerFlash)
+                            AnswerFlashAnimation(
+                              isCorrect: isCorrectFlash,
+                              onComplete: () {
+                                setState(() {
+                                  showAnswerFlash = false;
+                                });
+                              },
+                            ),
                           FadeTransitionContainer(
                             isVisible: !showBankBuzzer,
                             body: Container(
@@ -1018,6 +1163,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                                           ['choices'],
                                       isMultipleChoices: isMultipleChoices(),
                                       action: choiceAction,
+                                      enableFeedback: false,
                                     ),
                                     TrueOrFalse(
                                       locale: locale,
@@ -1025,6 +1171,7 @@ class _QuestionsState extends State<Questions> with WidgetsBindingObserver {
                                           ['choices'],
                                       isTrueOrFalse: isTrueOrFalse(),
                                       action: choiceAction,
+                                      enableFeedback: false,
                                     ),
                                     ReversedWords(
                                         isReversedWords: isReversedWords(),

@@ -38,10 +38,10 @@ class AdMethods {
     );
   }
 
-  void createInterstitialAd(BuildContext context) {
+  Future<void> createInterstitialAd(BuildContext context) async{
     LocaleProvider localeProvider =
         Provider.of<LocaleProvider>(context, listen: false);
-    InterstitialAd.load(
+    await InterstitialAd.load(
         adUnitId: interstitialAdUnitId,
         request: const AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
@@ -50,7 +50,7 @@ class AdMethods {
                 localeProvider.setInterstitialAd(null)));
   }
 
-  void showInterstitialAd(callback, BuildContext context) {
+  void showInterstitialAd(callback, BuildContext context) async{
     LocaleProvider localeProvider =
         Provider.of<LocaleProvider>(context, listen: false);
     InterstitialAd? interstitialAd = localeProvider.interstitialAd;
@@ -71,7 +71,8 @@ class AdMethods {
       createInterstitialAd(context);
       callback();
     } else {
-      callback();
+      await createInterstitialAd(context);
+      showInterstitialAd(callback, context);
     }
   }
 }

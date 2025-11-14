@@ -4,7 +4,7 @@ import 'package:in_zone_app/screens/questions.dart';
 import 'package:in_zone_app/utilities/ad_methods.dart';
 import 'package:in_zone_app/utilities/api_methods.dart';
 import 'package:in_zone_app/widgets/buttons/main_button.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class PlayEventButton extends StatelessWidget {

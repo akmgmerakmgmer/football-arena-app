@@ -23,8 +23,8 @@ class GridContainer extends StatelessWidget {
                     : MediaQuery.of(context).size.width > 600
                         ? 2
                         : 1,
-        mainAxisSpacing: 15,
-        crossAxisSpacing: 15,
+        mainAxisSpacing: 24,
+        crossAxisSpacing: 20,
         children: widget);
   }
 }

@@ -3,7 +3,7 @@ import 'package:in_zone_app/providers/locale_provider.dart';
 import 'package:in_zone_app/utilities/generalMethods.dart';
 import 'package:in_zone_app/widgets/containers/modal_container.dart';
 import 'package:in_zone_app/widgets/screens/online_main_screen/carousel_container.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class FriendMatches extends StatelessWidget {
@@ -38,7 +38,8 @@ class FriendMatches extends StatelessWidget {
         "desc": {
           'en': "Create a match code for your friend to join your match",
           'ar': "أنشئ رمز سري لصديقك لتحديه في مباراة."
-        }
+        },
+        "titleIcon": Icons.add_circle_outline,
       },
       {
         "image": "assets/images/join_match.jpg",
@@ -48,7 +49,8 @@ class FriendMatches extends StatelessWidget {
           'en': "Join a match with your friend's match code",
           'ar':
               "انضم إلى مباراة باستخدام الرمز السري للمباراة التي انشأها صديقك."
-        }
+        },
+        "titleIcon": Icons.login,
       },
     ];
     return CarouselContainer(

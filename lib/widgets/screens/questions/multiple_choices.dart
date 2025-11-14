@@ -8,12 +8,14 @@ class MultipleChoices extends StatelessWidget {
   final List choices;
   final bool isMultipleChoices;
   final Function action;
+  final bool enableFeedback;
   const MultipleChoices({
     super.key,
     required this.locale,
     required this.choices,
     required this.isMultipleChoices,
     required this.action,
+    this.enableFeedback = true,
   });
 
   @override
@@ -39,6 +41,7 @@ class MultipleChoices extends StatelessWidget {
                                     },
                                     uppercase: true,
                                     fontSize: 13,
+                                    enableFeedback: enableFeedback,
                                   ),
                                 )
                               : MainButton(
@@ -50,6 +53,7 @@ class MultipleChoices extends StatelessWidget {
                                   },
                                   uppercase: true,
                                   fontSize: 13,
+                                  enableFeedback: enableFeedback,
                                 ),
                           const SizedBox(
                             height: 20,

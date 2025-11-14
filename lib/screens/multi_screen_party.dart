@@ -8,9 +8,10 @@ import 'package:in_zone_app/widgets/containers/grid_container.dart';
 import 'package:in_zone_app/widgets/containers/image_background_plain.dart';
 import 'package:in_zone_app/widgets/general_widgets/waiting_for_other_players.dart';
 import 'package:in_zone_app/widgets/screens/multi_screen/placeholder_avatar.dart';
+import 'package:in_zone_app/widgets/screens/multi_screen/player_counter_header.dart';
 import 'package:in_zone_app/widgets/screens/multi_screen/player_party_avatar.dart';
 import 'package:in_zone_app/widgets/screens/questions/room_code.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class MultiScreenParty extends StatefulWidget {
@@ -108,47 +109,50 @@ class _MultiScreenState extends State<MultiScreenParty>
                 ? RoomCode(code: room['code'])
                 : Container(),
             Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/vs.png',
-                    width: 70,
-                    fit: BoxFit.cover,
-                  ),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        GridContainer(
-                          fixedGrids: true,
-                          widget: List.generate(
-                              room['numberOfPlayers'],
-                              (index) => index < room['players'].length
-                                  ? PlayerPartyAvatar(
-                                      player: room['players'][index],
-                                      user: user,
-                                    )
-                                  : const PlaceholderAvatar()),
-                          numberOfGrids: 3,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      PlayerCounterHeader(
+                        currentPlayers: room['players'].length,
+                        totalPlayers: room['numberOfPlayers'],
+                        locale: localeProvider.locale,
+                      ),
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            GridContainer(
+                              fixedGrids: true,
+                              widget: List.generate(
+                                  room['numberOfPlayers'],
+                                  (index) => index < room['players'].length
+                                      ? PlayerPartyAvatar(
+                                          player: room['players'][index],
+                                          user: user,
+                                        )
+                                      : const PlaceholderAvatar()),
+                              numberOfGrids: 3,
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            room['players'].length != room['numberOfPlayers']
+                                ? WaitingForOtherPlayers(
+                                    title: AppLocalizations.of(context)!
+                                        .waiting_for_players,
+                                  )
+                                : Container()
+                          ],
                         ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        room['players'].length != room['numberOfPlayers']
-                            ? WaitingForOtherPlayers(
-                                title: AppLocalizations.of(context)!
-                                    .waiting_for_players,
-                              )
-                            : Container()
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ],

@@ -28,10 +28,30 @@ class _ShopState extends State<Shop> {
   final ScrollController _scrollController = ScrollController();
   int activeTabIndex = 1;
   List activeTabs = [
-    {"nameEn": "Avatars", "nameAr": "الرموز (افاتارز)", "index": 1},
-    {"nameEn": "Themes", "nameAr": "الخلفيات", "index": 2},
-    {"nameEn": "Perks", "nameAr": "وسائل المساعدة", "index": 3},
-    {"nameEn": "Coins", "nameAr": "العملات", "index": 4},
+    {
+      "nameEn": "Avatars",
+      "nameAr": "الرموز",
+      "index": 1,
+      "icon": Icons.account_circle
+    },
+    {
+      "nameEn": "Themes",
+      "nameAr": "الخلفيات",
+      "index": 2,
+      "icon": Icons.palette
+    },
+    {
+      "nameEn": "Perks",
+      "nameAr": "المساعدة",
+      "index": 3,
+      "icon": Icons.emoji_events
+    },
+    {
+      "nameEn": "Coins",
+      "nameAr": "العملات",
+      "index": 4,
+      "icon": Icons.monetization_on
+    },
   ];
 
   void tabAction(index) {
@@ -125,44 +145,79 @@ class _ShopState extends State<Shop> {
           child: Column(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 0, horizontal: 0),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColorDark,
-                    borderRadius: BorderRadius.circular(100)),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.black.withOpacity(0.6),
+                      Colors.black.withOpacity(0.4),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Theme.of(context).primaryColor.withOpacity(0.3),
+                    width: 2,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).primaryColor.withOpacity(0.2),
+                      blurRadius: 15,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: activeTabs
-                      .map((tab) => TabsButton(
-                          selected: activeTabIndex == tab['index'],
-                          action: () => tabAction(tab['index']),
-                          title: Provider.of<LocaleProvider>(context,
-                                          listen: false)
-                                      .locale ==
-                                  'en'
-                              ? tab['nameEn']
-                              : tab['nameAr']))
+                      .map((tab) => Expanded(
+                            child: TabsButton(
+                              selected: activeTabIndex == tab['index'],
+                              action: () => tabAction(tab['index']),
+                              icon: tab['icon'],
+                              title: Provider.of<LocaleProvider>(context,
+                                              listen: false)
+                                          .locale ==
+                                      'en'
+                                  ? tab['nameEn']
+                                  : tab['nameAr'],
+                            ),
+                          ))
                       .toList(),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
               activeTabIndex == 4
                   ? BuyCoins(
                       coins: shopItems.isEmpty ? [] : shopItems['coins'],
                       loading: loading,
+                      onBuyMoreTap: () {
+                        // Already on coins tab, no action needed
+                      },
                     )
                   : activeTabIndex == 3
                       ? BuyPerks(
                           perks: shopItems.isEmpty ? [] : shopItems['perks'],
                           loading: loading,
+                          onBuyMoreTap: () {
+                            tabAction(4); // Switch to coins tab
+                          },
                         )
                       : activeTabIndex == 2
                           ? BuyThemes(
                               themes: themes.isEmpty ? [] : themes,
-                              loading: loading)
+                              loading: loading,
+                              onBuyMoreTap: () {
+                                tabAction(4); // Switch to coins tab
+                              },
+                            )
                           : BuyAvatars(
                               avatars: avatars.isEmpty ? [] : avatars,
                               loading: loading,
+                              onBuyMoreTap: () {
+                                tabAction(4); // Switch to coins tab
+                              },
                             )
             ],
           ),

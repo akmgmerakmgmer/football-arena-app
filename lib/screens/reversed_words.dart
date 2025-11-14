@@ -3,7 +3,7 @@ import 'package:in_zone_app/screens/single_letter.dart';
 import 'package:in_zone_app/widgets/buttons/hint_action_button.dart';
 import 'package:in_zone_app/widgets/containers/blur_background_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/text_widget.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 
 class ReversedWords extends StatefulWidget {
   final List reversedWord;

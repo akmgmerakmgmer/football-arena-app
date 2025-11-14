@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/screens/main_online/results_data.dart';
 import 'package:in_zone_app/widgets/screens/questions/user_image.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 
 class UserRankData extends StatelessWidget {
   final Map user;

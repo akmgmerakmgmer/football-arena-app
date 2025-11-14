@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:in_zone_app/widgets/containers/fade_transition.dart';
-import 'package:in_zone_app/widgets/containers/grid_container.dart';
 import 'package:in_zone_app/widgets/general_widgets/user_coins.dart';
 import 'package:in_zone_app/widgets/screens/shop/single_avatar.dart';
 import 'package:in_zone_app/widgets/screens/shop/single_avatar_loading_card.dart';
@@ -9,7 +7,14 @@ import 'package:in_zone_app/widgets/screens/shop/single_avatar_loading_card.dart
 class BuyAvatars extends StatelessWidget {
   final List avatars;
   final bool loading;
-  const BuyAvatars({super.key, required this.avatars, required this.loading});
+  final VoidCallback? onBuyMoreTap;
+  
+  const BuyAvatars({
+    super.key,
+    required this.avatars,
+    required this.loading,
+    this.onBuyMoreTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,21 +23,24 @@ class BuyAvatars extends StatelessWidget {
         padding: const EdgeInsets.only(right: 16.0, left: 16.0),
         child: Column(
           children: [
-            const UserCoins(),
-            const SizedBox(
-              height: 16,
-            ),
+            UserCoins(onBuyMoreTap: onBuyMoreTap),
+            const SizedBox(height: 20),
             loading
                 ? const SingleAvatarLoadingCard()
-                : GridContainer(
-                    widget: avatars
-                        .map((avatar) => SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: SingleAvatar(
-                                avatar: avatar,
-                              ),
-                            ))
-                        .toList())
+                : GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
+                      childAspectRatio: 0.7,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                    ),
+                    itemCount: avatars.length,
+                    itemBuilder: (context, index) {
+                      return SingleAvatar(avatar: avatars[index]);
+                    },
+                  ),
           ],
         ),
       ),

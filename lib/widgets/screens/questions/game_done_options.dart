@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_zone_app/widgets/buttons/save_exit_button.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_zone_app/l10n/app_localizations.dart';
 
 class GameDoneOptions extends StatelessWidget {
   final Function playAgain;
@@ -17,32 +17,40 @@ class GameDoneOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        showPlayAgain
-            ? SaveExitButton(
-                buttonText: AppLocalizations.of(context)!.playAgain,
-                action: () => playAgain(),
-                icon: Icons.restart_alt,
-                radius: 10,
-                fontSize: 16,
-                loading: loading,
-              )
-            : Container(),
-        showPlayAgain
-            ? const SizedBox(
-                width: 15,
-              )
-            : Container(),
-        SaveExitButton(
-          buttonText: AppLocalizations.of(context)!.exitGame,
-          action: () => exitGame(),
-          icon: Icons.exit_to_app,
-          radius: 10,
-          fontSize: 16,
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.2),
+          width: 2,
         ),
-      ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (showPlayAgain) ...[
+            SaveExitButton(
+              buttonText: AppLocalizations.of(context)!.playAgain,
+              action: () => playAgain(),
+              icon: Icons.refresh_rounded,
+              radius: 12,
+              fontSize: 16,
+              loading: loading,
+            ),
+            const SizedBox(width: 16),
+          ],
+          SaveExitButton(
+            buttonText: AppLocalizations.of(context)!.exitGame,
+            action: () => exitGame(),
+            icon: Icons.home_rounded,
+            radius: 12,
+            fontSize: 16,
+          ),
+        ],
+      ),
     );
   }
 }
